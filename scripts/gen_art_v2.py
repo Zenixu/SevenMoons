@@ -128,31 +128,38 @@ def draw_leg(g, x, top, lift, forward, c_leg, c_sh, c_shoe, c_shoe_hi):
 # ----------------------------------------------------------------------------
 # Karakter — Arutala (hoodie gelap, rambut spike ala Sasuke)
 # ----------------------------------------------------------------------------
-def draw_char(direction, frame):
+def draw_char(direction, frame, walking=True):
     g = new_grid()
     side = direction == "side"
     down = direction == "down"
     up = direction == "up"
 
     # ---------------- Kaki / langkah ----------------
+    # idle = berdiri DIAM (tanpa ayunan lengan / naik-turun). walk = langkah.
     if side:
-        STEPS = [
-            (4, 0, -3, 0, -3, 0),   # kontak
+        WALK = [
+            (4, 0, -3, 0, -2, 0),   # kontak
             (0, 0, 0, 3, 0, 1),     # passing
-            (-3, 0, 4, 0, 3, 0),    # kontak kebalikan
+            (-3, 0, 4, 0, 2, 0),    # kontak kebalikan
             (0, 3, 0, 0, 0, 1),     # passing
         ]
-        adx, alift, bdx, blift, aswing, bob = STEPS[frame]
+        if walking:
+            adx, alift, bdx, blift, aswing, bob = WALK[frame % 4]
+        else:
+            adx, alift, bdx, blift, aswing, bob = (0, 0, 0, 0, 0, 0)
         draw_leg(g, 12, 35, blift, bdx, P["pants_sh"], P["pants_sh"], P["shoe"], P["shoe_hi"])
         draw_leg(g, 12, 35, alift, adx, P["pants"], P["pants_sh"], P["shoe"], P["shoe_hi"])
     else:
-        STEPS = [
-            (-1, 0, 1, 0, 3, -3, 0),
+        WALK = [
+            (-1, 0, 1, 0, 2, -2, 0),
             (0, 3, 0, 0, 0, 0, 1),
-            (1, 0, -1, 0, -3, 3, 0),
+            (1, 0, -1, 0, -2, 2, 0),
             (0, 0, 0, 3, 0, 0, 1),
         ]
-        ldx, llift, rdx, rlift, larm, rarm, bob = STEPS[frame]
+        if walking:
+            ldx, llift, rdx, rlift, larm, rarm, bob = WALK[frame % 4]
+        else:
+            ldx, llift, rdx, rlift, larm, rarm, bob = (0, 0, 0, 0, 0, 0, 0)
         aswing = 0
         draw_leg(g, 10, 35, llift, ldx, P["pants"], P["pants_sh"], P["shoe"], P["shoe_hi"])
         draw_leg(g, 18, 35, rlift, rdx, P["pants"], P["pants_sh"], P["shoe"], P["shoe_hi"])
@@ -180,19 +187,24 @@ def draw_char(direction, frame):
     # kerah/hood di belakang leher
     rect(g, 10, ty0 - 1, 21, ty0 + 1, P["hood_sh"])
 
-    # ---------------- Lengan ----------------
+    # ---------------- Lengan (lebih ramping, terpisah dari torso) ----------------
     if side:
         ax = 15 + aswing
-        rect(g, ax - 2, ty0 + 2, ax + 2, ty1 - 2, P["hood"])
-        vline(g, ax + 2, ty0 + 2, ty1 - 2, P["hood_sh"])
-        rect(g, ax - 2, ty1 - 2, ax + 2, ty1 - 1, P["skin"])   # tangan
+        rect(g, ax - 2, ty0 + 2, ax + 1, ty1 - 3, P["hood_sh"])   # lengan (lebih gelap)
+        vline(g, ax - 2, ty0 + 2, ty1 - 3, P["hood"])             # tepi depan terang
+        rect(g, ax - 2, ty1 - 3, ax + 1, ty1 - 1, P["skin"])      # tangan 4x3
+        px(g, ax - 2, ty1 - 1, P["skin_sh"])                      # jempol
     else:
-        rect(g, 5, ty0 + 2 + larm, 8, ty1 - 1 + larm, P["hood"])
-        rect(g, 23, ty0 + 2 + rarm, 26, ty1 - 1 + rarm, P["hood"])
-        vline(g, 5, ty0 + 2 + larm, ty1 - 1 + larm, P["hood_hi"])
-        vline(g, 26, ty0 + 2 + rarm, ty1 - 1 + rarm, P["hood_sh"])
-        rect(g, 5, ty1 - 1 + larm, 8, ty1 + larm, P["skin"])
-        rect(g, 23, ty1 - 1 + rarm, 26, ty1 + rarm, P["skin"])
+        # lengan kiri & kanan (warna lebih gelap dari hoodie agar tidak menyatu)
+        rect(g, 6, ty0 + 2 + larm, 8, ty1 - 2 + larm, P["hood_sh"])
+        vline(g, 6, ty0 + 2 + larm, ty1 - 2 + larm, P["hood_hi"])
+        rect(g, 23, ty0 + 2 + rarm, 25, ty1 - 2 + rarm, P["hood_sh"])
+        vline(g, 25, ty0 + 2 + rarm, ty1 - 2 + rarm, P["hood_sh"])
+        # tangan kecil (3x2 + ibu jari) — bukan balok besar
+        rect(g, 6, ty1 - 2 + larm, 8, ty1 - 1 + larm, P["skin"])
+        px(g, 6, ty1 - 1 + larm, P["skin_sh"])
+        rect(g, 23, ty1 - 2 + rarm, 25, ty1 - 1 + rarm, P["skin"])
+        px(g, 25, ty1 - 1 + rarm, P["skin_sh"])
 
     # ---------------- Leher & kepala ----------------
     rect(g, 14, ty0 - 3, 17, ty0 - 1, P["skin_sh"])
@@ -293,10 +305,10 @@ def build_sheet(path):
     for name, row, count in ANIMS:
         direction = "down" if "down" in name else "up" if "up" in name else "side"
         for i in range(count):
-            frame = i if "walk" in name else (i * 2)
+            frame = i
             cell = Image.new("RGBA", (FW, FH), (0, 0, 0, 0))
             cell.alpha_composite(shadow)
-            cell.alpha_composite(draw_char(direction, frame))
+            cell.alpha_composite(draw_char(direction, frame, walking=("walk" in name)))
             sheet.alpha_composite(cell, (i * FW, row * FH))
     sheet.save(path)
     print(f"  sheet  -> {path}  {sheet.size}")
@@ -479,37 +491,54 @@ def make_bedroom(bg_dir):
     d.ellipse([dx1 - 13, 194, dx1 - 6, 202], fill=(176, 154, 88, 255))      # kenop
     d.point([(dx1 - 11, 196)], fill=(214, 198, 132, 255))
 
-    # ---------- Kulkas (samping pintu) ----------
-    fx0, fx1 = 132, 198
-    d.rectangle([fx0, 116, fx1, 242], fill=(38, 44, 66, 255))               # badan
-    d.rectangle([fx0 + 3, 119, fx1 - 3, 239], fill=(48, 56, 80, 255))
-    d.line([(fx0 + 3, 158), (fx1 - 3, 158)], fill=(30, 36, 56, 255))        # garis freezer
-    d.rectangle([fx1 - 13, 128, fx1 - 8, 148], fill=(28, 34, 52, 255))      # gagang atas
-    d.rectangle([fx1 - 13, 170, fx1 - 8, 196], fill=(28, 34, 52, 255))      # gagang bawah
-    d.rectangle([fx0 + 8, 126, fx0 + 26, 136], fill=(120, 132, 160, 255))   # magnet
-    d.rectangle([fx0 + 10, 128, fx0 + 22, 134], fill=(180, 190, 214, 255))
-    d.rectangle([fx0, 238, fx1, 242], fill=(22, 27, 42, 255))               # bayangan
+    # ---------- Kulkas (samping pintu) — lebih kecil, proporsional ----------
+    fx0, fx1 = 134, 182
+    fy0, fy1 = 152, 242
+    d.rectangle([fx0, fy0, fx1, fy1], fill=(38, 44, 66, 255))               # badan
+    d.rectangle([fx0 + 2, fy0 + 2, fx1 - 2, fy1 - 2], fill=(48, 56, 80, 255))
+    d.line([(fx0 + 2, 182), (fx1 - 2, 182)], fill=(30, 36, 56, 255))        # garis freezer
+    d.rectangle([fx0, fy0, fx1, fy0 + 2], fill=(62, 70, 96, 255))           # tepi atas
+    d.rectangle([fx1 - 10, 162, fx1 - 6, 176], fill=(28, 34, 52, 255))      # gagang atas
+    d.rectangle([fx1 - 10, 192, fx1 - 6, 214], fill=(28, 34, 52, 255))      # gagang bawah
+    d.rectangle([fx0 + 6, 158, fx0 + 20, 166], fill=(120, 132, 160, 255))   # magnet
+    d.rectangle([fx0 + 8, 160, fx0 + 18, 164], fill=(180, 190, 214, 255))
+    d.rectangle([fx0, 238, fx1, 244], fill=(22, 27, 42, 255))               # bayangan kontak
 
     # ---------- Backing cermin di dinding (prop mirror.png digambar di atas) ----------
     d.rectangle([240, 130, 268, 172], fill=(18, 22, 40, 255))              # bayangan lembut
     d.rectangle([240, 170, 268, 172], fill=(11, 14, 26, 255))
 
-    # ---------- Kasur (KANAN) ----------
+    # ---------- Kasur (KANAN) — rangka kayu, matras tebal, bantal & selimut ----------
     b0, b1 = 296, 470
-    d.rectangle([b0 - 6, 166, b0 + 12, 242], fill=(30, 36, 58, 255))        # kepala kasur
-    d.rectangle([b0 - 6, 166, b0 + 12, 173], fill=(48, 56, 86, 255))
-    d.rectangle([b0 - 3, 198, b0 + 5, 240], fill=(22, 27, 44, 255))
-    d.rectangle([b0, 190, b1, 244], fill=(24, 29, 48, 255))                 # rangka
-    d.rectangle([b0 + 4, 186, b1 - 4, 238], fill=(48, 56, 86, 255))         # kasur
-    d.rectangle([b0 + 4, 186, b1 - 4, 192], fill=(70, 82, 118, 255))        # tepi atas
-    d.rounded_rectangle([b0 + 12, 190, b0 + 84, 214], radius=7, fill=(150, 160, 190, 255))  # bantal
-    d.line([(b0 + 20, 200), (b0 + 76, 200)], fill=(118, 128, 158, 255))
-    d.rectangle([b0 + 92, 190, b1 - 6, 238], fill=(38, 46, 76, 255))        # selimut
-    d.rectangle([b0 + 92, 190, b1 - 6, 197], fill=(56, 68, 104, 255))       # lipatan
-    d.line([(b0 + 92, 197), (b1 - 6, 197)], fill=(28, 34, 56, 255))
-    d.line([(b0 + 126, 197), (b0 + 126, 238)], fill=(28, 34, 56, 255))
-    d.line([(b0 + 152, 197), (b0 + 152, 238)], fill=(32, 39, 62, 255))
-    d.rectangle([b0, 234, b1, 244], fill=(18, 22, 36, 255))                 # bayangan
+    # kepala kasur (headboard) tinggi dengan dua tiang
+    d.rectangle([b0 - 8, 168, b0 + 8, 246], fill=(32, 26, 42, 255))
+    d.rectangle([b0 - 6, 174, b0 + 6, 244], fill=(46, 38, 60, 255))
+    d.rectangle([b0 - 8, 168, b0 + 8, 174], fill=(58, 48, 74, 255))         # bibir atas
+    d.rectangle([b0 - 9, 164, b0 - 3, 172], fill=(64, 54, 82, 255))         # tiang kiri
+    d.rectangle([b0 + 3, 164, b0 + 9, 172], fill=(64, 54, 82, 255))         # tiang kanan
+    # rangka + kaki
+    d.rectangle([b0, 236, b1, 244], fill=(30, 25, 40, 255))
+    d.rectangle([b0 + 6, 244, b0 + 12, 252], fill=(24, 20, 34, 255))        # kaki kiri
+    d.rectangle([b1 - 14, 244, b1 - 8, 252], fill=(24, 20, 34, 255))        # kaki kanan
+    # matras tebal (dengan sisi atas terang & bawah gelap)
+    d.rectangle([b0, 190, b1, 238], fill=(52, 60, 92, 255))
+    d.rectangle([b0, 190, b1, 196], fill=(74, 84, 122, 255))
+    d.rectangle([b0, 232, b1, 238], fill=(36, 42, 68, 255))
+    # bantal (persegi, jelas) + lipatan + bayangan
+    d.rounded_rectangle([b0 + 10, 194, b0 + 78, 214], radius=5, fill=(166, 176, 204, 255))
+    d.line([(b0 + 10, 194), (b0 + 78, 194)], fill=(198, 206, 230, 255))
+    d.line([(b0 + 16, 204), (b0 + 72, 204)], fill=(136, 146, 176, 255))
+    d.rectangle([b0 + 10, 214, b0 + 78, 218], fill=(118, 128, 158, 255))
+    # selimut menutupi sisi kanan: tepi terlipat, kerutan, menggantung di kanan
+    g0 = b0 + 88
+    d.rectangle([g0, 192, b1, 236], fill=(44, 54, 88, 255))
+    d.rectangle([g0, 192, b1, 199], fill=(64, 76, 116, 255))                # tepi lipatan
+    d.line([(g0, 199), (b1, 199)], fill=(30, 38, 64, 255))
+    for wx in range(g0 + 14, b1 - 10, 24):
+        d.line([(wx, 200), (wx + 4, 234)], fill=(37, 45, 76, 255))          # kerutan
+    d.rectangle([b1 - 6, 236, b1 + 6, 252], fill=(40, 50, 82, 255))         # selimut menggantung
+    d.rectangle([b1 - 6, 236, b1 + 6, 241], fill=(58, 70, 108, 255))
+    d.rectangle([b0 - 8, 250, b1 + 6, 254], fill=(9, 11, 22, 255))          # bayangan kontak
 
     # ---------- Meja (KANAN) + barang ----------
     mx0, mx1 = 486, 606

@@ -176,3 +176,36 @@ sebagai satu-satunya sumber cahaya.
 - Referensi dipindah ke `docs/references/` (bukan `assets/`) supaya tidak ikut jadi aset game.
 - Regenerasi latar: `/usr/bin/python3 scripts/gen_art_v2.py` (butuh PIL).
 - Referensi #1 dipakai hanya bila #2 tidak memungkinkan; di sini #2 dipakai.
+
+## D008 — Perbaikan Karakter (idle diam + tangan), Kasur, & Ukuran Kulkas
+
+**Tanggal:** 2026-10-09
+**Status:** Diputuskan
+
+### Konteks
+Umpan balik pemain: **kasur masih sangat jelek**, **kulkas terlalu besar**, karakter
+**perlu sedikit lebih besar**, dan saat berdiam karakter **harus langsung idle diam**
+(tangannya "sangat annoying" karena berayun/menekuk).
+
+### Keputusan
+- **Karakter:**
+  - **Idle benar-benar diam.** Sebelumnya frame idle memakai tabel langkah yang sama
+    dengan walk, sehingga lengan berayun +/-2-3 px dan badan naik-turun. Sekarang
+    `draw_char(..., walking=False)` memakai pose statis; frame idle identik.
+  - **Tangan & lengan dirapikan:** lengan lebih ramping, diwarnai `hood_sh` (lebih
+    gelap dari torso) agar tidak menyatu, dan tangan dibuat kecil (3x2 + ibu jari),
+    bukan balok peach besar.
+  - **Ukuran sedikit lebih besar:** `player.gd` `sprite_scale = 1.25` (murni visual,
+    collision tak berubah) + kompensasi offset agar kaki tetap menempel lantai.
+- **Kasur:** digambar ulang — headboard berkepala tiang, matras tebal (highlight atas /
+  bayangan bawah), **bantal persegi jelas**, selimut dengan tepi terlipat + kerutan +
+  menggantung di sisi kanan, kaki & bayangan kontak. Kini jelas terbaca sebagai kasur.
+- **Kulkas:** diperkecil dari ~66x126 -> **48x90** (badan 134..182 x 152..242); collision
+  `RectangleShape2D_fridge` 68x124 -> **50x92** dan dipindah ke (158,197); anchor
+  interactable disesuaikan agar tetap terjangkau.
+
+### Konsekuensi
+- `gen_art_v2.py`: `draw_char(direction, frame, walking=True)`, `build_sheet` mengoper
+  flag `walking`; `make_bedroom` (kasur + kulkas) diperbarui.
+- Regenerasi: `/usr/bin/python3 scripts/gen_art_v2.py`.
+- Uji: `test_reachability` (Bedroom 1364 titik), `test_intro`, `test_chapter1_scenes` LULUS.

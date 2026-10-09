@@ -37,7 +37,7 @@ size = Vector2(176, 76)
 size = Vector2(124, 52)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fridge"]
-size = Vector2(68, 124)
+size = Vector2(50, 92)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sink"]
 size = Vector2(48, 60)
@@ -97,7 +97,7 @@ position = Vector2(546, 226)
 shape = SubResource("RectangleShape2D_desk")
 
 [node name="Fridge" type="CollisionShape2D" parent="Furniture"]
-position = Vector2(165, 180)
+position = Vector2(158, 197)
 shape = SubResource("RectangleShape2D_fridge")
 
 [node name="Sink" type="CollisionShape2D" parent="Furniture"]
@@ -116,7 +116,7 @@ position = Vector2(0, 54)
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="Fridge" type="Area2D" parent="Interactables"]
-position = Vector2(165, 170)
+position = Vector2(158, 176)
 script = ExtResource("3_inter")
 object_id = "fridge"
 

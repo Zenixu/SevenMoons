@@ -54,6 +54,12 @@ Spesifikasi sistem. Tiap sistem punya tujuan emosional, perilaku, dan kriteria p
 - Area interaksi diperbesar & digeser ke zona jalan agar interaksi muncul saat pemain
   benar-benar dekat (bukan terlalu jauh).
 
+## 7a. Animasi Karakter
+- Animasi 4 arah (idle/walk). **Idle benar-benar diam** (frame identik, tanpa ayunan
+  lengan atau bob). Walk memakai siklus 4 frame dengan ayunan lengan.
+- Sprite dapat diperbesar lewat `PlayerCharacter.sprite_scale` (default 1.25) tanpa
+  mengubah collision; kaki dijaga menempel lantai lewat kompensasi offset.
+
 ## 7b. Gerak Terarah (Scripted Walk)
 - `PlayerCharacter.auto_walk_to(target, speed)` — berjalan otomatis ke titik tujuan,
   memainkan animasi jalan lalu berhenti. Dipakai di adegan terarah, mis. saat tiba di

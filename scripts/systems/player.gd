@@ -17,6 +17,8 @@ const ANIM_ROWS := [
 
 @export var move_speed: float = 85.0
 @export var can_move: bool = true
+## Perbesaran sprite (tanpa mengubah collision). 1.0 = ukuran asli.
+@export var sprite_scale: float = 1.25
 
 @onready var sprite: AnimatedSprite2D = $Visual
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -28,7 +30,15 @@ var _auto_walking: bool = false
 func _ready() -> void:
 	add_to_group("player")
 	_build_sprite_frames()
+	_apply_sprite_scale()
 	sprite.play("idle_down")
+
+
+## Perbesar sprite dan jangkar kakinya agar tetap menempel lantai
+## (sprite centered, jadi kompensasi offset ke atas).
+func _apply_sprite_scale() -> void:
+	sprite.scale = Vector2(sprite_scale, sprite_scale)
+	sprite.position = Vector2(0.0, -(sprite_scale - 1.0) * (FRAME_H * 0.5 - 2.0))
 
 
 func _build_sprite_frames() -> void:
