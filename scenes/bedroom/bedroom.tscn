@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=26 format=3]
 
 [ext_resource type="Script" path="res://scripts/systems/bedroom_controller.gd" id="1_bed"]
 [ext_resource type="Texture2D" path="res://assets/art/bedroom_bg.png" id="2_bg"]
@@ -14,53 +14,63 @@
 [ext_resource type="Texture2D" path="res://assets/art/mirror.png" id="12_mirror"]
 [ext_resource type="Texture2D" path="res://assets/art/wall_clock.png" id="13_clock"]
 [ext_resource type="Texture2D" path="res://assets/art/player_sheet.png" id="15_player"]
+[ext_resource type="Script" path="res://scripts/systems/camera_follow.gd" id="16_cam"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
-size = Vector2(640, 216)
+size = Vector2(960, 216)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_v"]
 size = Vector2(20, 360)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_bottom"]
-size = Vector2(640, 40)
+size = Vector2(960, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
-size = Vector2(44, 44)
+size = Vector2(48, 48)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_inter"]
 size = Vector2(44, 84)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bed"]
-size = Vector2(124, 50)
+size = Vector2(152, 62)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_desk"]
-size = Vector2(132, 60)
+size = Vector2(172, 60)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(16, 26)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_balcony"]
-size = Vector2(64, 40)
+size = Vector2(150, 44)
 
 [node name="Bedroom" type="Node2D"]
 script = ExtResource("1_bed")
 
 [node name="Background" type="TextureRect" parent="."]
-offset_right = 640.0
+offset_right = 960.0
 offset_bottom = 360.0
 texture = ExtResource("2_bg")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(320, 180)
+limit_left = 0
+limit_top = 0
+limit_right = 960
+limit_bottom = 360
+script = ExtResource("16_cam")
+target_path = NodePath("../Player")
+follow_horizontal = true
+follow_vertical = false
+fixed_y = 180.0
 
 [node name="Walls" type="StaticBody2D" parent="."]
 
 [node name="WallTop" type="CollisionShape2D" parent="Walls"]
-position = Vector2(320, 97)
+position = Vector2(480, 97)
 shape = SubResource("RectangleShape2D_wall_top")
 
 [node name="WallBottom" type="CollisionShape2D" parent="Walls"]
-position = Vector2(320, 370)
+position = Vector2(480, 370)
 shape = SubResource("RectangleShape2D_wall_bottom")
 
 [node name="WallLeft" type="CollisionShape2D" parent="Walls"]
@@ -68,23 +78,23 @@ position = Vector2(10, 180)
 shape = SubResource("RectangleShape2D_wall_v")
 
 [node name="WallRight" type="CollisionShape2D" parent="Walls"]
-position = Vector2(630, 180)
+position = Vector2(950, 180)
 shape = SubResource("RectangleShape2D_wall_v")
 
 [node name="Furniture" type="StaticBody2D" parent="."]
 
 [node name="Bed" type="CollisionShape2D" parent="Furniture"]
-position = Vector2(106, 227)
+position = Vector2(270, 226)
 shape = SubResource("RectangleShape2D_bed")
 
 [node name="Desk" type="CollisionShape2D" parent="Furniture"]
-position = Vector2(532, 266)
+position = Vector2(806, 266)
 shape = SubResource("RectangleShape2D_desk")
 
 [node name="Interactables" type="Node2D" parent="."]
 
 [node name="Phone" type="Area2D" parent="Interactables"]
-position = Vector2(500, 228)
+position = Vector2(752, 228)
 script = ExtResource("3_inter")
 object_id = "phone"
 
@@ -99,7 +109,7 @@ offset_bottom = 8.0
 texture = ExtResource("9_phone")
 
 [node name="Photo" type="Area2D" parent="Interactables"]
-position = Vector2(540, 228)
+position = Vector2(802, 228)
 script = ExtResource("3_inter")
 object_id = "photo"
 
@@ -114,7 +124,7 @@ offset_bottom = 12.0
 texture = ExtResource("10_photo")
 
 [node name="Tea" type="Area2D" parent="Interactables"]
-position = Vector2(578, 228)
+position = Vector2(852, 228)
 script = ExtResource("3_inter")
 object_id = "tea"
 
@@ -129,11 +139,12 @@ offset_bottom = 8.0
 texture = ExtResource("11_tea")
 
 [node name="Mirror" type="Area2D" parent="Interactables"]
-position = Vector2(196, 186)
+position = Vector2(426, 162)
 script = ExtResource("3_inter")
 object_id = "mirror"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/Mirror"]
+position = Vector2(0, 52)
 shape = SubResource("RectangleShape2D_wall_inter")
 
 [node name="Visual" type="TextureRect" parent="Interactables/Mirror"]
@@ -144,22 +155,23 @@ offset_bottom = 18.0
 texture = ExtResource("12_mirror")
 
 [node name="Clock" type="Area2D" parent="Interactables"]
-position = Vector2(470, 188)
+position = Vector2(884, 88)
 script = ExtResource("3_inter")
 object_id = "clock"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/Clock"]
+position = Vector2(0, 122)
 shape = SubResource("RectangleShape2D_wall_inter")
 
 [node name="Visual" type="TextureRect" parent="Interactables/Clock"]
-offset_left = -12.0
-offset_top = -12.0
-offset_right = 12.0
-offset_bottom = 12.0
+offset_left = -14.0
+offset_top = -14.0
+offset_right = 14.0
+offset_bottom = 14.0
 texture = ExtResource("13_clock")
 
 [node name="Door" type="Area2D" parent="Interactables"]
-position = Vector2(36, 224)
+position = Vector2(68, 224)
 script = ExtResource("3_inter")
 object_id = "door"
 
@@ -167,7 +179,7 @@ object_id = "door"
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(320, 260)
+position = Vector2(320, 280)
 script = ExtResource("4_play")
 
 [node name="Visual" type="AnimatedSprite2D" parent="Player"]
@@ -176,7 +188,7 @@ script = ExtResource("4_play")
 shape = SubResource("RectangleShape2D_player")
 
 [node name="BalconyTrigger" type="Area2D" parent="."]
-position = Vector2(320, 224)
+position = Vector2(565, 224)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BalconyTrigger"]
 shape = SubResource("RectangleShape2D_balcony")
@@ -187,14 +199,14 @@ shape = SubResource("RectangleShape2D_balcony")
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -80.0
+offset_left = -88.0
 offset_top = 16.0
 offset_right = -20.0
-offset_bottom = 36.0
+offset_bottom = 38.0
 grow_horizontal = 0
-theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 0.8)
-theme_override_font_sizes/font_size = 12
-text = "02:47"
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 0.85)
+theme_override_font_sizes/font_size = 13
+text = "01:00"
 horizontal_alignment = 2
 
 [node name="ThoughtBox" parent="UI" instance=ExtResource("5_thought")]

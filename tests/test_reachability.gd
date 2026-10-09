@@ -10,13 +10,15 @@ const STEP := 6
 
 func _ready() -> void:
 	print("=== TEST: REACHABILITY INTERACTABLES ===")
-	await _check(BEDROOM_SCENE, "Bedroom", Vector2(320, 260))
-	await _check(CORRIDOR_SCENE, "Corridor", Vector2(320, 265))
+	await _check(BEDROOM_SCENE, "Bedroom", Vector2(320, 280), 960.0)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await _check(CORRIDOR_SCENE, "Corridor", Vector2(200, 265), 1120.0)
 	print("=== SELESAI ===")
 	get_tree().quit(0)
 
 
-func _check(scene: PackedScene, name: String, start: Vector2) -> void:
+func _check(scene: PackedScene, name: String, start: Vector2, world_w: float) -> void:
 	var inst: Node2D = scene.instantiate()
 	if "auto_start_intro" in inst:
 		inst.auto_start_intro = false
@@ -36,7 +38,7 @@ func _check(scene: PackedScene, name: String, start: Vector2) -> void:
 
 	var blocked: Dictionary = {}
 	var x := 0.0
-	while x <= 640.0:
+	while x <= world_w:
 		var y := 0.0
 		while y <= 360.0:
 			var p := Vector2(x, y)
@@ -60,7 +62,7 @@ func _check(scene: PackedScene, name: String, start: Vector2) -> void:
 		var cur: Vector2 = queue.pop_front()
 		for d in [Vector2(STEP, 0), Vector2(-STEP, 0), Vector2(0, STEP), Vector2(0, -STEP)]:
 			var np: Vector2 = cur + d
-			if np.x < 0.0 or np.x > 640.0 or np.y < 0.0 or np.y > 360.0:
+			if np.x < 0.0 or np.x > world_w or np.y < 0.0 or np.y > 360.0:
 				continue
 			if visited.has(np):
 				continue
@@ -89,12 +91,14 @@ func _check(scene: PackedScene, name: String, start: Vector2) -> void:
 
 	assert(all_ok, "[%s] ada interactable yang tidak terjangkau!" % name)
 	inst.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
 
 
 func _area_rect(area: Area2D) -> Rect2:
 	var cs: CollisionShape2D = area.get_node_or_null("CollisionShape2D")
-	var pos: Vector2 = area.global_position
 	if cs and cs.shape is RectangleShape2D:
+		var pos: Vector2 = cs.global_position
 		var half: Vector2 = (cs.shape as RectangleShape2D).size * 0.5
 		return Rect2(pos - half, (cs.shape as RectangleShape2D).size)
-	return Rect2(pos - Vector2(16, 16), Vector2(32, 32))
+	return Rect2(area.global_position - Vector2(16, 16), Vector2(32, 32))

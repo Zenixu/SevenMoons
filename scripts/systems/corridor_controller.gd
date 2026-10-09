@@ -2,6 +2,7 @@
 ## Pemain keluar dari kamar, berkeliling lorong: pintu tetangga (tidak bisa
 ## dibuka, hanya bisa diketuk), tangga turun (jalan buntu), dan lift untuk
 ## naik lantai satu-satu (3 -> 4 -> 5) dengan dialog tiap lantai.
+## Di lantai 5 ada pintu kaca menuju balkon atap (adegan S04-S06).
 class_name CorridorController
 extends Node2D
 
@@ -20,6 +21,14 @@ const FLOOR_MIN := 3
 const FLOOR_MAX := 5
 const BEDROOM_SCENE := "res://scenes/bedroom/bedroom.tscn"
 const CORRIDOR_SCENE := "res://scenes/corridor/corridor.tscn"
+const BALCONY_SCENE := "res://scenes/balcony/balcony.tscn"
+
+# Dialog tiap lantai (lebih dari satu baris, bukan cuma satu-dua kata)
+const FLOOR_INTRO: Dictionary = {
+	3: ["CORRIDOR_F3_INTRO", "CORRIDOR_F3_INTRO2", "CORRIDOR_F3_INTRO3"],
+	4: ["CORRIDOR_F4_ARRIVE", "CORRIDOR_F4_ARRIVE2", "CORRIDOR_F4_ARRIVE3"],
+	5: ["CORRIDOR_F5_ARRIVE", "CORRIDOR_F5_ARRIVE2", "CORRIDOR_F5_ARRIVE3"],
+}
 
 var _floor: int = 3
 var _is_busy: bool = false
@@ -29,10 +38,12 @@ func _ready() -> void:
 	_floor = int(FlagStore.get_flag("corridor_floor", FLOOR_MIN))
 	_floor = clampi(_floor, FLOOR_MIN, FLOOR_MAX)
 	_update_floor_visuals()
+	_place_player()
 
 	transition_layer.cut_to_black()
 	transition_layer.fade_from_black(1.5)
 	AudioManager.play_rain(2.0)
+	AudioManager.stop_clock_tick(0.5)
 
 	for child in interactables_parent.get_children():
 		if child is Interactable:
@@ -40,6 +51,16 @@ func _ready() -> void:
 
 	if auto_start:
 		_announce_floor()
+
+
+## Taruh pemain dekat pintu kamar (baru keluar) atau dekat lift (baru naik).
+func _place_player() -> void:
+	var from_elevator: bool = FlagStore.get_flag("corridor_from_elevator", false)
+	if from_elevator:
+		player.position = Vector2(880, 268)
+		FlagStore.set_flag("corridor_from_elevator", false)
+	else:
+		player.position = Vector2(150, 268)
 
 
 func _update_floor_visuals() -> void:
@@ -51,21 +72,14 @@ func _announce_floor() -> void:
 	player.set_movement_enabled(false)
 	await get_tree().create_timer(0.6).timeout
 
-	var key: String = ""
 	var seen_key: String = "corridor_seen_%d" % _floor
-	if not FlagStore.get_flag(seen_key, false):
+	var lines: Array = FLOOR_INTRO.get(_floor, [])
+	if not FlagStore.get_flag(seen_key, false) and not lines.is_empty():
 		FlagStore.set_flag(seen_key, true)
-		if _floor == FLOOR_MIN:
-			key = "CORRIDOR_F3_INTRO"
-		elif _floor == 4:
-			key = "CORRIDOR_F4_ARRIVE"
-		else:
-			key = "CORRIDOR_F5_ARRIVE"
-
-	if not key.is_empty():
-		thought_box.display_thought(key)
-		await thought_box.text_completed
-		await get_tree().create_timer(1.2).timeout
+		for line in lines:
+			thought_box.display_thought(line)
+			await thought_box.text_completed
+			await get_tree().create_timer(1.3).timeout
 		thought_box.clear()
 
 	player.set_movement_enabled(true)
@@ -86,53 +100,68 @@ func _on_object_interacted(obj_id: String) -> void:
 			await _handle_neighbor()
 		"elevator":
 			await _handle_elevator()
+		"balcony_door":
+			await _handle_balcony_door()
 
 	player.set_movement_enabled(true)
 	_is_busy = false
 
 
+func _say(key: String, wait: float = 1.0) -> void:
+	thought_box.display_thought(key)
+	await thought_box.text_completed
+	await get_tree().create_timer(wait).timeout
+
+
 func _handle_room_door() -> void:
 	if _floor == FLOOR_MIN:
-		thought_box.display_thought("CORRIDOR_ROOM_DOOR")
-		await thought_box.text_completed
-		await get_tree().create_timer(0.8).timeout
+		await _say("CORRIDOR_ROOM_DOOR", 0.8)
 		thought_box.clear()
+		FlagStore.set_flag("corridor_from_elevator", false)
 		await _go_to(BEDROOM_SCENE)
 	else:
-		thought_box.display_thought("CORRIDOR_ROOM_OTHER")
-		await thought_box.text_completed
-		await get_tree().create_timer(0.8).timeout
+		await _say("CORRIDOR_ROOM_OTHER", 0.8)
 		thought_box.clear()
 
 
 func _handle_stairs() -> void:
-	thought_box.display_thought("CORRIDOR_STAIRS")
-	await thought_box.text_completed
-	await get_tree().create_timer(1.0).timeout
-	thought_box.display_thought("CORRIDOR_STAIRS_RES")
-	await thought_box.text_completed
-	await get_tree().create_timer(1.2).timeout
+	await _say("CORRIDOR_STAIRS", 1.0)
+	await _say("CORRIDOR_STAIRS_RES", 1.2)
 	thought_box.clear()
 
 
 func _handle_neighbor() -> void:
-	thought_box.display_thought("CORRIDOR_NEIGHBOR")
-	await thought_box.text_completed
-	await get_tree().create_timer(0.9).timeout
+	await _say("CORRIDOR_NEIGHBOR", 0.9)
 	AudioManager.play_typing_sfx()
-	thought_box.display_thought("CORRIDOR_NEIGHBOR_KNOCK")
-	await thought_box.text_completed
-	await get_tree().create_timer(1.4).timeout
-	thought_box.display_thought("CORRIDOR_NEIGHBOR_KNOCK2")
-	await thought_box.text_completed
-	await get_tree().create_timer(1.0).timeout
+	await _say("CORRIDOR_NEIGHBOR_KNOCK", 1.4)
+	await _say("CORRIDOR_NEIGHBOR_KNOCK2", 1.0)
 	thought_box.clear()
 
 
+func _handle_balcony_door() -> void:
+	if _floor != FLOOR_MAX:
+		await _say("CORRIDOR_BALCONY_F5_OTHER", 0.9)
+		thought_box.clear()
+		return
+	# Lantai 5: tawarkan ke balkon
+	await _say("CORRIDOR_BALCONY_F5_DOOR", 0.9)
+	var opts: Array = [
+		{"text": "CORRIDOR_GO_BALCONY"},
+		{"text": "UI_BACK"},
+	]
+	choice_menu.present_choices(opts, "normal")
+	var idx: int = await choice_menu.choice_made
+	if idx == 0:
+		FlagStore.set_flag("reached_floor5_balcony", true)
+		thought_box.clear()
+		await _go_to(BALCONY_SCENE)
+	else:
+		await _say("CORRIDOR_BALCONY_F5_LOCK", 0.9)
+		thought_box.clear()
+
+
 func _handle_elevator() -> void:
-	thought_box.display_thought("CORRIDOR_LIFT")
-	await thought_box.text_completed
-	await get_tree().create_timer(0.8).timeout
+	await _say("CORRIDOR_LIFT", 0.8)
 
 	var opts: Array = []
 	var targets: Array = []
@@ -151,16 +180,14 @@ func _handle_elevator() -> void:
 	var target: int = targets[idx]
 
 	if target == _floor:
-		thought_box.display_thought("CORRIDOR_LIFT_STAY_RES")
-		await thought_box.text_completed
-		await get_tree().create_timer(1.0).timeout
+		await _say("CORRIDOR_LIFT_STAY_RES", 1.0)
 		thought_box.clear()
 		return
 
 	# Naik/turun satu lantai: dialog singkat di dalam lift
-	thought_box.display_thought("CORRIDOR_LIFT_MOVE")
-	await thought_box.text_completed
+	await _say("CORRIDOR_LIFT_MOVE", 1.2)
 	FlagStore.set_flag("corridor_floor", target)
+	FlagStore.set_flag("corridor_from_elevator", true)
 	await _go_to(CORRIDOR_SCENE)
 
 

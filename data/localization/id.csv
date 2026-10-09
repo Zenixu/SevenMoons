@@ -36,10 +36,18 @@ SETTINGS_FONT_SIZE,Ukuran Huruf
 SETTINGS_RESET,Kembalikan ke Awal
 SETTINGS_SAVE,Simpan
 S01_N01,...
-S01_N02,Aku bangun.
+S01_N02,Aku bangun. Lagi.
 S01_N03,Atau mungkin tidak pernah benar-benar tidur.
-S01_A01,Hujan lagi.
-S01_A02,Selalu hujan kalau aku nggak ingin ada suara.
+INTRO_CAP_1,Malam keberapa pun, aku berhenti menghitung.
+INTRO_CAP_2,Ada suara air di kaca. Atau mungkin cuma di kepalaku.
+INTRO_CAP_3,Aku membuka mata. Dunia masih kabur di tepinya.
+INTRO_CAP_4,Kamar. Langit-langit. Jam yang berhenti di angka satu.
+INTRO_SKIP,[spasi] lewati
+S01_A01,Gerimis di kaca. Jam di dinding berhenti di angka satu.
+S01_A02,Aku harus tahu sudah jam berapa.
+CLOCK_HINT,Periksa jam di dinding.
+CLOCK_START,Hanya satu angka yang berani bergerak. Sisanya diam.
+CLOCK_TICK,Jarum menit mulai berjalan. Seperti ada yang memberinya izin.
 S02_O1_N01,Layarnya menyala sendiri. Empat belas pesan belum dibuka.
 S02_O1_N02,"Yang paling atas: Kirana. Terkirim tiga hari lalu."
 S02_O1_PREVIEW,"Kirana: Kamu masih di sana? Aku cuma mau bilang..."
@@ -58,12 +66,12 @@ S02_O2_RES_B,Lebih baik begitu.
 S02_O3_N01,Teh yang dibuat entah kapan. Sudah tidak ada uapnya.
 S02_O3_A01,Dulu ada yang bilang teh itu bisa bikin tenang.
 S02_O3_A02,Dulu.
-S02_O4_N01,Pantulannya samar di kaca lemari. Wajahnya tampak lelah dan jauh.
+S02_O4_N01,Pantulannya samar di kaca cermin. Wajahnya tampak lelah dan jauh.
 S02_O4_A01,"Kamu juga nggak tidur, ya."
 S02_O4_N02,Pantulan itu tidak menjawab.
-S02_O5_N01,Jarumnya tidak sama dengan jam di pojok layar.
-S02_O5_A01,Mana yang benar?
-S02_O5_A02,Nggak penting juga.
+S02_O5_N01,Jarumnya berhenti di angka satu. Seperti menungguku.
+S02_O5_A01,Kalau aku tidak melihatnya, apakah waktu tetap berjalan?
+S02_O5_A02,Mungkin justru karena itu ia berhenti.
 S02_O6_N01,Pintu itu ada di sana. Tidak dikunci.
 S02_O6_N02,Tapi tangan Arutala tidak mau terangkat.
 S02_O6_A01,Di luar terlalu ramai. Walaupun sebenarnya kosong.
@@ -71,6 +79,10 @@ S02_O6_OPT_A,Coba buka
 S02_O6_OPT_B,Mundur
 S02_O6_RES_A,Gagang pintu terasa dingin. Ia menariknya kembali.
 S02_O6_RES_B,Nggak malam ini.
+S02_O6_CONFIRM,"Lorong di luar dingin dan kosong. Keluar sekarang?"
+S02_O6_CONFIRM_YES,Keluar
+S02_O6_CONFIRM_NO,Belum dulu
+S02_O6_LEAVE,Kunci berputar pelan. Aku melangkah ke lorong.
 S03_R1_VOICE,Kamu tahu apa yang kamu lakukan ke dia.
 S03_R1_OPT_A,Aku tahu.
 S03_R1_OPT_B,Jangan mulai lagi.
@@ -117,9 +129,14 @@ S08_MSG_REPLY,"nanti kamu tahu. sekarang, kita mulai dari yang kecil."
 S08_LOOP_LABEL,LOOP 2/7
 CORRIDOR_FLOOR,Lantai
 CORRIDOR_F3_INTRO,Pintu kamar tertutup di belakangku. Lorong ini terlalu terang untuk jam segini.
-CORRIDOR_F3_INTRO2,Hanya lampu dan pintu-pintu yang tidak akan kubuka.
-CORRIDOR_F4_ARRIVE,Lantai empat. Aku tidak ingat kenapa aku naik.
+CORRIDOR_F3_INTRO2,Lampu-lampu menyala sepanjang lorong, seolah ada yang sengaja menungguiku terjaga.
+CORRIDOR_F3_INTRO3,Hanya lampu dan pintu-pintu yang tidak akan kubuka. Aku berjalan pelan, mendengar langkahku sendiri.
+CORRIDOR_F4_ARRIVE,Lantai empat. Angka di panel lift berganti tanpa suara.
+CORRIDOR_F4_ARRIVE2,Aku tidak ingat kenapa aku naik. Rasanya bukan aku yang menekan tombolnya.
+CORRIDOR_F4_ARRIVE3,Tapi di sini lebih sunyi. Dan di sini, pikiranku sedikit lebih keras.
 CORRIDOR_F5_ARRIVE,Lantai lima. Di atas sudah tidak ada apa-apa lagi.
+CORRIDOR_F5_ARRIVE2,Lorongnya berhenti di sini. Sebuah pintu kaca di ujung, di baliknya hanya langit.
+CORRIDOR_F5_ARRIVE3,Aku tidak tahu apa yang menungguku di baliknya. Tapi kakiku melangkah lebih dulu.
 CORRIDOR_ROOM_DOOR,Kamarku. Aku bisa kembali kalau mau.
 CORRIDOR_ROOM_OTHER,Bukan kamarku. Pintunya sama, tapi bukan milikku.
 CORRIDOR_STAIRS,Tangga darurat. Menuju bawah, ke lobi.
@@ -133,3 +150,8 @@ CORRIDOR_LIFT_DOWN,Turun satu lantai
 CORRIDOR_LIFT_STAY,Diam di sini
 CORRIDOR_LIFT_STAY_RES,Nggak ada tempat lain yang lebih baik.
 CORRIDOR_LIFT_MOVE,Pintu besi menutup. Lantai di bawah kakiku bergeser.
+CORRIDOR_ARRIVE_LINE,Selamat datang di lantai %d. Pintu lift terbuka lagi.
+CORRIDOR_BALCONY_F5_DOOR,Pintu kaca menuju balkon atap. Di luar, hanya langit dan gerimis.
+CORRIDOR_BALCONY_F5_OTHER,Bukan sekarang. Di lantai ini tidak ada pintu seperti itu.
+CORRIDOR_BALCONY_F5_LOCK,Pintu ini terkunci dari luar. Aku tidak punya alasan untuk membukanya malam ini.
+CORRIDOR_GO_BALCONY,Buka pintu kaca

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://scripts/systems/corridor_controller.gd" id="1_corr"]
 [ext_resource type="Texture2D" path="res://assets/art/corridor_bg.png" id="2_bg"]
@@ -7,18 +7,19 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/thought_box.tscn" id="5_thought"]
 [ext_resource type="PackedScene" path="res://scenes/ui/choice_menu.tscn" id="6_choice"]
 [ext_resource type="PackedScene" path="res://scenes/transitions/transition_layer.tscn" id="7_trans"]
+[ext_resource type="Script" path="res://scripts/systems/camera_follow.gd" id="8_cam"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
-size = Vector2(640, 196)
+size = Vector2(1120, 196)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_v"]
 size = Vector2(20, 360)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_bottom"]
-size = Vector2(640, 40)
+size = Vector2(1120, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
-size = Vector2(44, 44)
+size = Vector2(48, 48)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(16, 26)
@@ -27,21 +28,30 @@ size = Vector2(16, 26)
 script = ExtResource("1_corr")
 
 [node name="Background" type="TextureRect" parent="."]
-offset_right = 640.0
+offset_right = 1120.0
 offset_bottom = 360.0
 texture = ExtResource("2_bg")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(320, 180)
+limit_left = 0
+limit_top = 0
+limit_right = 1120
+limit_bottom = 360
+script = ExtResource("8_cam")
+target_path = NodePath("../Player")
+follow_horizontal = true
+follow_vertical = false
+fixed_y = 180.0
 
 [node name="Walls" type="StaticBody2D" parent="."]
 
 [node name="WallTop" type="CollisionShape2D" parent="Walls"]
-position = Vector2(320, 98)
+position = Vector2(560, 98)
 shape = SubResource("RectangleShape2D_wall_top")
 
 [node name="WallBottom" type="CollisionShape2D" parent="Walls"]
-position = Vector2(320, 370)
+position = Vector2(560, 370)
 shape = SubResource("RectangleShape2D_wall_bottom")
 
 [node name="WallLeft" type="CollisionShape2D" parent="Walls"]
@@ -49,13 +59,13 @@ position = Vector2(10, 180)
 shape = SubResource("RectangleShape2D_wall_v")
 
 [node name="WallRight" type="CollisionShape2D" parent="Walls"]
-position = Vector2(630, 180)
+position = Vector2(1110, 180)
 shape = SubResource("RectangleShape2D_wall_v")
 
 [node name="Interactables" type="Node2D" parent="."]
 
 [node name="RoomDoor" type="Area2D" parent="Interactables"]
-position = Vector2(72, 250)
+position = Vector2(92, 250)
 script = ExtResource("3_inter")
 object_id = "room_door"
 
@@ -63,7 +73,7 @@ object_id = "room_door"
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="StairsDoor" type="Area2D" parent="Interactables"]
-position = Vector2(174, 250)
+position = Vector2(234, 250)
 script = ExtResource("3_inter")
 object_id = "stairs_door"
 
@@ -71,7 +81,7 @@ object_id = "stairs_door"
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="NeighborA" type="Area2D" parent="Interactables"]
-position = Vector2(282, 250)
+position = Vector2(432, 250)
 script = ExtResource("3_inter")
 object_id = "neighbor_a"
 
@@ -79,7 +89,7 @@ object_id = "neighbor_a"
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="NeighborB" type="Area2D" parent="Interactables"]
-position = Vector2(382, 250)
+position = Vector2(632, 250)
 script = ExtResource("3_inter")
 object_id = "neighbor_b"
 
@@ -87,15 +97,23 @@ object_id = "neighbor_b"
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="Elevator" type="Area2D" parent="Interactables"]
-position = Vector2(551, 250)
+position = Vector2(917, 250)
 script = ExtResource("3_inter")
 object_id = "elevator"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/Elevator"]
 shape = SubResource("RectangleShape2D_inter")
 
+[node name="BalconyDoor" type="Area2D" parent="Interactables"]
+position = Vector2(1058, 250)
+script = ExtResource("3_inter")
+object_id = "balcony_door"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/BalconyDoor"]
+shape = SubResource("RectangleShape2D_inter")
+
 [node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(320, 265)
+position = Vector2(200, 265)
 script = ExtResource("4_play")
 
 [node name="Visual" type="AnimatedSprite2D" parent="Player"]

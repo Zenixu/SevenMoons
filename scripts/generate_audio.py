@@ -21,33 +21,33 @@ def create_wav(filename, samples):
         wf.writeframes(raw_data)
     print(f"Generated: {filename} ({len(samples)/SAMPLE_RATE:.2f}s)")
 
-# 1. Ambience: Rain gentle loop (3 seconds seamless pink/brown noise rain)
-def generate_rain_loop(filename, duration=3.0):
+# 1. Ambience: Gerimis halus (loop) — bukan hujan deras.
+#    Karakter: desis halus frekuensi tinggi + noise lembut, amplitudo rendah,
+#    napas pelan. Tanpa tetes keras.
+def generate_rain_loop(filename, duration=4.0):
     num_samples = int(SAMPLE_RATE * duration)
     samples = [0.0] * num_samples
-    # Simple filtered noise generator
-    b0, b1, b2 = 0.0, 0.0, 0.0
-    random.seed(42)
+    random.seed(7)
+    lp = 0.0
     for i in range(num_samples):
         white = random.uniform(-1.0, 1.0)
-        # Pink-ish noise filter
-        b0 = 0.99765 * b0 + white * 0.0990460
-        b1 = 0.96300 * b1 + white * 0.2965164
-        b2 = 0.57000 * b2 + white * 1.0526913
-        pink = b0 + b1 + b2 + white * 0.1848
-        # Add random subtle drops
-        drop = 0.0
-        if random.random() < 0.003:
-            drop = random.uniform(0.1, 0.3)
-        samples[i] = (pink * 0.05 + drop) * 0.4
-    
-    # Crossfade ends for clean looping
-    fade_len = int(SAMPLE_RATE * 0.1)
+        lp += 0.10 * (white - lp)          # low-pass lembut
+        hiss = white - lp                   # komponen halus (desis gerimis)
+        t = i / SAMPLE_RATE
+        # napas pelan: gerimis kadang sedikit lebih ramai
+        mod = 0.78 + 0.22 * math.sin(2 * math.pi * 0.06 * t)
+        samples[i] = (0.55 * hiss + 0.45 * lp) * mod
+
+    # Normalisasi ke level pelan (gerimis jauh lebih tenang dari hujan)
+    peak = max(1e-6, max(abs(s) for s in samples))
+    samples = [s / peak * 0.34 for s in samples]
+
+    # Crossfade ujung agar loop mulus tanpa klik
+    fade_len = int(SAMPLE_RATE * 0.25)
     for i in range(fade_len):
-        fade_in = i / fade_len
-        fade_out = 1.0 - fade_in
-        samples[i] = samples[i] * fade_in + samples[num_samples - fade_len + i] * fade_out
-    
+        w = i / fade_len
+        samples[i] = samples[i] * w + samples[num_samples - fade_len + i] * (1.0 - w)
+
     create_wav(filename, samples)
 
 # 2. Ambience: Refrigerator hum loop (50Hz + subtle harmonics, 2 seconds)

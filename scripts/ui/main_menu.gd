@@ -42,7 +42,7 @@ func _init_labels() -> void:
 func _on_start_pressed() -> void:
 	start_game_requested.emit()
 	if get_tree() and get_tree().current_scene == self:
-		get_tree().change_scene_to_file("res://scenes/bedroom/bedroom.tscn")
+		get_tree().change_scene_to_file("res://scenes/intro/intro_cutscene.tscn")
 
 
 func _on_settings_pressed() -> void:

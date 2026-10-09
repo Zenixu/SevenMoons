@@ -1,6 +1,9 @@
 ## BedroomController — Pengendali Eksplorasi Kamar S01 & S02
 ## Mengelola 6 objek interaktif, memori inspeksi, pembatasan gerak saat berdialog,
 ## dan membuka pintu balkon setelah minimal 3 objek diperiksa.
+##
+## Jam dinding: mulai pukul 01:00 dan BERHENTI. Pemain harus memeriksa jam dulu;
+## setelah diperiksa, jarum menit mulai berjalan (waktu hidup). Ini kunci Loop 1.
 class_name BedroomController
 extends Node2D
 
@@ -21,11 +24,18 @@ signal exploration_completed()
 
 const CORRIDOR_SCENE := "res://scenes/corridor/corridor.tscn"
 
+# Jam dinding: 1 menit dalam game per N detik nyata setelah diperiksa
+const CLOCK_MINUTES_PER_SECOND := 0.2   # ~1 menit tiap 5 detik
+
 @export var auto_start_intro: bool = true
 
 var _inspected_objects: Dictionary = {}
 var _is_interacting: bool = false
 var _balcony_unlocked: bool = false
+
+var _clock_minutes: int = 60        # 01:00
+var _clock_running: bool = false
+var _clock_accum: float = 0.0
 
 
 func _ready() -> void:
@@ -41,52 +51,78 @@ func _ready() -> void:
 		if child is Interactable:
 			child.player_interacted.connect(_on_object_interacted)
 
+	_setup_clock()
+
 	# Cek apakah ini kembalian dari flashback (S08)
 	if FlagStore.get_flag("saw_flashback_1", false) and not FlagStore.get_flag("received_mystery_message", false):
 		_start_s08_sequence()
 	elif FlagStore.get_flag("visited_corridor", false):
 		# Kembali dari lorong: lewati intro, taruh pemain dekat pintu
-		player.position = Vector2(90, 250)
-		clock_label.text = "02:47"
+		player.position = Vector2(140, 268)
 		clock_label.visible = true
 		player.set_movement_enabled(true)
 	elif auto_start_intro:
 		_start_s01_intro()
+	else:
+		player.set_movement_enabled(true)
 
 
+# ---------------------------------------------------------------------------
+# Jam dinding (mulai 01:00, berhenti sampai diperiksa)
+# ---------------------------------------------------------------------------
+func _setup_clock() -> void:
+	_clock_minutes = 60
+	_clock_running = FlagStore.get_flag("clock_started", false)
+	_update_clock_label()
+
+
+func _update_clock_label() -> void:
+	var h: int = int(_clock_minutes / 60) % 24
+	var m: int = int(_clock_minutes) % 60
+	clock_label.text = "%02d:%02d" % [h, m]
+
+
+func _process(delta: float) -> void:
+	if not _clock_running:
+		return
+	# Majukan menit berdasarkan waktu nyata
+	_clock_accum += delta * CLOCK_MINUTES_PER_SECOND
+	if _clock_accum >= 1.0:
+		var add := int(_clock_accum)
+		_clock_accum -= float(add)
+		_clock_minutes += add
+		_update_clock_label()
+
+
+func _start_clock() -> void:
+	if _clock_running:
+		return
+	_clock_running = true
+	FlagStore.set_flag("clock_started", true)
+
+
+# ---------------------------------------------------------------------------
+# Intro S01 (setelah cutscene "bangun", jadi lebih singkat)
+# ---------------------------------------------------------------------------
 func _start_s01_intro() -> void:
 	player.set_movement_enabled(false)
 	AudioManager.play_rain(2.0)
 	transition_layer.cut_to_black()
-	transition_layer.fade_from_black(4.0)
+	transition_layer.fade_from_black(2.5)
 
-	await get_tree().create_timer(1.0).timeout
-	thought_box.display_thought("S01_N01")
-	await thought_box.text_completed
-	await get_tree().create_timer(1.5).timeout
-
-	thought_box.display_thought("S01_N02")
-	await thought_box.text_completed
-	await get_tree().create_timer(1.5).timeout
-
-	thought_box.display_thought("S01_N03")
-	await thought_box.text_completed
-	await get_tree().create_timer(1.0).timeout
-
-	# Munculkan jam 02:47
-	clock_label.text = "02:47"
 	clock_label.visible = true
 	FlagStore.set_flag("ui_clock_visible", true)
 
+	await get_tree().create_timer(1.0).timeout
 	thought_box.display_thought("S01_A01")
-	await thought_box.text_completed
-	await get_tree().create_timer(1.2).timeout
-
-	thought_box.display_thought("S01_A02")
 	await thought_box.text_completed
 	await get_tree().create_timer(1.0).timeout
 
+	thought_box.display_thought("S01_A02")
+	await thought_box.text_completed
+	await get_tree().create_timer(0.8).timeout
 	thought_box.clear()
+
 	player.set_movement_enabled(true)
 
 
@@ -216,17 +252,30 @@ func _handle_mirror() -> void:
 	thought_box.clear()
 
 
+## Jam dinding: pemain memeriksa jam dulu, lalu waktu mulai berjalan (Loop 1).
 func _handle_clock() -> void:
 	FlagStore.set_flag("noticed_clock", true)
+	clock_label.visible = true
+
+	if not _clock_running:
+		thought_box.display_thought("CLOCK_START")
+		await thought_box.text_completed
+		await get_tree().create_timer(1.2).timeout
+
+		thought_box.display_thought("CLOCK_TICK")
+		await thought_box.text_completed
+		await get_tree().create_timer(0.8).timeout
+
+		_start_clock()
+		thought_box.clear()
+		return
+
+	# Sudah berjalan — sekadar mengingatkan jam berapa sekarang
 	thought_box.display_thought("S02_O5_N01")
 	await thought_box.text_completed
 	await get_tree().create_timer(1.0).timeout
 
 	thought_box.display_thought("S02_O5_A01")
-	await thought_box.text_completed
-	await get_tree().create_timer(1.0).timeout
-
-	thought_box.display_thought("S02_O5_A02")
 	await thought_box.text_completed
 	await get_tree().create_timer(1.0).timeout
 	thought_box.clear()
@@ -252,32 +301,62 @@ func _handle_door() -> void:
 	choice_menu.present_choices(opts, "normal")
 	var idx: int = await choice_menu.choice_made
 
-	if idx == 0:
-		FlagStore.set_flag("tried_door", true)
-		thought_box.display_thought("S02_O6_RES_A")
+	if idx != 0:
+		FlagStore.set_flag("avoided_door", true)
+		thought_box.display_thought("S02_O6_RES_B")
 		await thought_box.text_completed
 		await get_tree().create_timer(1.0).timeout
 		thought_box.clear()
-		# Keluar ke lorong apartemen
-		FlagStore.set_flag("visited_corridor", true)
-		player.set_movement_enabled(false)
-		transition_layer.fade_to_black(1.2)
-		await get_tree().create_timer(1.2).timeout
-		get_tree().change_scene_to_file(CORRIDOR_SCENE)
 		return
-	else:
-		thought_box.display_thought("S02_O6_RES_B")
 
+	# Pemain memilih membuka: MINTA KONFIRMASI dulu
+	FlagStore.set_flag("tried_door", true)
+	thought_box.display_thought("S02_O6_RES_A")
 	await thought_box.text_completed
-	await get_tree().create_timer(1.0).timeout
-	thought_box.clear()
+	await get_tree().create_timer(0.8).timeout
+
+	thought_box.display_thought("S02_O6_CONFIRM")
+	await thought_box.text_completed
+	await get_tree().create_timer(0.6).timeout
+
+	var confirm_opts: Array = [
+		{"text": "S02_O6_CONFIRM_YES"},
+		{"text": "S02_O6_CONFIRM_NO"}
+	]
+	choice_menu.present_choices(confirm_opts, "normal")
+	var cidx: int = await choice_menu.choice_made
+
+	if cidx != 0:
+		# Batal keluar
+		thought_box.display_thought("S02_O6_RES_B")
+		await thought_box.text_completed
+		await get_tree().create_timer(0.9).timeout
+		thought_box.clear()
+		return
+
+	# Konfirmasi keluar
+	thought_box.display_thought("S02_O6_LEAVE")
+	await thought_box.text_completed
+	await get_tree().create_timer(0.8).timeout
+
+	FlagStore.set_flag("visited_corridor", true)
+	player.set_movement_enabled(false)
+	transition_layer.fade_to_black(1.2)
+	await get_tree().create_timer(1.2).timeout
+	get_tree().change_scene_to_file(CORRIDOR_SCENE)
 
 
 func _check_balcony_condition() -> void:
-	if not _balcony_unlocked and _inspected_objects.size() >= 3:
-		_balcony_unlocked = true
-		balcony_trigger.monitoring = true
-		thought_box.display_thought("UI_PROMPT_BALCONY")
+	# Balkon terbuka setelah minimal 3 objek diperiksa DAN jam sudah diperiksa.
+	if _balcony_unlocked:
+		return
+	if _inspected_objects.size() < 3:
+		return
+	if not FlagStore.get_flag("noticed_clock", false):
+		return
+	_balcony_unlocked = true
+	balcony_trigger.monitoring = true
+	thought_box.display_thought("UI_PROMPT_BALCONY")
 
 
 func _on_balcony_trigger_entered(body: Node2D) -> void:
@@ -391,9 +470,11 @@ func _start_s08_sequence() -> void:
 	transition_layer.fade_from_black(3.0)
 	AudioManager.play_rain(2.0)
 
-	# 2. Jam muncul
-	clock_label.text = "02:47"
+	# 2. Jam muncul (tetap 02:47 — saat bangun lagi di loop berikutnya)
+	_clock_minutes = 2 * 60 + 47
+	_clock_running = false
 	clock_label.visible = true
+	_update_clock_label()
 
 	await get_tree().create_timer(1.2).timeout
 	thought_box.display_thought("S08_N01")
