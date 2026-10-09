@@ -18,6 +18,10 @@ func _ready() -> void:
 	# 1. Layar harus mulai HITAM TOTAL
 	assert(intro.fade_rect.color.a == 1.0, "intro: layar harus mulai hitam penuh")
 
+	# 1b. Monolog harus digambar DI ATAS tirai hitam (kalau tidak, teks tak terlihat)
+	assert(intro.monologue_label.get_index() > intro.fade_rect.get_index(),
+		"intro: MonologueLabel harus di atas FadeRect agar teks terlihat")
+
 	# 2. Panel pertama ada & teksturnya termuat
 	assert(intro.panel != null, "intro: Panel tidak ada")
 	assert(IntroCutscene.PANELS.size() == 4, "intro: harus ada 4 panel komik")
