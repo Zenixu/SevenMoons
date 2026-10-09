@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/thought_box.tscn" id="4_thought"]
 [ext_resource type="PackedScene" path="res://scenes/ui/choice_menu.tscn" id="5_choice"]
 [ext_resource type="PackedScene" path="res://scenes/transitions/transition_layer.tscn" id="6_trans"]
+[ext_resource type="PackedScene" path="res://scenes/ui/chat_ui.tscn" id="7_chat"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_h"]
 size = Vector2(640, 20)
@@ -198,3 +199,24 @@ horizontal_alignment = 2
 [node name="ChoiceMenu" parent="UI" instance=ExtResource("5_choice")]
 
 [node name="TransitionLayer" parent="UI" instance=ExtResource("6_trans")]
+
+[node name="ChatUI" parent="UI" instance=ExtResource("7_chat")]
+visible = false
+
+[node name="LoopCounterLabel" type="Label" parent="UI"]
+visible = false
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = -30.0
+offset_right = -20.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.8, 0.85, 0.95, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "LOOP 2/7"
+horizontal_alignment = 2

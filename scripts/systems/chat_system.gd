@@ -7,6 +7,7 @@ signal message_displayed(sender: String, text: String)
 signal typing_started(sender: String)
 signal typing_finished(sender: String)
 signal message_cancelled(sender: String)
+signal text_submitted(text: String)
 
 const CHAT_BUBBLE_SCENE = preload("res://scenes/ui/chat_bubble.tscn")
 
@@ -14,15 +15,53 @@ const CHAT_BUBBLE_SCENE = preload("res://scenes/ui/chat_bubble.tscn")
 @onready var message_container: VBoxContainer = $Panel/MarginContainer/VBoxContainer/ScrollContainer/MessageList
 @onready var typing_indicator_container: HBoxContainer = $Panel/MarginContainer/VBoxContainer/TypingIndicator
 @onready var typing_label: Label = $Panel/MarginContainer/VBoxContainer/TypingIndicator/TypingLabel
+@onready var input_row: HBoxContainer = $Panel/MarginContainer/VBoxContainer/InputRow
+@onready var line_edit: LineEdit = $Panel/MarginContainer/VBoxContainer/InputRow/LineEdit
+@onready var send_button: Button = $Panel/MarginContainer/VBoxContainer/InputRow/SendButton
 
 var _typing_timer: Timer
 var _dots_count: int = 1
 var _is_typing: bool = false
+var _waiting_for_submit: bool = false
 
 
 func _ready() -> void:
 	if typing_indicator_container:
 		typing_indicator_container.visible = false
+	if input_row:
+		input_row.visible = false
+		send_button.pressed.connect(_on_send_pressed)
+		line_edit.text_submitted.connect(func(_t: String) -> void: _on_send_pressed())
+
+
+## Meminta pemain mengetik balasan teks bebas (S08)
+func prompt_text_input(placeholder_key: String = "S08_INPUT_PROMPT") -> String:
+	input_row.visible = true
+	line_edit.placeholder_text = tr(placeholder_key)
+	line_edit.text = ""
+	line_edit.grab_focus()
+	_waiting_for_submit = true
+
+	var text: String = await text_submitted
+	input_row.visible = false
+	_waiting_for_submit = false
+
+	# Tambahkan gelembung pemain ke obrolan
+	var bubble: ChatBubble = CHAT_BUBBLE_SCENE.instantiate()
+	message_container.add_child(bubble)
+	bubble.setup("", text, true)
+	_scroll_to_bottom()
+
+	return text
+
+
+func _on_send_pressed() -> void:
+	if not _waiting_for_submit:
+		return
+	var text: String = line_edit.text.strip_edges()
+	if text.is_empty():
+		text = "..."
+	text_submitted.emit(text)
 
 
 ## Menampilkan pesan biasa dengan simulasi mengetik

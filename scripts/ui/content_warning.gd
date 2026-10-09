@@ -12,6 +12,7 @@ signal help_requested()
 @onready var proceed_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/ProceedButton
 @onready var help_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/HelpButton
 @onready var quit_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/QuitButton
+@onready var help_menu: HelpMenu = $HelpMenu
 
 
 func _ready() -> void:
@@ -30,6 +31,8 @@ func _ready() -> void:
 
 func _on_proceed_pressed() -> void:
 	warning_acknowledged.emit()
+	if get_tree() and get_tree().current_scene == self:
+		get_tree().change_scene_to_file("res://scenes/main_menu/main_menu.tscn")
 
 
 func _on_help_pressed() -> void:

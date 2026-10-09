@@ -9,25 +9,30 @@ signal flashback_finished()
 @onready var memory_text: Label = $CenterContainer/VBoxContainer/MemoryText
 @onready var whisper_text: Label = $WhisperText
 
+@export var auto_start: bool = true
 var _current_slide: int = 0
 
 
 func _ready() -> void:
 	visible = false
 	whisper_text.visible = false
+	if auto_start and get_tree() and get_tree().current_scene == self:
+		await play_sequence()
+		get_tree().change_scene_to_file("res://scenes/bedroom/bedroom.tscn")
 
+
+const SLIDES: Array[Dictionary] = [
+	{"text": "S07_FLASH_1", "color": Color(0.18, 0.16, 0.22, 1.0)},
+	{"text": "S07_FLASH_2", "color": Color(0.14, 0.17, 0.22, 1.0)},
+	{"text": "S07_FLASH_3", "color": Color(0.22, 0.14, 0.16, 1.0)},
+	{"text": "S07_FLASH_4", "color": Color(0.19, 0.18, 0.15, 1.0)}
+]
 
 func play_sequence() -> void:
 	visible = true
-	var slides: Array[Dictionary] = [
-		{"text": "S07_FLASH_1", "color": Color(0.18, 0.16, 0.22, 1.0)},
-		{"text": "S07_FLASH_2", "color": Color(0.14, 0.17, 0.22, 1.0)},
-		{"text": "S07_FLASH_3", "color": Color(0.22, 0.14, 0.16, 1.0)},
-		{"text": "S07_FLASH_4", "color": Color(0.19, 0.18, 0.15, 1.0)}
-	]
 
-	for i in slides.size():
-		var slide: Dictionary = slides[i]
+	for i in SLIDES.size():
+		var slide: Dictionary = SLIDES[i]
 		slide_image.color = slide["color"]
 		memory_text.text = tr(slide["text"])
 		

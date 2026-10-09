@@ -105,6 +105,7 @@ func _run_s06_jump() -> void:
 	await get_tree().create_timer(2.0).timeout
 
 	balcony_scene_completed.emit()
+	get_tree().change_scene_to_file("res://scenes/transitions/flashback.tscn")
 
 
 func _run_s06_alt() -> void:
@@ -126,3 +127,4 @@ func _run_s06_alt() -> void:
 
 	thought_box.clear()
 	balcony_scene_completed.emit()
+	get_tree().change_scene_to_file("res://scenes/transitions/flashback.tscn")

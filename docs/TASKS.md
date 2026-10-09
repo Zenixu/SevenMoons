@@ -36,13 +36,13 @@ Kerjakan berurutan. Centang `[x]` saat selesai dan lolos kriteria. Rujuk AGENTS.
 **Selesai jika:** S01-S08 dapat dimainkan dengan placeholder.
 
 ## FASE 4 — Implementasi Bab 1 Penuh
-- [ ] 4.1 Hubungkan monolog S03 (4 putaran) dengan pilihan konvergen.
-- [ ] 4.2 Timer menunggu di S05 (15 detik dan 40 detik) + flag `waited_long`.
-- [ ] 4.3 S06: siluet lalu hitam total 3 detik. **Verifikasi tidak ada tampilan jatuh.**
-- [ ] 4.4 S06-ALT jika opsi lewati aktif.
-- [ ] 4.5 S07 kilas balik 4 potongan.
-- [ ] 4.6 S08: bangun lagi, perubahan lingkungan berdasarkan flag, pesan misterius dengan indikator mengetik, input teks bebas.
-- [ ] 4.7 Loop counter "LOOP 2/7" dan transisi ke Bab 2.
+- [x] 4.1 Hubungkan monolog S03 (4 putaran) dengan pilihan konvergen.
+- [x] 4.2 Timer menunggu di S05 (15 detik dan 40 detik) + flag `waited_long`.
+- [x] 4.3 S06: siluet lalu hitam total 3 detik. **Verifikasi tidak ada tampilan jatuh.**
+- [x] 4.4 S06-ALT jika opsi lewati aktif.
+- [x] 4.5 S07 kilas balik 4 potongan.
+- [x] 4.6 S08: bangun lagi, perubahan lingkungan berdasarkan flag, pesan misterius dengan indikator mengetik, input teks bebas.
+- [x] 4.7 Loop counter "LOOP 2/7" dan transisi ke Bab 2.
 **Selesai jika:** Bab 1 berjalan penuh dari S00 sampai S08 dan lolos checklist CHAPTER_01.md.
 
 ## FASE 5 — Audio dan Polish Bab 1

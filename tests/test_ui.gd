@@ -24,6 +24,7 @@ func _ready() -> void:
 	await _test_main_menu()
 
 	print("=== SEMUA TEST UI INTI LULUS ===")
+	get_tree().quit(0)
 
 
 func _test_thought_box() -> void:

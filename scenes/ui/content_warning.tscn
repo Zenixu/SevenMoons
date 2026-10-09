@@ -1,6 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/content_warning.gd" id="1_warning"]
+[ext_resource type="PackedScene" path="res://scenes/ui/help_menu.tscn" id="2_help"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.07, 0.08, 0.1, 0.96)
@@ -93,3 +94,7 @@ custom_minimum_size = Vector2(80, 28)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Keluar"
+
+[node name="HelpMenu" parent="." instance=ExtResource("2_help")]
+visible = false
+layout_mode = 1
