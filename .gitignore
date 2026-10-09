@@ -1,0 +1,16 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Export
+*.exe
+*.x86_64
+*.pck
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.code-workspace
