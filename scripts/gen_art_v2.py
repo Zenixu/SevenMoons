@@ -582,9 +582,9 @@ def make_corridor(art):
     d.rectangle([210, 60, 258, 192], fill=(58, 62, 78, 255))
     d.rectangle([214, 64, 254, 84], fill=(72, 78, 96, 255))
     d.line([(234, 64), (234, 84)], fill=(44, 48, 62, 255))
-    d.ellipse([246, 120, 255, 129], fill=(156, 164, 186, 255))
-    wood_door(400, 464)                                    # tetangga A
-    wood_door(600, 664)                                    # tetangga B
+    d.ellipse([246, 120, 255, 129], fill=(156, 164, 186, 255))    # kenop pintu tangga
+    wood_door(380, 444)                                    # tetangga A (kiri-tengah)
+    wood_door(720, 784)                                    # tetangga B (kanan-tengah)
     # Lift (kanan)
     d.rectangle([860, 44, 974, 196], fill=(40, 44, 58, 255))
     d.rectangle([864, 48, 970, 192], fill=(56, 60, 76, 255))
@@ -598,23 +598,24 @@ def make_corridor(art):
     d.point([(978, 103)], fill=(240, 212, 152, 255))
     d.rectangle([902, 28, 934, 46], fill=(18, 22, 32, 255))    # display lantai
     d.rectangle([903, 29, 933, 45], fill=(26, 34, 48, 255))
-    # Papan nomor lantai (frame; teks diisi Label)
-    d.rectangle([530, 34, 586, 56], fill=(38, 42, 56, 255))
-    d.rectangle([532, 36, 584, 54], fill=(52, 57, 74, 255))
+    # Papan nomor lantai (frame; teks diisi Label) — di sisi kiri tengah
+    d.rectangle([300, 34, 356, 56], fill=(38, 42, 56, 255))
+    d.rectangle([302, 36, 354, 54], fill=(52, 57, 74, 255))
 
-    # Pintu balkon atap (ujung kanan lorong) — kaca, hanya berarti di lantai 5
-    d.rectangle([1024, 44, 1096, 198], fill=(40, 46, 64, 255))
-    d.rectangle([1030, 50, 1090, 196], fill=(16, 23, 43, 255))       # kaca
-    d.ellipse([1048, 70, 1080, 102], fill=(150, 162, 194, 255))      # bulan di luar
-    d.ellipse([1054, 76, 1074, 96], fill=(206, 216, 236, 255))
+    # Pintu kaca atap (di TENGAH lorong) — hanya berarti di lantai 5.
+    # Pemain keluar lift di kanan, berjalan ke tengah, lalu cutscene atap.
+    d.rectangle([520, 44, 640, 198], fill=(40, 46, 64, 255))
+    d.rectangle([526, 50, 634, 196], fill=(16, 23, 43, 255))         # kaca
+    d.ellipse([562, 70, 598, 102], fill=(150, 162, 194, 255))        # bulan di luar
+    d.ellipse([568, 76, 592, 96], fill=(206, 216, 236, 255))
     random.seed(303)
-    for _ in range(60):
-        rx = random.randint(1032, 1088)
+    for _ in range(90):
+        rx = random.randint(528, 632)
         ry = random.randint(52, 192)
         d.line([(rx, ry), (rx - 3, ry + random.randint(5, 11))], fill=(74, 96, 138, 255))
-    d.rectangle([1058, 50, 1062, 196], fill=(40, 46, 64, 255))       # daun tengah
-    d.rectangle([1030, 50, 1033, 196], fill=(56, 64, 86, 255))
-    d.rectangle([1087, 50, 1090, 196], fill=(56, 64, 86, 255))
+    d.rectangle([578, 50, 582, 196], fill=(40, 46, 64, 255))         # daun tengah
+    d.rectangle([526, 50, 529, 196], fill=(56, 64, 86, 255))
+    d.rectangle([631, 50, 634, 196], fill=(56, 64, 86, 255))
 
     # Kolam cahaya lampu (lapisan tembus pandang)
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://scripts/systems/corridor_controller.gd" id="1_corr"]
 [ext_resource type="Texture2D" path="res://assets/art/corridor_bg.png" id="2_bg"]
@@ -20,6 +20,9 @@ size = Vector2(1120, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
 size = Vector2(48, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_roof"]
+size = Vector2(120, 110)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(16, 26)
@@ -81,7 +84,7 @@ object_id = "stairs_door"
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="NeighborA" type="Area2D" parent="Interactables"]
-position = Vector2(432, 250)
+position = Vector2(412, 250)
 script = ExtResource("3_inter")
 object_id = "neighbor_a"
 
@@ -89,7 +92,7 @@ object_id = "neighbor_a"
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="NeighborB" type="Area2D" parent="Interactables"]
-position = Vector2(632, 250)
+position = Vector2(752, 250)
 script = ExtResource("3_inter")
 object_id = "neighbor_b"
 
@@ -105,7 +108,7 @@ object_id = "elevator"
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="BalconyDoor" type="Area2D" parent="Interactables"]
-position = Vector2(1058, 250)
+position = Vector2(580, 250)
 script = ExtResource("3_inter")
 object_id = "balcony_door"
 
@@ -113,13 +116,19 @@ object_id = "balcony_door"
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(200, 265)
+position = Vector2(150, 268)
 script = ExtResource("4_play")
 
 [node name="Visual" type="AnimatedSprite2D" parent="Player"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("RectangleShape2D_player")
+
+[node name="RoofTrigger" type="Area2D" parent="."]
+position = Vector2(580, 250)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoofTrigger"]
+shape = SubResource("RectangleShape2D_roof")
 
 [node name="UI" type="CanvasLayer" parent="."]
 

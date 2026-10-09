@@ -13,7 +13,7 @@ func _ready() -> void:
 	await _test_elevator_floor_progression()
 	await _test_neighbor_knock()
 	await _test_stairs_dead_end()
-	await _test_floor5_balcony_door()
+	await _test_floor5_rooftop_flow()
 
 	print("=== SEMUA TEST LORONG LULUS ===")
 	get_tree().quit(0)
@@ -105,43 +105,48 @@ func _test_stairs_dead_end() -> void:
 	print("    Tangga buntu: OK")
 
 
-## Lantai 5: pintu balkon menawarkan pilihan; lantai lain menolak.
-func _test_floor5_balcony_door() -> void:
-	print("  - Menguji pintu balkon lantai 5...")
+## Lantai 5: pemain keluar lift, BERJALAN ke tengah, lalu cutscene rooftop.
+func _test_floor5_rooftop_flow() -> void:
+	print("  - Menguji alur lantai 5: jalan ke tengah -> cutscene rooftop...")
 	var old_speed: float = SettingsManager.text_speed
 	SettingsManager.text_speed = 100.0
 
-	# Lantai 3: pintu balkon tidak membuka
+	# Lantai 3: trigger atap tidak boleh aktif
 	FlagStore.set_flag("corridor_floor", 3)
 	var c3: CorridorController = CORRIDOR_SCENE.instantiate()
 	c3.auto_start = false
 	c3.navigate_scenes = false
 	add_child(c3)
 	await get_tree().process_frame
+	assert(c3.roof_trigger.monitoring == false,
+		"atap: trigger harus mati di lantai 3")
 	await c3._handle_balcony_door()
 	assert(FlagStore.get_flag("reached_floor5_balcony", false) == false,
-		"balkon: tidak boleh terbuka di lantai 3")
+		"atap: tidak boleh terbuka di lantai 3")
 	c3.queue_free()
+	await get_tree().process_frame
 
-	# Lantai 5: pemain memilih "Buka pintu kaca" (opsi 0)
+	# Lantai 5: trigger atap aktif, dan baru memicu saat pemain menyentuhnya
 	FlagStore.set_flag("corridor_floor", 5)
 	FlagStore.set_flag("reached_floor5_balcony", false)
+	FlagStore.set_flag("corridor_seen_5", true)   # lewati intro lantai
+	FlagStore.set_flag("corridor_from_elevator", true)   # baru naik lift
 	var c5: CorridorController = CORRIDOR_SCENE.instantiate()
 	c5.auto_start = false
 	c5.navigate_scenes = false
 	add_child(c5)
 	await get_tree().process_frame
-	c5.choice_menu.visibility_changed.connect(func() -> void:
-		if c5.choice_menu.visible:
-			get_tree().create_timer(0.02).timeout.connect(func() -> void:
-				if is_instance_valid(c5) and c5.choice_menu.visible:
-					c5.choice_menu._on_button_pressed(0)
-			)
-	)
-	await c5._handle_balcony_door()
+	assert(c5.roof_trigger.monitoring == true,
+		"atap: trigger harus aktif di lantai 5")
+	# Pemain muncul di dekat lift (kanan), bukan di tengah
+	assert(c5.player.position.x > 700.0,
+		"atap: pemain lantai 5 harus mulai dekat lift (kanan)")
+	# Jalan ke tengah: pindahkan pemain ke area trigger, lalu picu
+	c5.player.position = Vector2(580, 268)
+	await c5._on_roof_trigger_entered(c5.player)
 	assert(FlagStore.get_flag("reached_floor5_balcony", false) == true,
-		"balkon: lantai 5 harus bisa menuju balkon")
+		"atap: cutscene lantai 5 harus memicu perjalanan ke rooftop")
 	c5.queue_free()
 
 	SettingsManager.text_speed = old_speed
-	print("    Pintu balkon lantai 5: OK")
+	print("    Alur rooftop lantai 5: OK")

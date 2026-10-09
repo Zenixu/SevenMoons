@@ -155,3 +155,7 @@ CORRIDOR_BALCONY_F5_DOOR,Pintu kaca menuju balkon atap. Di luar, hanya langit da
 CORRIDOR_BALCONY_F5_OTHER,Bukan sekarang. Di lantai ini tidak ada pintu seperti itu.
 CORRIDOR_BALCONY_F5_LOCK,Pintu ini terkunci dari luar. Aku tidak punya alasan untuk membukanya malam ini.
 CORRIDOR_GO_BALCONY,Buka pintu kaca
+CORRIDOR_F5_HINT,Pintu kaca di tengah lorong. Di baliknya, atap gedung.
+CORRIDOR_F5_ROOF_1,Aku berjalan sampai ujung lorong. Di sini tidak ada lagi pintu — hanya kaca.
+CORRIDOR_F5_ROOF_2,Di balik kaca itu, atap gedung terbuka ke langit. Gerimis belum berhenti.
+CORRIDOR_F5_ROOF_3,Tanganku mendorong pintunya sebelum pikiranku sempat menahan.

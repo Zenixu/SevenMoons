@@ -56,6 +56,12 @@ func _make_blur_material() -> ShaderMaterial:
 func play_intro() -> void:
 	AudioManager.play_rain(3.0)
 
+	# Layar mulai HITAM TOTAL, lalu perlahan "membuka mata":
+	# tirai hitam memudar sehingga panel pertama (mata terpejam, blur tinggi)
+	# muncul perlahan. Ini inti efek "bangun dari gelap".
+	var open_eyes := create_tween()
+	open_eyes.tween_property(fade_rect, "color:a", 0.0, 2.4)
+
 	for i in PANELS.size():
 		if _skipped:
 			break
