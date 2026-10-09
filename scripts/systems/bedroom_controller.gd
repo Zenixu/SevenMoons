@@ -19,6 +19,8 @@ signal exploration_completed()
 @onready var tea_node: Node2D = $Interactables/Tea
 @onready var photo_node: Node2D = $Interactables/Photo
 
+const CORRIDOR_SCENE := "res://scenes/corridor/corridor.tscn"
+
 @export var auto_start_intro: bool = true
 
 var _inspected_objects: Dictionary = {}
@@ -42,6 +44,12 @@ func _ready() -> void:
 	# Cek apakah ini kembalian dari flashback (S08)
 	if FlagStore.get_flag("saw_flashback_1", false) and not FlagStore.get_flag("received_mystery_message", false):
 		_start_s08_sequence()
+	elif FlagStore.get_flag("visited_corridor", false):
+		# Kembali dari lorong: lewati intro, taruh pemain dekat pintu
+		player.position = Vector2(90, 250)
+		clock_label.text = "02:47"
+		clock_label.visible = true
+		player.set_movement_enabled(true)
 	elif auto_start_intro:
 		_start_s01_intro()
 
@@ -247,6 +255,16 @@ func _handle_door() -> void:
 	if idx == 0:
 		FlagStore.set_flag("tried_door", true)
 		thought_box.display_thought("S02_O6_RES_A")
+		await thought_box.text_completed
+		await get_tree().create_timer(1.0).timeout
+		thought_box.clear()
+		# Keluar ke lorong apartemen
+		FlagStore.set_flag("visited_corridor", true)
+		player.set_movement_enabled(false)
+		transition_layer.fade_to_black(1.2)
+		await get_tree().create_timer(1.2).timeout
+		get_tree().change_scene_to_file(CORRIDOR_SCENE)
+		return
 	else:
 		thought_box.display_thought("S02_O6_RES_B")
 

@@ -48,9 +48,10 @@ Kerjakan berurutan. Centang `[x]` saat selesai dan lolos kriteria. Rujuk AGENTS.
 ## FASE 5 — Audio dan Polish Bab 1
 - [ ] 5.1 Pasang aset audio (lihat AUDIO_DESIGN.md bagian 7).
 - [ ] 5.2 Atur timing audio sesuai peta bagian 6.
-- [ ] 5.3 Pixel art final untuk kamar, balkon, bulan, siluet.
-- [ ] 5.4 Penyetelan jeda dan tempo dengan uji manual.
-- [ ] 5.5 Aksesibilitas: font besar, kontras tinggi, batas kedip.
+- [x] 5.3 Pixel art final untuk kamar, balkon, bulan, siluet, karakter (spritesheet 4 arah), dan lorong apartemen.
+- [x] 5.4 Penyetelan jeda dan tempo dengan uji manual (temuan pemain: tembok/furnitur bocor + pintu salah tempat — diperbaiki).
+- [x] 5.5 Aksesibilitas: font besar, kontras tinggi, batas kedip.
+- [x] 5.6 Lorong apartemen + lift antar lantai (3→4→5) dengan dialog per lantai, pintu tetangga terkunci, tangga buntu.
 **Selesai jika:** vertical slice layak dijadikan trailer/demo.
 
 ## FASE 6 — Uji dan Tinjauan

@@ -13,23 +13,34 @@
 [ext_resource type="Texture2D" path="res://assets/art/tea_cup.png" id="11_tea"]
 [ext_resource type="Texture2D" path="res://assets/art/mirror.png" id="12_mirror"]
 [ext_resource type="Texture2D" path="res://assets/art/wall_clock.png" id="13_clock"]
-[ext_resource type="Texture2D" path="res://assets/art/door.png" id="14_door"]
 [ext_resource type="Texture2D" path="res://assets/art/player_sheet.png" id="15_player"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_h"]
-size = Vector2(640, 20)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
+size = Vector2(640, 216)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_v"]
 size = Vector2(20, 360)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_bottom"]
+size = Vector2(640, 40)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
-size = Vector2(36, 36)
+size = Vector2(44, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_inter"]
+size = Vector2(44, 84)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bed"]
+size = Vector2(124, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_desk"]
+size = Vector2(132, 60)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(16, 26)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_balcony"]
-size = Vector2(40, 50)
+size = Vector2(64, 40)
 
 [node name="Bedroom" type="Node2D"]
 script = ExtResource("1_bed")
@@ -45,25 +56,35 @@ position = Vector2(320, 180)
 [node name="Walls" type="StaticBody2D" parent="."]
 
 [node name="WallTop" type="CollisionShape2D" parent="Walls"]
-position = Vector2(320, 30)
-shape = SubResource("RectangleShape2D_wall_h")
+position = Vector2(320, 97)
+shape = SubResource("RectangleShape2D_wall_top")
 
 [node name="WallBottom" type="CollisionShape2D" parent="Walls"]
-position = Vector2(320, 340)
-shape = SubResource("RectangleShape2D_wall_h")
+position = Vector2(320, 370)
+shape = SubResource("RectangleShape2D_wall_bottom")
 
 [node name="WallLeft" type="CollisionShape2D" parent="Walls"]
-position = Vector2(20, 180)
+position = Vector2(10, 180)
 shape = SubResource("RectangleShape2D_wall_v")
 
 [node name="WallRight" type="CollisionShape2D" parent="Walls"]
-position = Vector2(620, 180)
+position = Vector2(630, 180)
 shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="Furniture" type="StaticBody2D" parent="."]
+
+[node name="Bed" type="CollisionShape2D" parent="Furniture"]
+position = Vector2(106, 227)
+shape = SubResource("RectangleShape2D_bed")
+
+[node name="Desk" type="CollisionShape2D" parent="Furniture"]
+position = Vector2(532, 266)
+shape = SubResource("RectangleShape2D_desk")
 
 [node name="Interactables" type="Node2D" parent="."]
 
 [node name="Phone" type="Area2D" parent="Interactables"]
-position = Vector2(495, 206)
+position = Vector2(500, 228)
 script = ExtResource("3_inter")
 object_id = "phone"
 
@@ -78,7 +99,7 @@ offset_bottom = 8.0
 texture = ExtResource("9_phone")
 
 [node name="Photo" type="Area2D" parent="Interactables"]
-position = Vector2(530, 204)
+position = Vector2(540, 228)
 script = ExtResource("3_inter")
 object_id = "photo"
 
@@ -93,7 +114,7 @@ offset_bottom = 12.0
 texture = ExtResource("10_photo")
 
 [node name="Tea" type="Area2D" parent="Interactables"]
-position = Vector2(565, 208)
+position = Vector2(578, 228)
 script = ExtResource("3_inter")
 object_id = "tea"
 
@@ -108,12 +129,12 @@ offset_bottom = 8.0
 texture = ExtResource("11_tea")
 
 [node name="Mirror" type="Area2D" parent="Interactables"]
-position = Vector2(205, 175)
+position = Vector2(196, 186)
 script = ExtResource("3_inter")
 object_id = "mirror"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/Mirror"]
-shape = SubResource("RectangleShape2D_inter")
+shape = SubResource("RectangleShape2D_wall_inter")
 
 [node name="Visual" type="TextureRect" parent="Interactables/Mirror"]
 offset_left = -12.0
@@ -123,12 +144,12 @@ offset_bottom = 18.0
 texture = ExtResource("12_mirror")
 
 [node name="Clock" type="Area2D" parent="Interactables"]
-position = Vector2(320, 36)
+position = Vector2(470, 188)
 script = ExtResource("3_inter")
 object_id = "clock"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/Clock"]
-shape = SubResource("RectangleShape2D_inter")
+shape = SubResource("RectangleShape2D_wall_inter")
 
 [node name="Visual" type="TextureRect" parent="Interactables/Clock"]
 offset_left = -12.0
@@ -138,22 +159,15 @@ offset_bottom = 12.0
 texture = ExtResource("13_clock")
 
 [node name="Door" type="Area2D" parent="Interactables"]
-position = Vector2(450, 165)
+position = Vector2(36, 224)
 script = ExtResource("3_inter")
 object_id = "door"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/Door"]
 shape = SubResource("RectangleShape2D_inter")
 
-[node name="Visual" type="TextureRect" parent="Interactables/Door"]
-offset_left = -14.0
-offset_top = -24.0
-offset_right = 14.0
-offset_bottom = 24.0
-texture = ExtResource("14_door")
-
 [node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(320, 240)
+position = Vector2(320, 260)
 script = ExtResource("4_play")
 
 [node name="Visual" type="AnimatedSprite2D" parent="Player"]
@@ -162,17 +176,10 @@ script = ExtResource("4_play")
 shape = SubResource("RectangleShape2D_player")
 
 [node name="BalconyTrigger" type="Area2D" parent="."]
-position = Vector2(20, 130)
+position = Vector2(320, 224)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BalconyTrigger"]
 shape = SubResource("RectangleShape2D_balcony")
-
-[node name="Visual" type="ColorRect" parent="BalconyTrigger"]
-offset_left = -15.0
-offset_top = -25.0
-offset_right = 15.0
-offset_bottom = 25.0
-color = Color(0.2, 0.3, 0.45, 0.2)
 
 [node name="UI" type="CanvasLayer" parent="."]
 

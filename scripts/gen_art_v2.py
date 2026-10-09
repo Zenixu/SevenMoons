@@ -382,24 +382,26 @@ def make_bedroom(art):
     for x in range(-40, W, 64):
         d.line([(x, 202), (x + 30, H)], fill=(24, 19, 22, 255))
 
-    # Jendela (x 240..400, y 46..184)
-    d.rectangle([234, 42, 406, 188], fill=(36, 42, 60, 255))   # kusen luar
-    d.rectangle([240, 48, 400, 182], fill=(16, 23, 44, 255))   # kaca
-    # bulan di luar jendela
-    d.ellipse([296, 66, 348, 118], fill=(58, 70, 108, 255))
-    d.ellipse([304, 74, 340, 110], fill=(150, 162, 194, 255))
-    d.ellipse([310, 80, 330, 96], fill=(206, 216, 236, 255))
+    # Pintu balkon geser (kaca, tengah) — dari langit-langit ke lantai
+    d.rectangle([230, 36, 410, 198], fill=(40, 46, 64, 255))    # kusen luar
+    d.rectangle([236, 42, 404, 196], fill=(15, 22, 42, 255))    # kaca
+    # bulan di luar
+    d.ellipse([294, 62, 348, 116], fill=(58, 70, 108, 255))
+    d.ellipse([302, 70, 340, 108], fill=(150, 162, 194, 255))
+    d.ellipse([308, 76, 330, 96], fill=(206, 216, 236, 255))
     # hujan (opaque supaya tidak melubangi)
     random.seed(101)
-    for _ in range(150):
-        rx = random.randint(242, 398)
-        ry = random.randint(50, 176)
+    for _ in range(170):
+        rx = random.randint(238, 402)
+        ry = random.randint(44, 190)
         rl = random.randint(5, 13)
         d.line([(rx, ry), (rx - 3, ry + rl)], fill=(74, 96, 138, 255))
-    # palang
-    d.rectangle([317, 48, 323, 182], fill=(36, 42, 60, 255))
-    d.rectangle([240, 112, 400, 118], fill=(36, 42, 60, 255))
-    d.rectangle([240, 48, 243, 182], fill=(52, 60, 82, 255))
+    # bingkai pintu geser (dua daun + rel + ambang)
+    d.rectangle([316, 42, 322, 196], fill=(40, 46, 64, 255))
+    d.rectangle([236, 42, 239, 196], fill=(56, 64, 86, 255))
+    d.rectangle([401, 42, 404, 196], fill=(56, 64, 86, 255))
+    d.rectangle([236, 44, 404, 50], fill=(56, 64, 86, 255))
+    d.rectangle([236, 190, 404, 196], fill=(34, 40, 56, 255))   # ambang
 
     # Tempat tidur (kiri) — tinggi wajar (~55px, sebanding karakter 40px)
     d.rectangle([44, 194, 168, 252], fill=(30, 34, 50, 255))   # rangka
@@ -410,19 +412,22 @@ def make_bedroom(art):
     d.line([(54, 202), (104, 202)], fill=(120, 130, 158, 255))
     d.rectangle([48, 240, 164, 246], fill=(36, 42, 60, 255))   # bayangan bawah
 
-    # Meja (kanan) — meja rendah (permukaan di y~212, tempat props diletakkan)
-    d.rectangle([466, 212, 598, 224], fill=(64, 50, 55, 255))  # permukaan
-    d.rectangle([466, 212, 598, 215], fill=(86, 68, 74, 255))
-    d.rectangle([474, 224, 482, 272], fill=(44, 35, 39, 255))  # kaki
-    d.rectangle([582, 224, 590, 272], fill=(44, 35, 39, 255))
-    d.rectangle([470, 226, 594, 236], fill=(36, 29, 33, 255))  # laci
-    d.line([(478, 231), (486, 231)], fill=(120, 104, 88, 255)) # gagang laci
+    # Meja (kanan) — diletakkan lebih rendah di lantai (permukaan y 236, kolisi s/d 296)
+    d.rectangle([466, 236, 598, 248], fill=(64, 50, 55, 255))  # permukaan
+    d.rectangle([466, 236, 598, 239], fill=(86, 68, 74, 255))
+    d.rectangle([474, 248, 482, 296], fill=(44, 35, 39, 255))  # kaki
+    d.rectangle([582, 248, 590, 296], fill=(44, 35, 39, 255))
+    d.rectangle([470, 250, 594, 260], fill=(36, 29, 33, 255))  # laci
+    d.line([(478, 255), (486, 255)], fill=(120, 104, 88, 255)) # gagang laci
 
-    # Pintu balkon (kiri jauh)
-    d.rectangle([2, 54, 30, 206], fill=(48, 54, 72, 255))
-    d.rectangle([5, 58, 27, 202], fill=(18, 24, 40, 255))
-    d.rectangle([15, 58, 17, 202], fill=(48, 54, 72, 255))
-    d.ellipse([19, 124, 23, 128], fill=(188, 168, 96, 255))
+    # Pintu utama (kiri jauh) — kayu, menuju lorong apartemen
+    d.rectangle([2, 50, 34, 200], fill=(48, 39, 43, 255))
+    d.rectangle([5, 54, 31, 196], fill=(66, 53, 55, 255))
+    d.rectangle([5, 54, 31, 58], fill=(80, 66, 68, 255))
+    d.rectangle([9, 62, 27, 116], fill=(52, 41, 43, 255))       # panel atas
+    d.rectangle([9, 124, 27, 190], fill=(52, 41, 43, 255))      # panel bawah
+    d.ellipse([23, 122, 30, 130], fill=(190, 170, 98, 255))     # kenop kuningan
+    d.point([(25, 124)], fill=(226, 210, 142, 255))
 
     # --- Lapisan tembus cahaya (composite, bukan overwrite) ---
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
@@ -504,6 +509,96 @@ def make_balcony(art):
     print("  bg     -> balcony_skyline, balcony_railing, moon_dim")
 
 
+def make_corridor(art):
+    """Latar lorong apartemen (lantai 3-5). Pintu kamar, tangga, 2 pintu
+    tetangga, dan lift. Nomor lantai diisi controller lewat Label."""
+    W, H = 640, 360
+    img = Image.new("RGBA", (W, H), (17, 19, 28, 255))
+    d = ImageDraw.Draw(img)
+
+    # Langit-langit
+    d.rectangle([0, 0, W, 34], fill=(14, 16, 24, 255))
+    d.line([(0, 34), (W, 34)], fill=(30, 33, 44, 255))
+
+    # Dinding (gradien)
+    for y in range(34, 192):
+        t = (y - 34) / 158.0
+        c = (int(30 + 14 * t), int(33 + 15 * t), int(47 + 16 * t), 255)
+        d.line([(0, y), (W, y)], fill=c)
+    d.rectangle([0, 188, W, 196], fill=(42, 46, 60, 255))   # alas dinding
+    d.rectangle([0, 194, W, 196], fill=(30, 33, 44, 255))
+
+    # Lantai (ubin)
+    for y in range(196, H):
+        t = (y - 196) / 164.0
+        c = (int(32 + 16 * t), int(34 + 16 * t), int(44 + 18 * t), 255)
+        d.line([(0, y), (W, y)], fill=c)
+    for y in range(196, H, 24):
+        d.line([(0, y), (W, y)], fill=(21, 23, 31, 255))
+    for x in range(-40, W, 70):
+        d.line([(x, 196), (x + 22, H)], fill=(25, 27, 35, 255))
+
+    # Lampu langit-langit
+    for lx in (160, 480):
+        d.rectangle([lx - 44, 2, lx + 44, 12], fill=(52, 58, 76, 255))
+        d.rectangle([lx - 38, 4, lx + 38, 10], fill=(158, 168, 196, 255))
+
+    def wood_door(x0, x1):
+        d.rectangle([x0 - 4, 54, x1 + 4, 196], fill=(48, 39, 43, 255))
+        d.rectangle([x0, 58, x1, 192], fill=(66, 53, 55, 255))
+        d.rectangle([x0 + 3, 62, x1 - 3, 188], fill=(57, 46, 48, 255))
+        d.rectangle([x0 + 7, 68, x1 - 7, 116], fill=(48, 38, 40, 255))
+        d.rectangle([x0 + 7, 124, x1 - 7, 172], fill=(48, 38, 40, 255))
+        d.line([(x0 + 7, 68), (x1 - 7, 68)], fill=(80, 66, 68, 255))
+        d.line([(x0 + 7, 124), (x1 - 7, 124)], fill=(80, 66, 68, 255))
+        d.ellipse([x1 - 15, 122, x1 - 8, 130], fill=(190, 170, 98, 255))
+        d.point([(x1 - 13, 124)], fill=(226, 210, 142, 255))
+
+    wood_door(40, 104)                                     # pintu kamar Arutala
+    # Pintu tangga (logam, sempit)
+    d.rectangle([146, 56, 202, 196], fill=(44, 48, 62, 255))
+    d.rectangle([150, 60, 198, 192], fill=(58, 62, 78, 255))
+    d.rectangle([154, 64, 194, 84], fill=(72, 78, 96, 255))
+    d.line([(174, 64), (174, 84)], fill=(44, 48, 62, 255))
+    d.ellipse([186, 120, 195, 129], fill=(156, 164, 186, 255))
+    wood_door(250, 314)                                    # tetangga A
+    wood_door(350, 414)                                    # tetangga B
+    # Lift (kanan)
+    d.rectangle([494, 44, 608, 196], fill=(40, 44, 58, 255))
+    d.rectangle([498, 48, 604, 192], fill=(56, 60, 76, 255))
+    d.rectangle([502, 52, 549, 188], fill=(44, 48, 62, 255))
+    d.rectangle([553, 52, 600, 188], fill=(44, 48, 62, 255))
+    d.line([(549, 52), (549, 188)], fill=(28, 31, 41, 255))
+    d.line([(553, 52), (553, 188)], fill=(28, 31, 41, 255))
+    d.rectangle([606, 92, 620, 152], fill=(34, 38, 50, 255))   # panel tombol
+    for by in (100, 116, 132):
+        d.ellipse([609, by, 615, by + 6], fill=(150, 122, 84, 255))
+    d.point([(612, 103)], fill=(240, 212, 152, 255))
+    d.rectangle([536, 28, 568, 46], fill=(18, 22, 32, 255))    # display lantai
+    d.rectangle([537, 29, 567, 45], fill=(26, 34, 48, 255))
+    # Papan nomor lantai (frame; teks diisi Label)
+    d.rectangle([292, 34, 348, 56], fill=(38, 42, 56, 255))
+    d.rectangle([294, 36, 346, 54], fill=(52, 57, 74, 255))
+
+    # Kolam cahaya lampu (lapisan tembus pandang)
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(glow)
+    for lx in (160, 480):
+        gd.polygon([(lx - 30, 12), (lx + 30, 12), (lx + 90, H), (lx - 90, H)],
+                   fill=(80, 96, 140, 22))
+    img = Image.alpha_composite(img, glow)
+
+    # Vignette tepi
+    vig = Image.new("L", (W, H), 0)
+    vd = ImageDraw.Draw(vig)
+    for i in range(80):
+        vd.rectangle([i, i, W - i, H - i], outline=min(255, int(2.6 * (80 - i))))
+    dark = Image.new("RGBA", (W, H), (5, 6, 11, 255))
+    img = Image.composite(Image.alpha_composite(img, dark), img, vig)
+    img.save(os.path.join(art, "corridor_bg.png"))
+    print(f"  bg     -> corridor_bg.png {img.size}")
+
+
 # ----------------------------------------------------------------------------
 # Kilas balik — 4 potongan (160x120)
 # ----------------------------------------------------------------------------
@@ -574,6 +669,7 @@ if __name__ == "__main__":
     print("Background:")
     make_bedroom(art)
     make_balcony(art)
+    make_corridor(art)
     print("Kilas balik:")
     make_flashbacks(art)
     print("Selesai: semua aset v2 dihasilkan.")

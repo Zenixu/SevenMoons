@@ -1,0 +1,144 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/corridor_controller.gd" id="1_corr"]
+[ext_resource type="Texture2D" path="res://assets/art/corridor_bg.png" id="2_bg"]
+[ext_resource type="Script" path="res://scripts/systems/interactable.gd" id="3_inter"]
+[ext_resource type="Script" path="res://scripts/systems/player.gd" id="4_play"]
+[ext_resource type="PackedScene" path="res://scenes/ui/thought_box.tscn" id="5_thought"]
+[ext_resource type="PackedScene" path="res://scenes/ui/choice_menu.tscn" id="6_choice"]
+[ext_resource type="PackedScene" path="res://scenes/transitions/transition_layer.tscn" id="7_trans"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
+size = Vector2(640, 196)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_v"]
+size = Vector2(20, 360)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_bottom"]
+size = Vector2(640, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
+size = Vector2(44, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(16, 26)
+
+[node name="Corridor" type="Node2D"]
+script = ExtResource("1_corr")
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 640.0
+offset_bottom = 360.0
+texture = ExtResource("2_bg")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(320, 180)
+
+[node name="Walls" type="StaticBody2D" parent="."]
+
+[node name="WallTop" type="CollisionShape2D" parent="Walls"]
+position = Vector2(320, 98)
+shape = SubResource("RectangleShape2D_wall_top")
+
+[node name="WallBottom" type="CollisionShape2D" parent="Walls"]
+position = Vector2(320, 370)
+shape = SubResource("RectangleShape2D_wall_bottom")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Walls"]
+position = Vector2(10, 180)
+shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="WallRight" type="CollisionShape2D" parent="Walls"]
+position = Vector2(630, 180)
+shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="Interactables" type="Node2D" parent="."]
+
+[node name="RoomDoor" type="Area2D" parent="Interactables"]
+position = Vector2(72, 250)
+script = ExtResource("3_inter")
+object_id = "room_door"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/RoomDoor"]
+shape = SubResource("RectangleShape2D_inter")
+
+[node name="StairsDoor" type="Area2D" parent="Interactables"]
+position = Vector2(174, 250)
+script = ExtResource("3_inter")
+object_id = "stairs_door"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/StairsDoor"]
+shape = SubResource("RectangleShape2D_inter")
+
+[node name="NeighborA" type="Area2D" parent="Interactables"]
+position = Vector2(282, 250)
+script = ExtResource("3_inter")
+object_id = "neighbor_a"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/NeighborA"]
+shape = SubResource("RectangleShape2D_inter")
+
+[node name="NeighborB" type="Area2D" parent="Interactables"]
+position = Vector2(382, 250)
+script = ExtResource("3_inter")
+object_id = "neighbor_b"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/NeighborB"]
+shape = SubResource("RectangleShape2D_inter")
+
+[node name="Elevator" type="Area2D" parent="Interactables"]
+position = Vector2(551, 250)
+script = ExtResource("3_inter")
+object_id = "elevator"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/Elevator"]
+shape = SubResource("RectangleShape2D_inter")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(320, 265)
+script = ExtResource("4_play")
+
+[node name="Visual" type="AnimatedSprite2D" parent="Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("RectangleShape2D_player")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="FloorLabel" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -80.0
+offset_top = 36.0
+offset_right = 80.0
+offset_bottom = 58.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.82, 0.86, 0.94, 0.95)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 13
+text = "Lantai 3"
+horizontal_alignment = 1
+
+[node name="HintLabel" type="Label" parent="UI"]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -120.0
+offset_top = 58.0
+offset_right = 120.0
+offset_bottom = 76.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.68, 0.73, 0.84, 0.8)
+theme_override_font_sizes/font_size = 10
+text = ""
+horizontal_alignment = 1
+
+[node name="ThoughtBox" parent="UI" instance=ExtResource("5_thought")]
+
+[node name="ChoiceMenu" parent="UI" instance=ExtResource("6_choice")]
+
+[node name="TransitionLayer" parent="UI" instance=ExtResource("7_trans")]

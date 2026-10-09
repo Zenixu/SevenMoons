@@ -115,3 +115,21 @@ S08_MSG_3,dia belum selesai. dan aku rasa kamu juga belum.
 S08_INPUT_PROMPT,ketik apa saja...
 S08_MSG_REPLY,"nanti kamu tahu. sekarang, kita mulai dari yang kecil."
 S08_LOOP_LABEL,LOOP 2/7
+CORRIDOR_FLOOR,Lantai
+CORRIDOR_F3_INTRO,Pintu kamar tertutup di belakangku. Lorong ini terlalu terang untuk jam segini.
+CORRIDOR_F3_INTRO2,Hanya lampu dan pintu-pintu yang tidak akan kubuka.
+CORRIDOR_F4_ARRIVE,Lantai empat. Aku tidak ingat kenapa aku naik.
+CORRIDOR_F5_ARRIVE,Lantai lima. Di atas sudah tidak ada apa-apa lagi.
+CORRIDOR_ROOM_DOOR,Kamarku. Aku bisa kembali kalau mau.
+CORRIDOR_ROOM_OTHER,Bukan kamarku. Pintunya sama, tapi bukan milikku.
+CORRIDOR_STAIRS,Tangga darurat. Menuju bawah, ke lobi.
+CORRIDOR_STAIRS_RES,Turun, lalu naik lagi. Tidak ada yang menunggu di bawah.
+CORRIDOR_NEIGHBOR,Salah satu pintu tetangga. Ada suara TV pelan di dalam.
+CORRIDOR_NEIGHBOR_KNOCK,Aku mengetuk. Sekali. Dua kali.
+CORRIDOR_NEIGHBOR_KNOCK2,Tidak ada jawaban. Mungkin memang tidak seharusnya ada.
+CORRIDOR_LIFT,Lift. Tombolnya masih menyala.
+CORRIDOR_LIFT_UP,Naik satu lantai
+CORRIDOR_LIFT_DOWN,Turun satu lantai
+CORRIDOR_LIFT_STAY,Diam di sini
+CORRIDOR_LIFT_STAY_RES,Nggak ada tempat lain yang lebih baik.
+CORRIDOR_LIFT_MOVE,Pintu besi menutup. Lantai di bawah kakiku bergeser.
