@@ -14,6 +14,16 @@ config/name="SevenMoons"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameState="*res://scripts/autoload/game_state.gd"
+FlagStore="*res://scripts/autoload/flag_store.gd"
+SettingsManager="*res://scripts/autoload/settings_manager.gd"
+SaveSystem="*res://scripts/autoload/save_system.gd"
+AudioManager="*res://scripts/autoload/audio_manager.gd"
+LoopManager="*res://scripts/autoload/loop_manager.gd"
+DialogueRunner="*res://scripts/autoload/dialogue_runner.gd"
+
 [display]
 
 window/size/viewport_width=640
@@ -21,7 +31,6 @@ window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"
-window/stretch/aspect="keep"
 
 [rendering]
 

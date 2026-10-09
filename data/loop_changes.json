@@ -1,0 +1,51 @@
+{
+	"1": {
+		"light_level": "dark",
+		"rain_intensity": 1.0,
+		"moon_visibility": 0.0,
+		"balcony_scene_length": "full",
+		"clock_ticking": true
+	},
+	"2": {
+		"light_level": "dim",
+		"rain_intensity": 0.85,
+		"moon_visibility": 0.15,
+		"balcony_scene_length": "shorter",
+		"clock_ticking": true
+	},
+	"3": {
+		"light_level": "dim",
+		"rain_intensity": 0.7,
+		"moon_visibility": 0.3,
+		"balcony_scene_length": "shorter",
+		"clock_ticking": false
+	},
+	"4": {
+		"light_level": "warm_dim",
+		"rain_intensity": 0.5,
+		"moon_visibility": 0.5,
+		"balcony_scene_length": "short",
+		"clock_ticking": false
+	},
+	"5": {
+		"light_level": "soft",
+		"rain_intensity": 0.3,
+		"moon_visibility": 0.7,
+		"balcony_scene_length": "brief",
+		"clock_ticking": false
+	},
+	"6": {
+		"light_level": "gentle",
+		"rain_intensity": 0.1,
+		"moon_visibility": 0.9,
+		"balcony_scene_length": "minimal",
+		"clock_ticking": false
+	},
+	"7": {
+		"light_level": "moonlit",
+		"rain_intensity": 0.0,
+		"moon_visibility": 1.0,
+		"balcony_choice_removed": true,
+		"clock_ticking": false
+	}
+}

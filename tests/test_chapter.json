@@ -1,0 +1,24 @@
+{
+	"chapter": 99,
+	"loop": 1,
+	"scenes": {
+		"TEST_01": {
+			"steps": [
+				{
+					"pause_after": 0.0,
+					"text": "TEST_NARRATION",
+					"type": "narration"
+				},
+				{
+					"flag": "test_narration_done",
+					"type": "set_flag",
+					"value": true
+				},
+				{
+					"duration": 0.1,
+					"type": "pause"
+				}
+			]
+		}
+	}
+}

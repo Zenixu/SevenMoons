@@ -3,20 +3,20 @@
 Kerjakan berurutan. Centang `[x]` saat selesai dan lolos kriteria. Rujuk AGENTS.md, SAFETY_AND_CONTENT.md.
 
 ## FASE 0 — Setup Proyek
-- [ ] 0.1 Buat proyek Godot 4.x, atur resolusi dasar pixel-perfect (mis. 640x360, scaling integer, filter nearest).
-- [ ] 0.2 Buat struktur folder sesuai GODOT_ARCHITECTURE.md.
-- [ ] 0.3 Salin file md ke `docs/`.
-- [ ] 0.4 Inisialisasi git, `.gitignore` Godot.
-- [ ] 0.5 Putuskan: sistem dialog JSON sendiri (rekomendasi) vs plugin. Tulis di `docs/DECISIONS.md`.
+- [x] 0.1 Buat proyek Godot 4.x, atur resolusi dasar pixel-perfect (mis. 640x360, scaling integer, filter nearest).
+- [x] 0.2 Buat struktur folder sesuai GODOT_ARCHITECTURE.md.
+- [x] 0.3 Salin file md ke `docs/`.
+- [x] 0.4 Inisialisasi git, `.gitignore` Godot.
+- [x] 0.5 Putuskan: sistem dialog JSON sendiri (rekomendasi) vs plugin. Tulis di `docs/DECISIONS.md`.
 **Selesai jika:** proyek terbuka tanpa error dan menjalankan scene kosong.
 
 ## FASE 1 — Fondasi Sistem (autoload)
-- [ ] 1.1 `FlagStore` + uji.
-- [ ] 1.2 `SettingsManager` (kecepatan teks, volume, lewati adegan sensitif, tanpa tekanan waktu).
-- [ ] 1.3 `SaveSystem` (JSON di `user://saves/`).
-- [ ] 1.4 `AudioManager` (BGM, SFX, ambience terpisah, fade).
-- [ ] 1.5 `LoopManager` (current_loop, loop_changes.json).
-- [ ] 1.6 `DialogueRunner` membaca `chapter_XX.json` dan menjalankan step.
+- [x] 1.1 `FlagStore` + uji.
+- [x] 1.2 `SettingsManager` (kecepatan teks, volume, lewati adegan sensitif, tanpa tekanan waktu).
+- [x] 1.3 `SaveSystem` (JSON di `user://saves/`).
+- [x] 1.4 `AudioManager` (BGM, SFX, ambience terpisah, fade).
+- [x] 1.5 `LoopManager` (current_loop, loop_changes.json).
+- [x] 1.6 `DialogueRunner` membaca `chapter_XX.json` dan menjalankan step.
 **Selesai jika:** tiap autoload punya scene uji yang lulus.
 
 ## FASE 2 — UI Inti
