@@ -47,6 +47,8 @@ Dipakai hemat dan selalu bermakna:
 - **Jam 02:47**: waktu yang selalu sama saat loop mulai.
 - **Lampu**: mati di loop 1, makin terang tiap loop.
 - **Tombol "Lompat"**: satu-satunya pilihan di loop 1, makin jarang, hilang di loop 7.
+- **Kulkas & wastafel**: penanda "hidup sehari-hari" yang tersisa di kamar; diperiksa untuk
+  merasakan rutinitas yang kini terasa berat (objek interaktif baru, lihat CHAPTER_01.md O7/O8).
 
 ## 8. Cakupan Rilis Pertama
 - Target durasi: 3-5 jam.

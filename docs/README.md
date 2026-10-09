@@ -31,5 +31,12 @@ Arutala, 18 tahun, terjebak dalam 7 loop yang dimulai dari titik terendahnya. Ti
 ## Status
 - [x] Konsep dan struktur
 - [x] Naskah Bab 1 (Loop 1)
-- [ ] Prototipe vertical slice
+- [x] Fase 0-5: vertical slice Bab 1 dapat dimainkan (intro monolog, kamar 8 objek, lorong + lift, rooftop lantai 5)
+- [x] Suite uji otomatis 13/13 LULUS
+- [ ] Uji pemain & tinjauan sensitif (Fase 6)
 - [ ] Bab 2-7
+
+> **Pembaruan terakhir (Chapter 1):** redesign karakter (hoodie + rambut ala Sasuke),
+> kamar & lift dirapikan, lantai 5 = rooftop langsung, intro monolog saat mata tertutup,
+> SFX ketikan dialog, hujan berlapis (normal/quiet), folder `assets/` ditata ulang.
+> Lihat `DECISIONS.md` D003-D006.

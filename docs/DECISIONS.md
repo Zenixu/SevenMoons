@@ -63,3 +63,89 @@ Unbound** (moody, outline tebal, palet terbatas).
 ### Konsekuensi
 - `scripts/generate_pixel_art.py` (v1) usang; aset v2 menggantikannya.
 - Semua aset tetap dapat diregenerasi secara deterministik (seed tetap).
+
+## D003 — Aset Seni v2.1: Redesign Karakter & Latar, Folder Aset Dirapikan
+
+**Tanggal:** 2026-10-09
+**Status:** Diputuskan
+
+### Konteks
+Umpan balik pemain: proporsi karakter vs ruangan/pintu tidak cocok (pintu raksasa,
+karakter kecil), desain karakter terlalu polos, dan folder `assets/` berantakan
+(semua gambar menumpuk di `assets/art/`).
+
+### Keputusan
+- **Karakter** didesain ulang: memakai **hoodie** + **rambut spike biru-hitam
+  (mirip Sasuke)**. Frame diperbesar **24x40 -> 32x48** (sheet 4 kolom x 6 baris).
+- **Pintu** diperkecil (tinggi ~64 px) agar proporsional terhadap tinggi karakter.
+- **Folder aset ditata ulang**: `assets/{characters,backgrounds,props,ui,flashbacks}`
+  (plus `audio/`, `shaders/`, `fonts/`). `assets/art/` dihapus; semua referensi
+  `res://assets/art/*` diganti ke folder baru.
+
+### Konsekuensi
+- `player.gd`: `FRAME_W/FRAME_H = 32/48`, `SHEET_PATH` baru.
+- Semua `.tscn`/`.gd` merujuk folder baru. Regenerasi: `/usr/bin/python3 scripts/gen_art_v2.py`.
+
+## D004 — Alur Lantai 5 = Rooftop Langsung + Scene Lift Interior
+
+**Tanggal:** 2026-10-09
+**Status:** Diputuskan
+
+### Konteks
+Semula lantai 5 memunculkan **lorong dengan pintu kamar lagi**, dan menekan lift
+langsung memindah lantai. Pemain ingin: lantai 5 = **atap dengan pager** langsung,
+dan naik lantai lewat **interior lift** dulu (masuk -> pilih lantai).
+
+### Keputusan
+- Scene baru `scenes/lift/lift.tscn` + `scripts/systems/lift_controller.gd`.
+  Pemain **masuk ke dalam lift**, lalu memilih lantai (3 / 4 / 5) dari **peta lantai**
+  di dinding.
+- Interior lift dibuat **sempit** (kotak lift di tengah, sisi kiri/kanan dibiarkan
+  kosong gelap) agar terasa seperti lift sungguhan.
+- Lantai 5 membawa pemain **langsung ke `balcony.tscn` (rooftop)** — langit malam,
+  bulan, skyline, hujan, dan **pager/railing** memanjang. Tidak ada pintu kamar.
+- `corridor_controller.gd`: `FLOOR_MIN=3`, `FLOOR_MAX=4`; lift -> `lift.tscn`.
+  `lift_controller.gd`: `ROOF_FLOOR=5`, `ROOFTOP_SCENE=balcony.tscn`.
+
+### Konsekuensi
+- Kunci lokalisasi `ROOFTOP_ARRIVE*` menggantikan `CORRIDOR_F5_ARRIVE*`.
+- Flag baru: `rooftop_from_lift`, `rooftop_arrived`, `corridor_floor`.
+
+## D005 — Monolog Pembuka Dimainkan Saat Mata Tertutup (Intro)
+
+**Tanggal:** 2026-10-09
+**Status:** Diputuskan
+
+### Konteks
+Pemain ingin dialog pembuka panjang muncul **di awal game saat pandangan masih
+gelap (mata tertutup)**, diketik perlahan, dan **dipotong per bagian** — bukan satu
+blok panjang yang tampil sekaligus.
+
+### Keputusan
+- Monolog dipindah ke `scenes/intro/intro_cutscene.tscn` (bukan di kamar).
+- **Fase 1 (mata tertutup):** layar hitam; monolog Arutala diketik huruf demi huruf,
+  **6 bagian** berurutan (kunci `S01_INTRO_1..6`), tiap bagian diberi jeda.
+- **Fase 2 (membuka mata):** tirai hitam memudar, hujan mengeras, panel komik muncul.
+- `MonologueLabel` digambar **di atas** `FadeRect` (kalau tidak, teks tertutup kotak
+  hitam dan layar tampak hitam tanpa teks — sudah diperbaiki + assertion regresi).
+
+### Konsekuensi
+- Kecepatan ketik menghormati setting **Kecepatan Teks** (aksesibilitas).
+
+## D006 — Audio: Hujan Berlapis + SFX Ketikan Dialog
+
+**Tanggal:** 2026-10-09
+**Status:** Diputuskan
+
+### Konteks
+Hujan terasa terlalu berisik; pemain ingin volume hujan turun, hujan lebih pelan
+saat mata tertutup & di dalam lift, dan ingin ada **bunyi ketikan saat dialog**.
+
+### Keputusan
+- Gerimis dinormalisasi `0.34 -> 0.16`; `AMB_RAIN_DB -4.0 -> -6.0`.
+- Lapisan hujan punya level: **normal** (`AMB_RAIN_DB`) dan **pelan/quiet**
+  (`AMB_RAIN_QUIET_DB = -15.0`). Dipakai `play_rain_quiet()` saat mata tertutup dan
+  di dalam lift; `set_rain_level()` mengeraskan saat "membuka mata".
+- SFX baru `type_tick.wav` (0.055s) diputar saat teks dialog/monolog/caption diketik
+  (`AudioManager.play_type_tick()`, volume 0 dB). `thought_box.gd` & intro memicunya
+  tiap ~0.045-0.05s per 2 karakter.

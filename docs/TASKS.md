@@ -46,15 +46,22 @@ Kerjakan berurutan. Centang `[x]` saat selesai dan lolos kriteria. Rujuk AGENTS.
 **Selesai jika:** Bab 1 berjalan penuh dari S00 sampai S08 dan lolos checklist CHAPTER_01.md.
 
 ## FASE 5 — Audio dan Polish Bab 1
-- [ ] 5.1 Pasang aset audio (lihat AUDIO_DESIGN.md bagian 7).
-- [ ] 5.2 Atur timing audio sesuai peta bagian 6.
+- [x] 5.1 Pasang aset audio (lihat AUDIO_DESIGN.md bagian 7).
+- [x] 5.2 Atur timing audio sesuai peta bagian 6.
 - [x] 5.3 Pixel art final untuk kamar, balkon, bulan, siluet, karakter (spritesheet 4 arah), dan lorong apartemen.
 - [x] 5.4 Penyetelan jeda dan tempo dengan uji manual (temuan pemain: tembok/furnitur bocor + pintu salah tempat — diperbaiki).
 - [x] 5.5 Aksesibilitas: font besar, kontras tinggi, batas kedip.
 - [x] 5.6 Lorong apartemen + lift antar lantai (3→4→5) dengan dialog per lantai, pintu tetangga terkunci, tangga buntu.
+- [x] 5.7 Karakter didesain ulang (hoodie + rambut spike ala Sasuke), frame 32x48; proporsi pintu/ruangan disesuaikan.
+- [x] 5.8 Folder `assets/` ditata ulang (characters/backgrounds/props/ui/flashbacks); `assets/art/` dihapus.
+- [x] 5.9 Kamar dirapikan & diperkecil: kasur+meja di kanan, kulkas+wastafel di kiri dekat pintu, jendela lebih ke atas, satu jam saja.
+- [x] 5.10 Lift: pemain masuk interior lift (sempit) lalu pilih lantai dari peta; lantai 5 = rooftop langsung (bukan lorong berpintu).
+- [x] 5.11 Audio: hujan dikecilkan + level quiet (mata tertutup & dalam lift); SFX ketikan saat dialog/monolog.
+- [x] 5.12 Intro: monolog pembuka saat mata tertutup, diketik perlahan & dipotong per bagian.
 **Selesai jika:** vertical slice layak dijadikan trailer/demo.
 
 ## FASE 6 — Uji dan Tinjauan
+- [x] 6.0 Suite uji otomatis 13/13 LULUS (flag, settings, save, audio, loop, dialogue, ui, intro, corridor, reachability, chapter1 scenes/full).
 - [ ] 6.1 Uji dengan 5-10 pemain, kumpulkan masukan (terutama adegan sensitif).
 - [ ] 6.2 **Tinjauan naskah oleh psikolog/konselor/penyintas.** Wajib sebelum rilis demo.
 - [ ] 6.3 Revisi berdasarkan masukan.

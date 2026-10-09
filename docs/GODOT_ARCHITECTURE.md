@@ -7,11 +7,16 @@ Godot 4.x, GDScript bertipe. Prinsip: **data terpisah dari kode**, sistem saling
 res://
 ├── project.godot
 ├── assets/
-│   ├── art/            (sprite, tileset, UI)
+│   ├── characters/     (player_sheet.png — spritesheet 32x48)
+│   ├── backgrounds/    (bedroom_bg, corridor_bg, rooftop_bg, lift_bg, ...)
+│   ├── props/          (phone, photo_frame, tea_cup, mirror, wall_clock, door, silhouette_figure)
+│   ├── ui/             (intro_panel_1..4)
+│   ├── flashbacks/     (fb_1..4)
 │   ├── audio/
 │   │   ├── bgm/
-│   │   ├── sfx/
-│   │   └── ambience/
+│   │   ├── sfx/        (type_tick, chat_type, phone_vibrate, clock_chime)
+│   │   └── ambience/   (rain_gentle_loop, fridge_hum_loop, clock_tick_loop)
+│   ├── shaders/        (wake_blur.gdshader)
 │   └── fonts/
 ├── data/
 │   ├── chapters/       (chapter_01.json, ...)
@@ -19,17 +24,25 @@ res://
 │   └── localization/   (id.csv, en.csv)
 ├── scenes/
 │   ├── main_menu/
+│   ├── intro/          (intro_cutscene.tscn — panel komik + monolog mata-tertutup)
 │   ├── bedroom/
-│   ├── balcony/
-│   ├── ui/             (dialogue_box, chat_bubble, choice_menu, settings, help)
+│   ├── corridor/       (lorong apartemen, lantai 3-4)
+│   ├── lift/           (lift.tscn — interior lift, pilih lantai)
+│   ├── balcony/        (rooftop lantai 5)
+│   ├── ui/             (thought_box, chat_ui, choice_menu, settings, help)
 │   └── transitions/
 ├── scripts/
-│   ├── autoload/       (GameState, LoopManager, FlagStore, SaveSystem, AudioManager, SettingsManager)
-│   ├── systems/        (ChatSystem, HesitantChoice, Interactable, MetaLayer)
-│   └── ui/
+│   ├── autoload/       (GameState, LoopManager, FlagStore, SaveSystem, AudioManager, SettingsManager, DialogueRunner)
+│   ├── systems/        (player, interactable, camera_follow, bedroom_controller, corridor_controller, lift_controller, balcony_controller, intro_cutscene)
+│   ├── ui/
+│   ├── gen_art_v2.py       (generator pixel art v2)
+│   └── generate_audio.py   (generator audio)
 ├── tests/
 └── docs/               (file md proyek ini)
 ```
+
+> **Catatan folder aset (D003):** `assets/art/` sudah dihapus; semua gambar kini
+> dipecah ke `characters/`, `backgrounds/`, `props/`, `ui/`, `flashbacks/`.
 
 ## 2. Autoload (Singleton)
 | Nama | Tugas |
@@ -87,15 +100,22 @@ Konversikan CHAPTER_01.md ke `data/chapters/chapter_01.json`.
 ## 5. Scene Utama
 - `main_menu.tscn`: Mulai, Pengaturan, Bantuan, Keluar.
 - `content_warning.tscn`: tampil sebelum game.
-- `bedroom.tscn`: kamar, 6 interactable, kamera tetap.
-- `balcony.tscn`: balkon, siluet, tombol pilihan.
-- `ui/dialogue_box.tscn`, `ui/chat_ui.tscn`, `ui/choice_menu.tscn`, `ui/help_screen.tscn`.
+- `intro/intro_cutscene.tscn`: panel komik pembuka + **monolog saat mata tertutup** (diketik perlahan, dipotong per bagian). Mengarah ke `bedroom.tscn`.
+- `bedroom.tscn`: kamar (640x360), **8 interactable** (phone, photo, tea, mirror, clock, door, fridge, sink), kamera follow horizontal.
+- `corridor/corridor.tscn`: lorong apartemen (1120x360), lantai 3-4, lift, pintu tetangga, tangga buntu.
+- `lift/lift.tscn`: **interior lift sempit**; pemain memilih lantai (3/4/5) dari peta lantai.
+- `balcony/balcony.tscn`: **rooftop lantai 5** — Arutala berjalan ke tengah lalu berhenti, dialog, lalu S04-S06.
+- `ui/thought_box.tscn`, `ui/chat_ui.tscn`, `ui/choice_menu.tscn`, `ui/help_screen.tscn`.
 
 ## 6. Konvensi Sinyal
 - `DialogueRunner.step_started(step)`, `step_finished`.
 - `FlagStore.flag_changed(name, value)`.
 - `LoopManager.loop_started(n)`, `loop_ended(n)`.
 - `AudioManager.leitmotif_stage_changed(stage)`.
+- `Interactable.player_interacted(object_id)`.
+- `ThoughtBox.text_completed`, `ThoughtBox.text_erased`.
+- `ChoiceMenu.choice_made(idx)`.
+- `PlayerCharacter.auto_walk_to(target, speed)` — berjalan otomatis untuk adegan terarah.
 
 ## 7. Aset Placeholder
 Sebelum art final, gunakan kotak warna dan font sistem agar sistem dapat diuji. Tandai `placeholder_` pada nama file.

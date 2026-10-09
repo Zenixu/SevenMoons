@@ -49,7 +49,15 @@ Spesifikasi sistem. Tiap sistem punya tujuan emosional, perilaku, dan kriteria p
 
 ## 7. Sistem Interaksi Objek (Interactable)
 - Objek punya: `id`, `prompt_text`, `on_interact` (dialog/pilihan), `flag_on_inspect`.
-- Interaksi dengan tombol "Aksi". Efek highlight halus (bukan menyilaukan).
+- Interaksi dengan tombol "Aksi" (default `E`). Efek highlight halus (bukan menyilaukan).
+- Kamar Bab 1 punya **8 objek**: phone, photo, tea, mirror, clock, door, **fridge**, **sink**.
+- Area interaksi diperbesar & digeser ke zona jalan agar interaksi muncul saat pemain
+  benar-benar dekat (bukan terlalu jauh).
+
+## 7b. Gerak Terarah (Scripted Walk)
+- `PlayerCharacter.auto_walk_to(target, speed)` — berjalan otomatis ke titik tujuan,
+  memainkan animasi jalan lalu berhenti. Dipakai di adegan terarah, mis. saat tiba di
+  rooftop: Arutala berjalan ke tengah atap lalu berhenti sebelum dialog dimulai.
 
 ## 8. Sistem Save/Load
 - Slot otomatis di awal tiap scene dan akhir tiap loop.

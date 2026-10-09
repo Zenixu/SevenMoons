@@ -22,27 +22,34 @@ Notasi:
 
 ---
 
-## S01 — Bangun
-**Latar:** Kamar apartemen, gelap. Cahaya biru kelabu dari jendela dan balkon. Suara gerimis.
-**[BGM]** Tidak ada musik. Hanya ambience: hujan halus, dengung kulkas jauh, jam dinding.
-**[VFX]** Layar mulai hitam, fade-in sangat lambat (4s). Piksel noise tipis.
+## S01 — Bangun (opening: monolog saat mata tertutup)
+**Latar:** Layar hitam total — mata Arutala masih tertutup. Suara gerimis pelan.
+**[BGM]** Tidak ada musik. Ambience hujan **diredam** (level quiet) — dengung kulkas & jam belum aktif.
+**[VFX]** Layar hitam penuh. Monolog muncul di tengah, **diketik huruf demi huruf**, **dipotong per bagian** (dengan bunyi ketikan). Tiap bagian diberi jeda.
+**[AUDIO]** SFX ketikan (`type_tick`) tiap beberapa karakter.
 
-[NARASI] ...
-(jeda 2s)
-[NARASI] Aku bangun.
-(jeda 2s)
-[NARASI] Atau mungkin tidak pernah benar-benar tidur.
-**[UI]** Muncul jam kecil di pojok: `02:47`. (Flag tampilan jam: `ui_clock_visible`)
-[ARU] Hujan lagi.
-(jeda 1.5s)
-[ARU] Selalu hujan kalau aku nggak ingin ada suara.
+**Monolog (mata tertutup) — 6 bagian, kunci `S01_INTRO_1..6`:**
+1. [ARU] Ah, sudah malam keberapa ini?
+2. [ARU] Rasanya semakin hari rasa kesepian ini semakin menusuk diriku. Aku tenggelam dalam segala kesunyian.
+3. [ARU] Suara jarum jam, rintikan gerimis yang sangat tenang... aku sendiri menyukai kesunyian ini.
+4. [ARU] Namun rasanya kosong dan menakutkan. Apakah aku akan terbangun lagi di malam ini?
+5. [ARU] Sudah 4 tahun sejak semua hal itu terjadi. Aku bingung dengan apa yang akan aku lakukan.
+6. [ARU] Rasanya setiap kali aku bergerak... aku merasa lelah. Haruskah aku mengakhiri malam ini saja?
+
+**[VFX]** Setelah monolog selesai: tirai hitam memudar perlahan ("membuka mata"), hujan mengeras ke level normal. Panel komik intro (S00) tampil.
+**[UI]** Muncul jam kecil di pojok: `01:00`. (Flag tampilan jam: `ui_clock_visible`)
+[NARASI] Gerimis di kaca. Jam di dinding berhenti di angka satu.
+[NARASI] Aku harus tahu sudah jam berapa.
 **[UI]** Kontrol gerak aktif. Pemain boleh menggerakkan Arutala di kamar.
 -> S02
+
+*(Catatan: intro cutscene komik S00 + monolog mata-tertutup berada di `scenes/intro/intro_cutscene.tscn`; kamar di `bedroom.tscn`.)*
 
 ---
 
 ## S02 — Kamar (eksplorasi terbatas)
-**Aturan:** Kamar kecil. Ada 6 objek interaktif. Pemain tidak wajib memeriksa semuanya, tapi minimal 3 sebelum balkon bisa dipilih. Tiap objek memberi satu potongan suasana dan menyetel flag untuk loop berikutnya.
+**Aturan:** Kamar kecil (satu layar 640x360). Ada **8 objek interaktif** (6 lama + **kulkas** & **wastafel** baru). Pemain tidak wajib memeriksa semuanya, tapi minimal 3 sebelum balkon bisa dipilih. Tiap objek memberi satu potongan suasana dan menyetel flag untuk loop berikutnya.
+**Tata ruang (kiri ke kanan):** wastafel -> pintu -> kulkas -> cermin -> kasur -> jendela balkon (agak ke atas) -> meja. Kasur & meja di sisi kanan, dekat.
 **Pintu apartemen:** Terkunci secara naratif. Interaksi menghasilkan teks (lihat O6).
 
 ### O1 — Ponsel di meja
@@ -104,6 +111,20 @@ Notasi:
 
 ---
 
+### O7 — Kulkas di samping pintu
+**Aksi:** Periksa
+[NARASI] Kulkas itu berdehem pelan. Isinya cuma satu botol air yang belum juga habis.
+[ARU] Dulu ada yang selalu bilang supaya aku makan teratur. Sekarang aku lupa kapan terakhir masak.
+**{checked_fridge = true}**
+
+### O8 — Wastafel di ujung kiri
+**Aksi:** Periksa
+[NARASI] Keran menetes satu-satu. Cermin di atasnya berkabut, tidak ada yang dilihat.
+[ARU] Mencuci muka pun terasa seperti tugas yang terlalu berat untuk malam ini.
+**{checked_sink = true}**
+
+---
+
 ## S03 — Percakapan dengan Diri Sendiri (monolog interaktif)
 **Pemicu:** Arutala duduk di tepi kasur/lantai sebelum ke balkon. Layar redup.
 **[BGM]** Masuk tipis, hanya 4 nada piano jauh dari leitmotif (lihat AUDIO_DESIGN.md, "Tema Bulan - fragmen A"), sangat pelan, bergema.
@@ -148,8 +169,23 @@ Format: ada **Suara Dalam** (pikiran yang menekan) dan **Aku** (Arutala). Pemain
 
 ---
 
-## S04 — Menuju Balkon
-**Latar:** Pintu geser balkon. Hujan terdengar jelas. Lantai dingin.
+## S04a — Tiba di Rooftop (lantai 5): Berjalan ke Tengah lalu Berhenti
+**Latar:** Atap gedung (rooftop) — langit malam, bulan di balik awan, skyline, hujan, dan **pager/railing** memanjang. **Tidak ada pintu kamar**; lift membawa Arutala langsung ke atap.
+**Aturan:** Setelah naik lift ke lantai 5, Arutala **berjalan otomatis** ke tengah atap, **berhenti sejenak**, baru dialog perenungan dimulai (bukan langsung cutscene terjun).
+**[AUDIO]** Hujan level normal. Ambience kulkas/jam mati (di luar ruangan).
+
+**[WALK]** Arutala berjalan dari sisi kiri ke tengah atap. Lalu berhenti.
+1. [ARU] Apakah ini pilihan yang tepat? Apakah semua ini adalah jawaban dari segalanya? Apa aku akan bebas dengan semua hal yang sudah kurenggut, sekaligus rasa bersalah yang kian hari semakin terasa di diriku?
+2. [ARU] ...
+3. [ARU] ...mungkin iya.
+
+*(Kunci lokalisasi: `ROOFTOP_WALK_1..3`. Flag: `rooftop_from_lift`, `rooftop_arrived`.)*
+-> S04
+
+---
+
+## S04 — Menuju Balkon (bulan)
+**Latar:** Tepi atap, dekat pager. Hujan terdengar jelas. Lantai dingin.
 **[BGM]** Tidak ada.
 **[VFX]** Warna layar makin pucat. Tepi layar menggelap (vignette).
 [NARASI] Gerimis menempel di kaca.
@@ -180,9 +216,9 @@ Format: ada **Suara Dalam** (pikiran yang menekan) dan **Aku** (Arutala). Pemain
 ---
 
 ## S06 — Lompat (sensitif)
-**Aturan keras:** tidak ada tampilan jatuh, benturan, atau akibat fisik. Tidak ada detail cara.
+**Aturan keras:** tidak ada tampilan jatuh, benturan, atau akibat fisik. Tidak ada detail cara. Adegan memakai karakter berjalan ke tepi (bukan siluet terpisah).
 **[BGM]** Fragmen A terputus.
-**[VFX]** Siluet Arutala bergerak melewati batas sisi kanan layar, lalu layar langsung menjadi hitam total.
+**[VFX]** Arutala (karakter yang dikendalikan) **berjalan ke tepi pager**, lalu layar langsung menjadi hitam total. Tidak ada tampilan jatuh.
 **[SFX]** Suara hujan terdengar sedetik, lalu seluruh suara dipotong.
 (jeda 3s hitam total, tanpa suara)
 **[SFX]** Satu denting jam tunggal, jauh.
@@ -252,15 +288,21 @@ Fade out.
 | noticed_tea | Loop 7 (seseorang menyeduhkan teh) |
 | talked_to_mirror | Loop 6 |
 | tried_door | Loop 2 (pintu jadi pusat cerita) |
+| checked_fridge, checked_sink | Detail kamar (objek baru O7/O8) |
 | heard_phone_buzz | Loop 2-3 |
 | saw_moon_hidden | Loop 7 (purnama) |
 | waited_long | Loop 2 (suara misterius menyinggung "kamu menunggu lama") |
 | received_mystery_message | Seluruh game |
+| rooftop_from_lift, rooftop_arrived | Kedatangan di atap (lantai 5) |
+| corridor_floor, corridor_from_elevator | Navigasi lift antar lantai |
 
 ## Checklist Penerimaan Bab 1
-- [ ] Content warning dan opsi lewati berfungsi
-- [ ] S06 hanya siluet lalu hitam, tanpa adegan jatuh
-- [ ] Semua flag tersimpan dan terbaca di Loop 2
-- [ ] Jeda dan waktu sesuai naskah
-- [ ] Hook S08 muncul dengan indikator mengetik
+- [x] Content warning dan opsi lewati berfungsi
+- [x] S06 berjalan ke tepi lalu hitam, tanpa adegan jatuh
+- [x] Semua flag tersimpan dan terbaca di Loop 2
+- [x] Jeda dan waktu sesuai naskah
+- [x] Hook S08 muncul dengan indikator mengetik
 - [ ] Bab berdurasi 15-20 menit saat dimainkan normal
+- [x] Intro: monolog pembuka saat mata tertutup, diketik perlahan, dipotong per bagian
+- [x] Lift: masuk ke dalam lift, pilih lantai dari peta; lantai 5 = rooftop langsung
+- [x] SFX ketikan dialog aktif; hujan diredam saat mata tertutup & di dalam lift
