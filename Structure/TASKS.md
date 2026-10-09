@@ -20,11 +20,11 @@ Kerjakan berurutan. Centang `[x]` saat selesai dan lolos kriteria. Rujuk AGENTS.
 **Selesai jika:** tiap autoload punya scene uji yang lulus.
 
 ## FASE 2 — UI Inti
-- [ ] 2.1 Kotak Pikiran (teks muncul pelan, bisa terhapus/diganti).
-- [ ] 2.2 Gelembung Chat dengan indikator mengetik.
-- [ ] 2.3 Menu pilihan (konvergen dan tertunda/ragu).
-- [ ] 2.4 Layar content warning.
-- [ ] 2.5 Menu utama, Pengaturan, **Menu Bantuan** (teks dari SAFETY_AND_CONTENT.md bagian 5).
+- [x] 2.1 Kotak Pikiran (teks muncul pelan, bisa terhapus/diganti).
+- [x] 2.2 Gelembung Chat dengan indikator mengetik.
+- [x] 2.3 Menu pilihan (konvergen dan tertunda/ragu).
+- [x] 2.4 Layar content warning.
+- [x] 2.5 Menu utama, Pengaturan, **Menu Bantuan** (teks dari SAFETY_AND_CONTENT.md bagian 5).
 **Selesai jika:** semua UI dapat dipanggil dari scene uji dan responsif pada resolusi pixel.
 
 ## FASE 3 — Scene Bab 1

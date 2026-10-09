@@ -1,0 +1,188 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/settings_menu.gd" id="1_settings"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.09, 0.1, 0.13, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.4, 0.52, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="SettingsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_settings")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.02, 0.04, 0.75)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(440, 270)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Pengaturan"
+horizontal_alignment = 1
+
+[node name="TabContainer" type="TabContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Audio" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+metadata/_tab_index = 0
+
+[node name="BgmRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/BgmRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Volume Musik"
+
+[node name="BgmSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/BgmRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="SfxRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/SfxRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Volume Efek Suara"
+
+[node name="SfxSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/SfxRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="AmbRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AmbRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Volume Ambience"
+
+[node name="AmbSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AmbRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="Gameplay" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+metadata/_tab_index = 1
+
+[node name="TextSpeedRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Gameplay"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Gameplay/TextSpeedRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Kecepatan Teks"
+
+[node name="TextSpeedSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Gameplay/TextSpeedRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.5
+max_value = 2.0
+step = 0.1
+value = 1.0
+
+[node name="SkipSensitiveCheck" type="CheckBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Gameplay"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Lewati Adegan Sensitif"
+
+[node name="NoTimePressureCheck" type="CheckBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/Gameplay"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Tanpa Tekanan Waktu"
+
+[node name="A11y" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+metadata/_tab_index = 2
+
+[node name="HighContrastCheck" type="CheckBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/A11y"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Kontras Tinggi"
+
+[node name="ReduceFlashCheck" type="CheckBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TabContainer/A11y"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Kurangi Kilatan Cahaya"
+
+[node name="ButtonRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 2
+
+[node name="ResetButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonRow"]
+custom_minimum_size = Vector2(120, 26)
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Kembalikan Awal"
+
+[node name="CloseButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonRow"]
+custom_minimum_size = Vector2(80, 26)
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Tutup"

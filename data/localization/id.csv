@@ -1,0 +1,35 @@
+key,id
+UI_CONTINUE,Lanjutkan
+UI_BACK,Kembali
+UI_CLOSE,Tutup
+UI_START,Mulai
+UI_SETTINGS,Pengaturan
+UI_HELP,Bantuan
+UI_QUIT,Keluar
+UI_CONFIRM,Konfirmasi
+CW_TITLE,Peringatan Konten
+CW_DESC,"Game ini membahas depresi, rasa bersalah, kecemasan sosial, dan pikiran untuk mengakhiri hidup. Ada adegan yang menyiratkan percobaan bunuh diri (tidak ditampilkan secara grafis).\n\nKalau kamu sedang berada di masa sulit, kamu boleh berhenti kapan saja. Kamu tidak harus memainkan ini sekarang."
+CW_BTN_PROCEED,"Aku mengerti, lanjutkan"
+CW_BTN_HELP,"Lihat bantuan"
+CW_BTN_QUIT,Keluar
+HELP_TITLE,Sumber Bantuan
+HELP_SUBTITLE,"Kalau kamu sedang memikirkan untuk menyakiti diri sendiri, kamu tidak sendirian dan kamu layak dibantu."
+HELP_ITEM_1,"• Kalau dalam bahaya langsung: hubungi layanan darurat setempat (112) atau pergi ke IGD terdekat."
+HELP_ITEM_2,"• Layanan kesehatan jiwa Kemenkes: telepon 119, lalu tekan 8."
+HELP_ITEM_3,"• Into The Light Indonesia: intothelightid.org"
+HELP_ITEM_4,"• Bicara dengan orang yang kamu percaya hari ini, walau hanya satu kalimat."
+SETTINGS_TITLE,Pengaturan
+SETTINGS_TAB_AUDIO,Audio
+SETTINGS_TAB_GAMEPLAY,Permainan
+SETTINGS_TAB_A11Y,Aksesibilitas
+SETTINGS_BGM_VOL,Volume Musik
+SETTINGS_SFX_VOL,Volume Efek Suara
+SETTINGS_AMBIENCE_VOL,Volume Ambience
+SETTINGS_TEXT_SPEED,Kecepatan Teks
+SETTINGS_SKIP_SENSITIVE,Lewati Adegan Sensitif
+SETTINGS_NO_TIME_PRESSURE,Tanpa Tekanan Waktu
+SETTINGS_HIGH_CONTRAST,Kontras Tinggi
+SETTINGS_REDUCE_FLASH,Kurangi Kilatan Cahaya
+SETTINGS_FONT_SIZE,Ukuran Huruf
+SETTINGS_RESET,Kembalikan ke Awal
+SETTINGS_SAVE,Simpan
