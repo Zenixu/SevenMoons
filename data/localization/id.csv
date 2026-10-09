@@ -160,7 +160,6 @@ LIFT_FLOOR_3,Lantai 3
 LIFT_FLOOR_4,Lantai 4
 LIFT_FLOOR_5,Lantai 5 — Atap
 LIFT_SAME_FLOOR,Aku sudah ada di lantai ini. Tidak ada gunanya berpindah ke tempat yang sama.
-S01_INTRO_MONOLOGUE,"Ah, sudah malam keberapa ini? Rasanya semakin hari rasa kesepian ini semakin menusuk diriku, aku tenggelam dalam segala kesunyian, suara jarum jam, rintikan gerimis yang sangat tenang, aku sendiri menyukai kesunyian ini, namun rasanya kosong dan menakutkan... apakah aku akan terbangun lagi di malam ini? Sudah 4 tahun sejak semua hal itu terjadi aku bingung dengan apa yang akan aku lakukan, rasanya setiap kali aku bergerak... aku merasa lelah, haruskah aku mengakhiri malam ini saja?"
 ROOFTOP_WALK_1,"Apakah ini pilihan yang tepat? Apakah semua ini adalah jawaban dari segalanya? Apa aku akan bebas dengan semua hal yang sudah kurenggut, sekaligus rasa bersalah yang kian hari semakin terasa di diriku?"
 ROOFTOP_WALK_2,"..."
 ROOFTOP_WALK_3,"...mungkin iya."
@@ -168,3 +167,9 @@ S02_O7_N01,"Kulkas itu berdehem pelan. Isinya cuma satu botol air yang belum jug
 S02_O7_A01,"Dulu ada yang selalu bilang supaya aku makan teratur. Sekarang aku lupa kapan terakhir masak."
 S02_O8_N01,"Keran menetes satu-satu. Cermin di atasnya berkabut, tidak ada yang dilihat."
 S02_O8_A01,"Mencuci muka pun terasa seperti tugas yang terlalu berat untuk malam ini."
+S01_INTRO_1,"Ah, sudah malam keberapa ini?"
+S01_INTRO_2,"Rasanya semakin hari rasa kesepian ini semakin menusuk diriku. Aku tenggelam dalam segala kesunyian."
+S01_INTRO_3,"Suara jarum jam, rintikan gerimis yang sangat tenang... aku sendiri menyukai kesunyian ini."
+S01_INTRO_4,"Namun rasanya kosong dan menakutkan. Apakah aku akan terbangun lagi di malam ini?"
+S01_INTRO_5,"Sudah 4 tahun sejak semua hal itu terjadi. Aku bingung dengan apa yang akan aku lakukan."
+S01_INTRO_6,"Rasanya setiap kali aku bergerak... aku merasa lelah. Haruskah aku mengakhiri malam ini saja?"

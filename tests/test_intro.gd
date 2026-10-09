@@ -32,13 +32,22 @@ func _ready() -> void:
 	# Percepat: langsung main, lalu tunggu tirai hitam mulai memudar
 	intro.play_intro()
 	await get_tree().create_timer(0.4).timeout
+	# Saat mata masih tertutup: monolog tampil, tirai masih hitam penuh
+	assert(intro.monologue_label.visible == true,
+		"intro: monolog pembuka harus tampil saat mata masih tertutup")
+
+	# Tunggu monolog selesai & tirai mulai memudar (membuka mata)
+	var guard0 := 0
+	while intro.fade_rect.color.a >= 1.0 and guard0 < 400:
+		await get_tree().create_timer(0.1).timeout
+		guard0 += 1
 	assert(intro.fade_rect.color.a < 1.0,
-		"intro: tirai hitam harus mulai memudar (membuka mata)")
+		"intro: tirai hitam harus mulai memudar setelah monolog (membuka mata)")
 	assert(intro.panel.texture != null, "intro: panel harus punya tekstur")
 
 	# Tunggu sampai intro selesai
 	var guard := 0
-	while not finished["ok"] and guard < 400:
+	while not finished["ok"] and guard < 600:
 		await get_tree().create_timer(0.1).timeout
 		guard += 1
 	assert(finished["ok"] == true, "intro: intro_finished harus dipancarkan")

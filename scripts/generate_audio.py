@@ -120,16 +120,16 @@ def generate_chat_type(filename):
 
 # 6b. SFX: Ketikan mesin tik (tick pendek) — dipakai saat dialog mengetik.
 def generate_type_tick(filename):
-    duration = 0.045
+    duration = 0.055
     num_samples = int(SAMPLE_RATE * duration)
     samples = [0.0] * num_samples
     random.seed(21)
     for i in range(num_samples):
         t = i / SAMPLE_RATE
-        # tick klik: noise singkat + resonansi frekuensi tinggi
+        # tick klik: noise singkat + resonansi frekuensi tinggi (lebih tebal & jelas)
         noise = random.uniform(-1.0, 1.0)
-        env = math.exp(-t * 150.0)
-        click = noise * 0.5 + 0.4 * math.sin(2 * math.pi * 2400 * t)
+        env = math.exp(-t * 95.0)
+        click = noise * 0.8 + 0.5 * math.sin(2 * math.pi * 2200 * t)
         samples[i] = click * env * 0.5
     create_wav(filename, samples)
 

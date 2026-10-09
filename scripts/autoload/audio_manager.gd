@@ -26,6 +26,7 @@ const STREAM_THEME_WARM_NOTE: AudioStream = preload("res://assets/audio/bgm/them
 
 # --- Layer ambience default (level linear sebelum bus volume) ---
 const AMB_RAIN_DB: float = -6.0
+const AMB_RAIN_QUIET_DB: float = -15.0   # hujan diredam (mata tertutup / dalam lift)
 const AMB_FRIDGE_DB: float = -14.0
 const AMB_CLOCK_DB: float = -20.0
 
@@ -55,7 +56,7 @@ func _ready() -> void:
 	_type_tick_player = AudioStreamPlayer.new()
 	_type_tick_player.bus = BUS_SFX
 	_type_tick_player.stream = STREAM_TYPE_TICK
-	_type_tick_player.volume_db = -6.0
+	_type_tick_player.volume_db = 0.0
 	add_child(_type_tick_player)
 
 	# Ambience layers
@@ -185,6 +186,18 @@ func play_rain(fade_in: float = 2.0) -> void:
 	set_ambience_layer(AMB_RAIN, STREAM_RAIN, AMB_RAIN_DB, fade_in)
 	set_ambience_layer(AMB_FRIDGE, STREAM_FRIDGE, AMB_FRIDGE_DB, fade_in)
 	set_ambience_layer(AMB_CLOCK, STREAM_CLOCK_TICK, AMB_CLOCK_DB, fade_in)
+
+
+## Hujan saja, dengan level lebih pelan (dipakai saat mata tertutup / di dalam lift).
+func play_rain_quiet(level_db: float = AMB_RAIN_QUIET_DB, fade_in: float = 2.0) -> void:
+	set_ambience_layer(AMB_RAIN, STREAM_RAIN, level_db, fade_in)
+	stop_ambience_layer(AMB_FRIDGE, minf(fade_in, 0.6))
+	stop_ambience_layer(AMB_CLOCK, minf(fade_in, 0.6))
+
+
+## Ubah level lapisan hujan saat sudah berbunyi (mis. mengeras saat "membuka mata").
+func set_rain_level(level_db: float, fade: float = 1.5) -> void:
+	set_ambience_layer(AMB_RAIN, STREAM_RAIN, level_db, fade)
 
 
 ## Hentikan hanya lapisan jam (mis. saat keluar kamar / jam berhenti).

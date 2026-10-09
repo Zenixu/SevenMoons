@@ -14,7 +14,6 @@ signal exploration_completed()
 @onready var choice_menu: ChoiceMenu = $UI/ChoiceMenu
 @onready var transition_layer: TransitionLayer = $UI/TransitionLayer
 @onready var clock_label: Label = $UI/ClockLabel
-@onready var intro_monologue: Label = $UI/IntroMonologue
 @onready var chat_ui: ChatSystem = $UI/ChatUI
 @onready var loop_counter_label: Label = $UI/LoopCounterLabel
 
@@ -27,6 +26,8 @@ const CORRIDOR_SCENE := "res://scenes/corridor/corridor.tscn"
 
 # Jam dinding: 1 menit dalam game per N detik nyata setelah diperiksa
 const CLOCK_MINUTES_PER_SECOND := 0.2   # ~1 menit tiap 5 detik
+
+
 
 @export var auto_start_intro: bool = true
 
@@ -107,30 +108,14 @@ func _start_clock() -> void:
 # ---------------------------------------------------------------------------
 func _start_s01_intro() -> void:
 	player.set_movement_enabled(false)
-	AudioManager.play_rain(2.0)
 	transition_layer.cut_to_black()
-
-	clock_label.visible = false
-	intro_monologue.text = tr("S01_INTRO_MONOLOGUE")
-	intro_monologue.modulate.a = 0.0
-	intro_monologue.visible = true
-
-	# Pandangan masih gelap: dialog di tengah layar muncul perlahan
 	transition_layer.fade_from_black(3.0)
-	var tw := create_tween()
-	tw.tween_property(intro_monologue, "modulate:a", 1.0, 3.0)
-	await tw.finished
-	await get_tree().create_timer(3.5).timeout
-
-	var out_tw := create_tween()
-	out_tw.tween_property(intro_monologue, "modulate:a", 0.0, 2.0)
-	await out_tw.finished
-	intro_monologue.visible = false
+	AudioManager.play_rain(2.0)
 
 	clock_label.visible = true
 	FlagStore.set_flag("ui_clock_visible", true)
 
-	await get_tree().create_timer(0.6).timeout
+	await get_tree().create_timer(1.0).timeout
 	thought_box.display_thought("S01_A01")
 	await thought_box.text_completed
 	await get_tree().create_timer(1.0).timeout

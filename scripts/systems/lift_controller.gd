@@ -35,7 +35,8 @@ func _ready() -> void:
 
 	transition_layer.cut_to_black()
 	transition_layer.fade_from_black(1.2)
-	AudioManager.play_rain(1.5)
+	# Di dalam lift suara hujan diredam (ruang tertutup).
+	AudioManager.play_rain_quiet(AudioManager.AMB_RAIN_QUIET_DB, 1.5)
 
 	for child in interactables_parent.get_children():
 		if child is Interactable:
