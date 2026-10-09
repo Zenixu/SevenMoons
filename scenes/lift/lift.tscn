@@ -1,111 +1,68 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=13 format=3]
 
-[ext_resource type="Script" path="res://scripts/systems/corridor_controller.gd" id="1_corr"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/corridor_bg.png" id="2_bg"]
+[ext_resource type="Script" path="res://scripts/systems/lift_controller.gd" id="1_lift"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/lift_bg.png" id="2_bg"]
 [ext_resource type="Script" path="res://scripts/systems/interactable.gd" id="3_inter"]
 [ext_resource type="Script" path="res://scripts/systems/player.gd" id="4_play"]
 [ext_resource type="PackedScene" path="res://scenes/ui/thought_box.tscn" id="5_thought"]
 [ext_resource type="PackedScene" path="res://scenes/ui/choice_menu.tscn" id="6_choice"]
 [ext_resource type="PackedScene" path="res://scenes/transitions/transition_layer.tscn" id="7_trans"]
-[ext_resource type="Script" path="res://scripts/systems/camera_follow.gd" id="8_cam"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
-size = Vector2(1120, 226)
+size = Vector2(640, 236)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_v"]
-size = Vector2(20, 360)
+size = Vector2(24, 360)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_bottom"]
-size = Vector2(1120, 40)
+size = Vector2(640, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
-size = Vector2(44, 44)
+size = Vector2(56, 150)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(16, 28)
 
-[node name="Corridor" type="Node2D"]
-script = ExtResource("1_corr")
+[node name="Lift" type="Node2D"]
+script = ExtResource("1_lift")
 
 [node name="Background" type="TextureRect" parent="."]
-offset_right = 1120.0
+offset_right = 640.0
 offset_bottom = 360.0
 texture = ExtResource("2_bg")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(320, 180)
-limit_left = 0
-limit_top = 0
-limit_right = 1120
-limit_bottom = 360
-script = ExtResource("8_cam")
-target_path = NodePath("../Player")
-follow_horizontal = true
-follow_vertical = false
-fixed_y = 180.0
 
 [node name="Walls" type="StaticBody2D" parent="."]
 
 [node name="WallTop" type="CollisionShape2D" parent="Walls"]
-position = Vector2(560, 113)
+position = Vector2(320, 118)
 shape = SubResource("RectangleShape2D_wall_top")
 
 [node name="WallBottom" type="CollisionShape2D" parent="Walls"]
-position = Vector2(560, 370)
+position = Vector2(320, 372)
 shape = SubResource("RectangleShape2D_wall_bottom")
 
 [node name="WallLeft" type="CollisionShape2D" parent="Walls"]
-position = Vector2(10, 180)
+position = Vector2(196, 180)
 shape = SubResource("RectangleShape2D_wall_v")
 
 [node name="WallRight" type="CollisionShape2D" parent="Walls"]
-position = Vector2(1110, 180)
+position = Vector2(444, 180)
 shape = SubResource("RectangleShape2D_wall_v")
 
 [node name="Interactables" type="Node2D" parent="."]
 
-[node name="RoomDoor" type="Area2D" parent="Interactables"]
-position = Vector2(62, 250)
+[node name="FloorPanel" type="Area2D" parent="Interactables"]
+position = Vector2(410, 150)
 script = ExtResource("3_inter")
-object_id = "room_door"
+object_id = "floor_panel"
+prompt_text_key = "LIFT_PANEL_PROMPT"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/RoomDoor"]
-shape = SubResource("RectangleShape2D_inter")
-
-[node name="StairsDoor" type="Area2D" parent="Interactables"]
-position = Vector2(172, 250)
-script = ExtResource("3_inter")
-object_id = "stairs_door"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/StairsDoor"]
-shape = SubResource("RectangleShape2D_inter")
-
-[node name="NeighborA" type="Area2D" parent="Interactables"]
-position = Vector2(322, 250)
-script = ExtResource("3_inter")
-object_id = "neighbor_a"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/NeighborA"]
-shape = SubResource("RectangleShape2D_inter")
-
-[node name="NeighborB" type="Area2D" parent="Interactables"]
-position = Vector2(542, 250)
-script = ExtResource("3_inter")
-object_id = "neighbor_b"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/NeighborB"]
-shape = SubResource("RectangleShape2D_inter")
-
-[node name="Elevator" type="Area2D" parent="Interactables"]
-position = Vector2(940, 250)
-script = ExtResource("3_inter")
-object_id = "elevator"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/Elevator"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/FloorPanel"]
+position = Vector2(0, 60)
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(110, 300)
+position = Vector2(320, 300)
 script = ExtResource("4_play")
 
 [node name="Visual" type="AnimatedSprite2D" parent="Player"]
@@ -137,9 +94,9 @@ visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -120.0
+offset_left = -140.0
 offset_top = 58.0
-offset_right = 120.0
+offset_right = 140.0
 offset_bottom = 76.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.68, 0.73, 0.84, 0.8)

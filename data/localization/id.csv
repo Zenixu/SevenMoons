@@ -134,9 +134,9 @@ CORRIDOR_F3_INTRO3,Hanya lampu dan pintu-pintu yang tidak akan kubuka. Aku berja
 CORRIDOR_F4_ARRIVE,Lantai empat. Angka di panel lift berganti tanpa suara.
 CORRIDOR_F4_ARRIVE2,Aku tidak ingat kenapa aku naik. Rasanya bukan aku yang menekan tombolnya.
 CORRIDOR_F4_ARRIVE3,Tapi di sini lebih sunyi. Dan di sini, pikiranku sedikit lebih keras.
-CORRIDOR_F5_ARRIVE,Lantai lima. Di atas sudah tidak ada apa-apa lagi.
-CORRIDOR_F5_ARRIVE2,Lorongnya berhenti di sini. Sebuah pintu kaca di ujung, di baliknya hanya langit.
-CORRIDOR_F5_ARRIVE3,Aku tidak tahu apa yang menungguku di baliknya. Tapi kakiku melangkah lebih dulu.
+ROOFTOP_ARRIVE,Lantai lima. Lift membawaku ke atap, bukan ke lorong.
+ROOFTOP_ARRIVE2,Di sini tidak ada pintu lagi — hanya pager besi, langit, dan hujan yang belum berhenti.
+ROOFTOP_ARRIVE3,Aku melangkah ke tengah atap. Anginnya dingin, dan untuk sesaat, pikiranku ikut diam.
 CORRIDOR_ROOM_DOOR,Kamarku. Aku bisa kembali kalau mau.
 CORRIDOR_ROOM_OTHER,Bukan kamarku. Pintunya sama, tapi bukan milikku.
 CORRIDOR_STAIRS,Tangga darurat. Menuju bawah, ke lobi.
@@ -151,11 +151,20 @@ CORRIDOR_LIFT_STAY,Diam di sini
 CORRIDOR_LIFT_STAY_RES,Nggak ada tempat lain yang lebih baik.
 CORRIDOR_LIFT_MOVE,Pintu besi menutup. Lantai di bawah kakiku bergeser.
 CORRIDOR_ARRIVE_LINE,Selamat datang di lantai %d. Pintu lift terbuka lagi.
-CORRIDOR_BALCONY_F5_DOOR,Pintu kaca menuju balkon atap. Di luar, hanya langit dan gerimis.
-CORRIDOR_BALCONY_F5_OTHER,Bukan sekarang. Di lantai ini tidak ada pintu seperti itu.
-CORRIDOR_BALCONY_F5_LOCK,Pintu ini terkunci dari luar. Aku tidak punya alasan untuk membukanya malam ini.
-CORRIDOR_GO_BALCONY,Buka pintu kaca
-CORRIDOR_F5_HINT,Pintu kaca di tengah lorong. Di baliknya, atap gedung.
-CORRIDOR_F5_ROOF_1,Aku berjalan sampai ujung lorong. Di sini tidak ada lagi pintu — hanya kaca.
-CORRIDOR_F5_ROOF_2,Di balik kaca itu, atap gedung terbuka ke langit. Gerimis belum berhenti.
-CORRIDOR_F5_ROOF_3,Tanganku mendorong pintunya sebelum pikiranku sempat menahan.
+CORRIDOR_F5_HINT,Di atas lantai ini hanya ada atap. Lift akan membawaku ke sana.
+LIFT_ENTER,Pintu lift menutup di belakangku. Ruang kecil ini terasa lebih sunyi dari lorong.
+LIFT_HINT,Ada peta lantai di dinding kanan. Tekan [E] untuk memilih tujuan.
+LIFT_PANEL_PROMPT,Peta Lantai
+LIFT_PANEL,Peta lantai apartemen. Tiga tombol: 3, 4, dan 5.
+LIFT_FLOOR_3,Lantai 3
+LIFT_FLOOR_4,Lantai 4
+LIFT_FLOOR_5,Lantai 5 — Atap
+LIFT_SAME_FLOOR,Aku sudah ada di lantai ini. Tidak ada gunanya berpindah ke tempat yang sama.
+S01_INTRO_MONOLOGUE,"Ah, sudah malam keberapa ini? Rasanya semakin hari rasa kesepian ini semakin menusuk diriku, aku tenggelam dalam segala kesunyian, suara jarum jam, rintikan gerimis yang sangat tenang, aku sendiri menyukai kesunyian ini, namun rasanya kosong dan menakutkan... apakah aku akan terbangun lagi di malam ini? Sudah 4 tahun sejak semua hal itu terjadi aku bingung dengan apa yang akan aku lakukan, rasanya setiap kali aku bergerak... aku merasa lelah, haruskah aku mengakhiri malam ini saja?"
+ROOFTOP_WALK_1,"Apakah ini pilihan yang tepat? Apakah semua ini adalah jawaban dari segalanya? Apa aku akan bebas dengan semua hal yang sudah kurenggut, sekaligus rasa bersalah yang kian hari semakin terasa di diriku?"
+ROOFTOP_WALK_2,"..."
+ROOFTOP_WALK_3,"...mungkin iya."
+S02_O7_N01,"Kulkas itu berdehem pelan. Isinya cuma satu botol air yang belum juga habis."
+S02_O7_A01,"Dulu ada yang selalu bilang supaya aku makan teratur. Sekarang aku lupa kapan terakhir masak."
+S02_O8_N01,"Keran menetes satu-satu. Cermin di atasnya berkabut, tidak ada yang dilihat."
+S02_O8_A01,"Mencuci muka pun terasa seperti tugas yang terlalu berat untuk malam ini."

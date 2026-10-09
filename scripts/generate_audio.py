@@ -40,7 +40,7 @@ def generate_rain_loop(filename, duration=4.0):
 
     # Normalisasi ke level pelan (gerimis jauh lebih tenang dari hujan)
     peak = max(1e-6, max(abs(s) for s in samples))
-    samples = [s / peak * 0.34 for s in samples]
+    samples = [s / peak * 0.16 for s in samples]
 
     # Crossfade ujung agar loop mulus tanpa klik
     fade_len = int(SAMPLE_RATE * 0.25)
@@ -118,6 +118,21 @@ def generate_chat_type(filename):
         samples[i] = 0.3 * math.sin(2 * math.pi * (600 - t * 2000) * t) * env
     create_wav(filename, samples)
 
+# 6b. SFX: Ketikan mesin tik (tick pendek) — dipakai saat dialog mengetik.
+def generate_type_tick(filename):
+    duration = 0.045
+    num_samples = int(SAMPLE_RATE * duration)
+    samples = [0.0] * num_samples
+    random.seed(21)
+    for i in range(num_samples):
+        t = i / SAMPLE_RATE
+        # tick klik: noise singkat + resonansi frekuensi tinggi
+        noise = random.uniform(-1.0, 1.0)
+        env = math.exp(-t * 150.0)
+        click = noise * 0.5 + 0.4 * math.sin(2 * math.pi * 2400 * t)
+        samples[i] = click * env * 0.5
+    create_wav(filename, samples)
+
 # 7. BGM: Fragment A Piano (4-note gentle melancholic phrase: A3, C4, B3, E3 with subtle reverb)
 def synthesize_piano_note(freq, duration, decay_rate=2.0):
     num_samples = int(SAMPLE_RATE * duration)
@@ -176,6 +191,7 @@ if __name__ == '__main__':
     generate_phone_vibrate(os.path.join(base_dir, "assets/audio/sfx/phone_vibrate.wav"))
     generate_clock_chime(os.path.join(base_dir, "assets/audio/sfx/clock_chime.wav"))
     generate_chat_type(os.path.join(base_dir, "assets/audio/sfx/chat_type.wav"))
+    generate_type_tick(os.path.join(base_dir, "assets/audio/sfx/type_tick.wav"))
     generate_fragment_a(os.path.join(base_dir, "assets/audio/bgm/theme_fragment_a.wav"), False)
     generate_fragment_a(os.path.join(base_dir, "assets/audio/bgm/theme_fragment_a_reversed.wav"), True)
     generate_warm_single_note(os.path.join(base_dir, "assets/audio/bgm/theme_warm_single_note.wav"))

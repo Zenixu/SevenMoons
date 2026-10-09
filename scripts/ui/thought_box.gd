@@ -15,14 +15,33 @@ var _current_text: String = ""
 var _is_typing: bool = false
 var _is_erasing: bool = false
 var _tween: Tween
+var _tick_accum: float = 0.0
+var _last_tick_char: int = -1
 
 
 func _ready() -> void:
 	if label:
 		label.text = ""
+	set_process(true)
 	_apply_accessibility()
 	if not SettingsManager.settings_changed.is_connected(_apply_accessibility):
 		SettingsManager.settings_changed.connect(_apply_accessibility)
+
+
+## Bunyi ketikan: satu tick tiap beberapa karakter yang muncul (bukan tiap
+## frame), agar tidak berisik namun tetap terasa seperti menulis.
+func _process(delta: float) -> void:
+	if not _is_typing or label == null:
+		return
+	_tick_accum += delta
+	if _tick_accum < 0.045:
+		return
+	_tick_accum = 0.0
+	var shown: int = label.visible_characters
+	if shown != _last_tick_char:
+		_last_tick_char = shown
+		if shown % 2 == 0:
+			AudioManager.play_type_tick()
 
 
 func _apply_accessibility() -> void:
@@ -50,6 +69,8 @@ func display_thought(text_key_or_literal: String, typing_speed_cps: float = 25.0
 	var final_text: String = tr(text_key_or_literal)
 	_current_text = final_text
 	_is_typing = true
+	_tick_accum = 0.0
+	_last_tick_char = -1
 	label.text = final_text
 	label.visible_characters = 0
 

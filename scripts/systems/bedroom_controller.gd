@@ -14,6 +14,7 @@ signal exploration_completed()
 @onready var choice_menu: ChoiceMenu = $UI/ChoiceMenu
 @onready var transition_layer: TransitionLayer = $UI/TransitionLayer
 @onready var clock_label: Label = $UI/ClockLabel
+@onready var intro_monologue: Label = $UI/IntroMonologue
 @onready var chat_ui: ChatSystem = $UI/ChatUI
 @onready var loop_counter_label: Label = $UI/LoopCounterLabel
 
@@ -58,7 +59,7 @@ func _ready() -> void:
 		_start_s08_sequence()
 	elif FlagStore.get_flag("visited_corridor", false):
 		# Kembali dari lorong: lewati intro, taruh pemain dekat pintu
-		player.position = Vector2(140, 268)
+		player.position = Vector2(110, 292)
 		clock_label.visible = true
 		player.set_movement_enabled(true)
 	elif auto_start_intro:
@@ -108,12 +109,28 @@ func _start_s01_intro() -> void:
 	player.set_movement_enabled(false)
 	AudioManager.play_rain(2.0)
 	transition_layer.cut_to_black()
-	transition_layer.fade_from_black(2.5)
+
+	clock_label.visible = false
+	intro_monologue.text = tr("S01_INTRO_MONOLOGUE")
+	intro_monologue.modulate.a = 0.0
+	intro_monologue.visible = true
+
+	# Pandangan masih gelap: dialog di tengah layar muncul perlahan
+	transition_layer.fade_from_black(3.0)
+	var tw := create_tween()
+	tw.tween_property(intro_monologue, "modulate:a", 1.0, 3.0)
+	await tw.finished
+	await get_tree().create_timer(3.5).timeout
+
+	var out_tw := create_tween()
+	out_tw.tween_property(intro_monologue, "modulate:a", 0.0, 2.0)
+	await out_tw.finished
+	intro_monologue.visible = false
 
 	clock_label.visible = true
 	FlagStore.set_flag("ui_clock_visible", true)
 
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.6).timeout
 	thought_box.display_thought("S01_A01")
 	await thought_box.text_completed
 	await get_tree().create_timer(1.0).timeout
@@ -147,6 +164,10 @@ func _on_object_interacted(obj_id: String) -> void:
 			await _handle_clock()
 		"door":
 			await _handle_door()
+		"fridge":
+			await _handle_fridge()
+		"sink":
+			await _handle_sink()
 
 	_check_balcony_condition()
 	player.set_movement_enabled(true)
@@ -276,6 +297,30 @@ func _handle_clock() -> void:
 	await get_tree().create_timer(1.0).timeout
 
 	thought_box.display_thought("S02_O5_A01")
+	await thought_box.text_completed
+	await get_tree().create_timer(1.0).timeout
+	thought_box.clear()
+
+
+func _handle_fridge() -> void:
+	FlagStore.set_flag("checked_fridge", true)
+	thought_box.display_thought("S02_O7_N01")
+	await thought_box.text_completed
+	await get_tree().create_timer(1.0).timeout
+
+	thought_box.display_thought("S02_O7_A01")
+	await thought_box.text_completed
+	await get_tree().create_timer(1.0).timeout
+	thought_box.clear()
+
+
+func _handle_sink() -> void:
+	FlagStore.set_flag("checked_sink", true)
+	thought_box.display_thought("S02_O8_N01")
+	await thought_box.text_completed
+	await get_tree().create_timer(1.0).timeout
+
+	thought_box.display_thought("S02_O8_A01")
 	await thought_box.text_completed
 	await get_tree().create_timer(1.0).timeout
 	thought_box.clear()

@@ -11,13 +11,13 @@ const BEDROOM_SCENE := "res://scenes/bedroom/bedroom.tscn"
 
 # (tekstur, durasi tampil, blur awal, blur akhir, alpha vignette)
 const PANELS: Array[Dictionary] = [
-	{"tex": "res://assets/art/intro_panel_1.png", "cap": "INTRO_CAP_1",
+	{"tex": "res://assets/ui/intro_panel_1.png", "cap": "INTRO_CAP_1",
 	 "dur": 2.6, "blur0": 8.0, "blur1": 5.0, "vig": 0.85},
-	{"tex": "res://assets/art/intro_panel_2.png", "cap": "INTRO_CAP_2",
+	{"tex": "res://assets/ui/intro_panel_2.png", "cap": "INTRO_CAP_2",
 	 "dur": 2.8, "blur0": 6.0, "blur1": 3.0, "vig": 0.6},
-	{"tex": "res://assets/art/intro_panel_3.png", "cap": "INTRO_CAP_3",
+	{"tex": "res://assets/ui/intro_panel_3.png", "cap": "INTRO_CAP_3",
 	 "dur": 2.8, "blur0": 4.5, "blur1": 1.2, "vig": 0.35},
-	{"tex": "res://assets/art/intro_panel_4.png", "cap": "INTRO_CAP_4",
+	{"tex": "res://assets/ui/intro_panel_4.png", "cap": "INTRO_CAP_4",
 	 "dur": 3.2, "blur0": 1.0, "blur1": 0.0, "vig": 0.15},
 ]
 

@@ -19,16 +19,18 @@ const STREAM_CLOCK_TICK: AudioStream = preload("res://assets/audio/ambience/cloc
 const STREAM_PHONE_VIBRATE: AudioStream = preload("res://assets/audio/sfx/phone_vibrate.wav")
 const STREAM_CLOCK_CHIME: AudioStream = preload("res://assets/audio/sfx/clock_chime.wav")
 const STREAM_CHAT_TYPE: AudioStream = preload("res://assets/audio/sfx/chat_type.wav")
+const STREAM_TYPE_TICK: AudioStream = preload("res://assets/audio/sfx/type_tick.wav")
 const STREAM_THEME_FRAGMENT_A: AudioStream = preload("res://assets/audio/bgm/theme_fragment_a.wav")
 const STREAM_THEME_FRAGMENT_A_REVERSED: AudioStream = preload("res://assets/audio/bgm/theme_fragment_a_reversed.wav")
 const STREAM_THEME_WARM_NOTE: AudioStream = preload("res://assets/audio/bgm/theme_warm_single_note.wav")
 
 # --- Layer ambience default (level linear sebelum bus volume) ---
-const AMB_RAIN_DB: float = -4.0
+const AMB_RAIN_DB: float = -6.0
 const AMB_FRIDGE_DB: float = -14.0
 const AMB_CLOCK_DB: float = -20.0
 
 var _bgm_player: AudioStreamPlayer
+var _type_tick_player: AudioStreamPlayer
 var _sfx_pool: Array[AudioStreamPlayer] = []
 const SFX_POOL_SIZE: int = 4
 
@@ -47,6 +49,14 @@ func _ready() -> void:
 	_bgm_player = AudioStreamPlayer.new()
 	_bgm_player.bus = BUS_BGM
 	add_child(_bgm_player)
+
+	# Player khusus suara ketikan (tidak memakai pool agar bisa cepat & tidak
+	# memotong SFX lain)
+	_type_tick_player = AudioStreamPlayer.new()
+	_type_tick_player.bus = BUS_SFX
+	_type_tick_player.stream = STREAM_TYPE_TICK
+	_type_tick_player.volume_db = -6.0
+	add_child(_type_tick_player)
 
 	# Ambience layers
 	_ambience_layers[AMB_MAIN] = _make_ambience_player(0.0)
@@ -235,3 +245,9 @@ func play_chime() -> void:
 
 func play_typing_sfx() -> void:
 	play_sfx(STREAM_CHAT_TYPE)
+
+
+## Tick ketikan singkat untuk efek dialog mengetik (boleh dipanggil berulang).
+func play_type_tick() -> void:
+	if _type_tick_player:
+		_type_tick_player.play()

@@ -22,10 +22,10 @@ func _ready() -> void:
 
 
 const SLIDES: Array[Dictionary] = [
-	{"text": "S07_FLASH_1", "texture": preload("res://assets/art/fb_1.png"), "color": Color(0.18, 0.16, 0.22, 1.0)},
-	{"text": "S07_FLASH_2", "texture": preload("res://assets/art/fb_2.png"), "color": Color(0.14, 0.17, 0.22, 1.0)},
-	{"text": "S07_FLASH_3", "texture": preload("res://assets/art/fb_3.png"), "color": Color(0.22, 0.14, 0.16, 1.0)},
-	{"text": "S07_FLASH_4", "texture": preload("res://assets/art/fb_4.png"), "color": Color(0.19, 0.18, 0.15, 1.0)}
+	{"text": "S07_FLASH_1", "texture": preload("res://assets/flashbacks/fb_1.png"), "color": Color(0.18, 0.16, 0.22, 1.0)},
+	{"text": "S07_FLASH_2", "texture": preload("res://assets/flashbacks/fb_2.png"), "color": Color(0.14, 0.17, 0.22, 1.0)},
+	{"text": "S07_FLASH_3", "texture": preload("res://assets/flashbacks/fb_3.png"), "color": Color(0.22, 0.14, 0.16, 1.0)},
+	{"text": "S07_FLASH_4", "texture": preload("res://assets/flashbacks/fb_4.png"), "color": Color(0.19, 0.18, 0.15, 1.0)}
 ]
 
 func play_sequence() -> void:

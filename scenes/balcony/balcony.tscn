@@ -1,13 +1,24 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/systems/balcony_controller.gd" id="1_balcony"]
 [ext_resource type="PackedScene" path="res://scenes/ui/thought_box.tscn" id="2_thought"]
 [ext_resource type="PackedScene" path="res://scenes/ui/choice_menu.tscn" id="3_choice"]
 [ext_resource type="PackedScene" path="res://scenes/transitions/transition_layer.tscn" id="4_trans"]
-[ext_resource type="Texture2D" path="res://assets/art/balcony_skyline.png" id="5_skyline"]
-[ext_resource type="Texture2D" path="res://assets/art/moon_dim.png" id="6_moon"]
-[ext_resource type="Texture2D" path="res://assets/art/balcony_railing.png" id="7_railing"]
-[ext_resource type="Texture2D" path="res://assets/art/silhouette_figure.png" id="8_sil"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/balcony_skyline.png" id="5_skyline"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/moon_dim.png" id="6_moon"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/balcony_railing.png" id="7_railing"]
+[ext_resource type="Texture2D" path="res://assets/props/silhouette_figure.png" id="8_sil"]
+[ext_resource type="Script" path="res://scripts/systems/player.gd" id="9_play"]
+[ext_resource type="Script" path="res://scripts/systems/camera_follow.gd" id="10_cam"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
+size = Vector2(640, 244)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_v"]
+size = Vector2(20, 360)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(16, 28)
 
 [node name="Balcony" type="Node2D"]
 script = ExtResource("1_balcony")
@@ -43,11 +54,47 @@ offset_bottom = 258.0
 texture = ExtResource("7_railing")
 
 [node name="Silhouette" type="TextureRect" parent="."]
+visible = false
 offset_left = 300.0
 offset_top = 200.0
 offset_right = 322.0
 offset_bottom = 252.0
 texture = ExtResource("8_sil")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(320, 180)
+limit_left = 0
+limit_top = 0
+limit_right = 640
+limit_bottom = 360
+script = ExtResource("10_cam")
+target_path = NodePath("../Player")
+follow_horizontal = true
+follow_vertical = false
+fixed_y = 180.0
+
+[node name="Walls" type="StaticBody2D" parent="."]
+
+[node name="WallTop" type="CollisionShape2D" parent="Walls"]
+position = Vector2(320, 122)
+shape = SubResource("RectangleShape2D_wall_top")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Walls"]
+position = Vector2(10, 180)
+shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="WallRight" type="CollisionShape2D" parent="Walls"]
+position = Vector2(630, 180)
+shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(74, 300)
+script = ExtResource("9_play")
+
+[node name="Visual" type="AnimatedSprite2D" parent="Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("RectangleShape2D_player")
 
 [node name="UI" type="CanvasLayer" parent="."]
 

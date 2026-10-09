@@ -15,6 +15,7 @@ signal balcony_scene_completed()
 @onready var choice_menu: ChoiceMenu = $UI/ChoiceMenu
 @onready var transition_layer: TransitionLayer = $UI/TransitionLayer
 @onready var wait_hint_label: Label = $UI/WaitHintLabel
+@onready var player: PlayerCharacter = $Player
 
 @export var auto_start_sequence: bool = true
 
@@ -31,7 +32,7 @@ func _ready() -> void:
 		if SettingsManager.skip_sensitive_scenes:
 			_run_s06_alt()
 		else:
-			_start_s04_and_s05()
+			_arrive_then_start()
 
 
 func _process(delta: float) -> void:
@@ -43,6 +44,44 @@ func _process(delta: float) -> void:
 		elif _wait_time >= 40.0 and wait_hint_label.text != tr("S05_WAIT_40"):
 			wait_hint_label.text = tr("S05_WAIT_40")
 			FlagStore.set_flag("waited_long", true)
+
+
+## Jika pemain baru tiba dari lift (lantai 5 = atap): pemain BERJALAN dulu
+## ke tengah atap, berhenti sejenak, baru dialog perenungan dimulai.
+func _arrive_then_start() -> void:
+	if FlagStore.get_flag("rooftop_from_lift", false) and not FlagStore.get_flag("rooftop_arrived", false):
+		FlagStore.set_flag("rooftop_arrived", true)
+		FlagStore.set_flag("rooftop_from_lift", false)
+		AudioManager.play_rain(1.5)
+		transition_layer.set_vignette(0.35, 1.5)
+
+		if player:
+			player.set_movement_enabled(false)
+			player.position = Vector2(74, 300)
+
+		transition_layer.cut_to_black()
+		transition_layer.fade_from_black(1.6)
+		await get_tree().create_timer(1.2).timeout
+
+		# Berjalan pelan menuju tengah atap
+		if player:
+			await player.auto_walk_to(Vector2(300, 300), 62.0)
+		await get_tree().create_timer(0.6).timeout
+
+		# Berhenti sejenak di tengah — dialog perenungan
+		thought_box.display_thought("ROOFTOP_WALK_1")
+		await thought_box.text_completed
+		await get_tree().create_timer(1.8).timeout
+
+		thought_box.display_thought("ROOFTOP_WALK_2")
+		await thought_box.text_completed
+		await get_tree().create_timer(1.6).timeout
+
+		thought_box.display_thought("ROOFTOP_WALK_3")
+		await thought_box.text_completed
+		await get_tree().create_timer(1.8).timeout
+		thought_box.clear()
+	await _start_s04_and_s05()
 
 
 func _start_s04_and_s05() -> void:
@@ -88,10 +127,14 @@ func _start_s04_and_s05() -> void:
 
 
 func _run_s06_jump() -> void:
-	# 1. Siluet bergerak singkat ke kanan (hanya gerak langkah)
-	var tw := create_tween()
-	tw.tween_property(silhouette, "position:x", silhouette.position.x + 30.0, 0.4)
-	await tw.finished
+	# 1. Arutala melangkah ke tepi pagar (hanya gerak langkah, tanpa detail)
+	silhouette.visible = false
+	if player:
+		await player.auto_walk_to(Vector2(598, 300), 58.0)
+	else:
+		var tw := create_tween()
+		tw.tween_property(silhouette, "position:x", silhouette.position.x + 30.0, 0.4)
+		await tw.finished
 
 	# 2. LANGSUNG HITAM TOTAL seketika, audio diputus
 	transition_layer.cut_to_black()

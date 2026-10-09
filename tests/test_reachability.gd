@@ -5,15 +5,19 @@ extends Node
 
 const BEDROOM_SCENE = preload("res://scenes/bedroom/bedroom.tscn")
 const CORRIDOR_SCENE = preload("res://scenes/corridor/corridor.tscn")
+const LIFT_SCENE = preload("res://scenes/lift/lift.tscn")
 const STEP := 6
 
 
 func _ready() -> void:
 	print("=== TEST: REACHABILITY INTERACTABLES ===")
-	await _check(BEDROOM_SCENE, "Bedroom", Vector2(320, 280), 960.0)
+	await _check(BEDROOM_SCENE, "Bedroom", Vector2(330, 290), 640.0)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	await _check(CORRIDOR_SCENE, "Corridor", Vector2(200, 265), 1120.0)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await _check(LIFT_SCENE, "Lift", Vector2(320, 300), 640.0)
 	print("=== SELESAI ===")
 	get_tree().quit(0)
 
