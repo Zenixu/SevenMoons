@@ -39,6 +39,7 @@ res://
 │   └── generate_audio.py   (generator audio)
 ├── tests/
 └── docs/               (file md proyek ini)
+    └── references/     (gambar referensi desain, mis. example_1/2.png)
 ```
 
 > **Catatan folder aset (D003):** `assets/art/` sudah dihapus; semua gambar kini

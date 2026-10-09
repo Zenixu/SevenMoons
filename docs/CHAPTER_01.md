@@ -50,6 +50,7 @@ Notasi:
 ## S02 — Kamar (eksplorasi terbatas)
 **Aturan:** Kamar kecil (satu layar 640x360). Ada **8 objek interaktif** (6 lama + **kulkas** & **wastafel** baru). Pemain tidak wajib memeriksa semuanya, tapi minimal 3 sebelum balkon bisa dipilih. Tiap objek memberi satu potongan suasana dan menyetel flag untuk loop berikutnya.
 **Tata ruang (kiri ke kanan):** wastafel -> pintu -> kulkas -> cermin -> kasur -> jendela balkon (agak ke atas) -> meja. Kasur & meja di sisi kanan, dekat.
+**Gaya ruang (D007):** indigo dingin monokrom, lantai keramik mengkilap dengan pantulan cahaya bulan memanjang dari jendela, jendela berkorden tebal (referensi `docs/references/example_2.png`).
 **Pintu apartemen:** Terkunci secara naratif. Interaksi menghasilkan teks (lihat O6).
 
 ### O1 — Ponsel di meja

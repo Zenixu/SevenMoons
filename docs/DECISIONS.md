@@ -149,3 +149,30 @@ saat mata tertutup & di dalam lift, dan ingin ada **bunyi ketikan saat dialog**.
 - SFX baru `type_tick.wav` (0.055s) diputar saat teks dialog/monolog/caption diketik
   (`AudioManager.play_type_tick()`, volume 0 dB). `thought_box.gd` & intro memicunya
   tiap ~0.045-0.05s per 2 karakter.
+
+## D007 — Redesign Kamar Mengikuti Referensi #2 (lantai mengkilap + pita cahaya bulan)
+
+**Tanggal:** 2026-10-09
+**Status:** Diputuskan
+
+### Konteks
+Pemain memberi **dua gambar referensi** (`assets/example_1.png`, `assets/example_2.png`)
+untuk perbaikan kamar, dan minta **condong ke contoh #2** bila memungkinkan.
+Referensi #2: suasana indigo dingin monokrom, **lantai keramik mengkilap** dengan
+**pita cahaya bulan** memanjang dari jendela, jendela **berkorden tebal**, moonlight
+sebagai satu-satunya sumber cahaya.
+
+### Keputusan
+- Kamar digambar ulang (`make_bedroom` di `scripts/gen_art_v2.py`) mengikuti #2:
+  palet indigo dingin, lantai ubin mengkilap + pantulan bulan berbentuk pita vertikal
+  (soft falloff + GaussianBlur), jendela berkorden dengan treeline + hujan + bulan.
+- **Tata letak & collision dipertahankan** (wastafel->pintu->kulkas->cermin->kasur->
+  jendela->meja) agar 8 interactable & reachability tetap valid.
+- Prop `mirror.png` didesain ulang: kaca bergradien + kilau diagonal tipis + pantulan
+  samar, agar jelas terbaca sebagai **cermin** (bukan gambar/retak).
+- Bayangan kontak ditambah di bawah wastafel/meja/kasur agar furnitur "menempel" lantai.
+
+### Konsekuensi
+- Referensi dipindah ke `docs/references/` (bukan `assets/`) supaya tidak ikut jadi aset game.
+- Regenerasi latar: `/usr/bin/python3 scripts/gen_art_v2.py` (butuh PIL).
+- Referensi #1 dipakai hanya bila #2 tidak memungkinkan; di sini #2 dipakai.
