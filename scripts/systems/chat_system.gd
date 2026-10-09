@@ -125,6 +125,7 @@ func _show_typing(sender: String, duration: float) -> void:
 	var dots: int = 1
 
 	while elapsed < duration and _is_typing:
+		AudioManager.play_typing_sfx()
 		typing_label.text = "%s sedang mengetik%s" % [sender, ".".repeat(dots)]
 		dots = (dots % 3) + 1
 		await get_tree().create_timer(dot_step).timeout

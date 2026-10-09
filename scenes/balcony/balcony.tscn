@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/systems/balcony_controller.gd" id="1_balcony"]
 [ext_resource type="PackedScene" path="res://scenes/ui/thought_box.tscn" id="2_thought"]
 [ext_resource type="PackedScene" path="res://scenes/ui/choice_menu.tscn" id="3_choice"]
 [ext_resource type="PackedScene" path="res://scenes/transitions/transition_layer.tscn" id="4_trans"]
+[ext_resource type="Texture2D" path="res://assets/art/balcony_skyline.png" id="5_skyline"]
+[ext_resource type="Texture2D" path="res://assets/art/moon_dim.png" id="6_moon"]
+[ext_resource type="Texture2D" path="res://assets/art/balcony_railing.png" id="7_railing"]
+[ext_resource type="Texture2D" path="res://assets/art/silhouette_figure.png" id="8_sil"]
 
 [node name="Balcony" type="Node2D"]
 script = ExtResource("1_balcony")
@@ -13,19 +17,18 @@ offset_right = 640.0
 offset_bottom = 360.0
 color = Color(0.04, 0.05, 0.08, 1)
 
-[node name="MoonGlow" type="ColorRect" parent="."]
-offset_left = 420.0
-offset_top = 40.0
-offset_right = 470.0
-offset_bottom = 90.0
-color = Color(0.3, 0.35, 0.45, 0.25)
+[node name="MoonGlow" type="TextureRect" parent="."]
+offset_left = 440.0
+offset_top = 35.0
+offset_right = 488.0
+offset_bottom = 83.0
+texture = ExtResource("6_moon")
 
-[node name="CityBackdrop" type="ColorRect" parent="."]
-offset_left = 60.0
-offset_top = 180.0
-offset_right = 580.0
-offset_bottom = 250.0
-color = Color(0.06, 0.07, 0.11, 0.9)
+[node name="CityBackdrop" type="TextureRect" parent="."]
+offset_top = 100.0
+offset_right = 640.0
+offset_bottom = 300.0
+texture = ExtResource("5_skyline")
 
 [node name="BalconyFloor" type="ColorRect" parent="."]
 offset_top = 250.0
@@ -33,18 +36,18 @@ offset_right = 640.0
 offset_bottom = 360.0
 color = Color(0.08, 0.09, 0.13, 1)
 
-[node name="Railing" type="ColorRect" parent="."]
-offset_top = 246.0
+[node name="Railing" type="TextureRect" parent="."]
+offset_top = 226.0
 offset_right = 640.0
-offset_bottom = 252.0
-color = Color(0.2, 0.22, 0.28, 1)
+offset_bottom = 258.0
+texture = ExtResource("7_railing")
 
-[node name="Silhouette" type="ColorRect" parent="."]
+[node name="Silhouette" type="TextureRect" parent="."]
 offset_left = 300.0
 offset_top = 200.0
 offset_right = 322.0
 offset_bottom = 252.0
-color = Color(0.02, 0.02, 0.03, 1)
+texture = ExtResource("8_sil")
 
 [node name="UI" type="CanvasLayer" parent="."]
 

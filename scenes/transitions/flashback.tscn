@@ -50,9 +50,10 @@ custom_minimum_size = Vector2(240, 140)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
 
-[node name="SlideImage" type="ColorRect" parent="CenterContainer/VBoxContainer/SlideFrame"]
+[node name="SlideImage" type="TextureRect" parent="CenterContainer/VBoxContainer/SlideFrame"]
 layout_mode = 2
-color = Color(0.16, 0.18, 0.24, 1)
+expand_mode = 1
+stretch_mode = 5
 
 [node name="MemoryText" type="Label" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(360, 0)

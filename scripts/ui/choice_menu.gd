@@ -96,6 +96,20 @@ func _create_choice_button(index: int, opt: Variant) -> Button:
 	btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	btn.custom_minimum_size = Vector2(280, 32)
 	btn.focus_mode = FOCUS_ALL
+
+	var base_font_size: int = 11
+	var font_sz: int = int(round(base_font_size * SettingsManager.font_size_multiplier))
+	btn.add_theme_font_size_override("font_size", font_sz)
+
+	if SettingsManager.high_contrast:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.0, 0.0, 0.0, 0.95)
+		sb.border_color = Color(1.0, 1.0, 1.0, 1.0)
+		sb.set_border_width_all(2)
+		sb.set_corner_radius_all(2)
+		btn.add_theme_stylebox_override("normal", sb)
+		btn.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+
 	btn.pressed.connect(func() -> void: _on_button_pressed(index))
 	return btn
 

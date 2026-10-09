@@ -25,11 +25,6 @@ AudioManager="*res://scripts/autoload/audio_manager.gd"
 LoopManager="*res://scripts/autoload/loop_manager.gd"
 DialogueRunner="*res://scripts/autoload/dialogue_runner.gd"
 
-[internationalization]
-
-locale/fallback="id"
-locale/translations=PackedStringArray("res://data/localization/id.id.translation")
-
 [display]
 
 window/size/viewport_width=640
@@ -37,6 +32,11 @@ window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://data/localization/id.id.translation")
+locale/fallback="id"
 
 [rendering]
 

@@ -6,10 +6,10 @@ extends Node2D
 
 signal balcony_scene_completed()
 
-@onready var silhouette: ColorRect = $Silhouette
-@onready var city_backdrop: ColorRect = $CityBackdrop
-@onready var railing: ColorRect = $Railing
-@onready var moon_glow: ColorRect = $MoonGlow
+@onready var silhouette: CanvasItem = $Silhouette
+@onready var city_backdrop: CanvasItem = $CityBackdrop
+@onready var railing: CanvasItem = $Railing
+@onready var moon_glow: CanvasItem = $MoonGlow
 
 @onready var thought_box: ThoughtBox = $UI/ThoughtBox
 @onready var choice_menu: ChoiceMenu = $UI/ChoiceMenu
@@ -47,6 +47,7 @@ func _process(delta: float) -> void:
 
 func _start_s04_and_s05() -> void:
 	transition_layer.set_vignette(0.7, 2.0)
+	AudioManager.play_rain(1.0)
 	FlagStore.set_flag("saw_moon_hidden", true)
 
 	# S04 Narasi
@@ -101,7 +102,7 @@ func _run_s06_jump() -> void:
 	await get_tree().create_timer(3.0).timeout
 
 	# 4. Denting jam tunggal
-	# (SFX ditangani AudioManager jika file ada)
+	AudioManager.play_chime()
 	await get_tree().create_timer(2.0).timeout
 
 	balcony_scene_completed.emit()
@@ -118,6 +119,7 @@ func _run_s06_alt() -> void:
 	await thought_box.text_completed
 	await get_tree().create_timer(1.5).timeout
 
+	AudioManager.fade_out_ambience(2.0)
 	transition_layer.fade_to_black(3.0)
 	await get_tree().create_timer(3.0).timeout
 

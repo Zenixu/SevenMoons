@@ -1,3 +1,4 @@
+
 ## SettingsManager — Autoload
 ## Pengaturan pemain: volume, kecepatan teks, aksesibilitas, lewati adegan sensitif.
 ## Simpan/muat ke user://settings.cfg

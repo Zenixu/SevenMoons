@@ -42,8 +42,13 @@ func fade_from_black(duration: float = 2.0) -> void:
 func cut_to_black() -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
-	color_rect.color = Color(0, 0, 0, 1)
-	fade_completed.emit()
+	if SettingsManager.reduce_flash:
+		_tween = create_tween()
+		_tween.tween_property(color_rect, "color:a", 1.0, 0.35)
+		_tween.finished.connect(func() -> void: fade_completed.emit())
+	else:
+		color_rect.color = Color(0, 0, 0, 1)
+		fade_completed.emit()
 
 
 ## Langsung kembali bening

@@ -48,6 +48,7 @@ func _ready() -> void:
 
 func _start_s01_intro() -> void:
 	player.set_movement_enabled(false)
+	AudioManager.play_rain(2.0)
 	transition_layer.cut_to_black()
 	transition_layer.fade_from_black(4.0)
 
@@ -109,6 +110,7 @@ func _on_object_interacted(obj_id: String) -> void:
 
 
 func _handle_phone() -> void:
+	AudioManager.play_vibrate()
 	FlagStore.set_flag("checked_phone", true)
 	thought_box.display_thought("S02_O1_N01")
 	await thought_box.text_completed
@@ -273,6 +275,7 @@ func _on_balcony_trigger_entered(body: Node2D) -> void:
 func start_s03_monologue() -> void:
 	player.set_movement_enabled(false)
 	transition_layer.set_vignette(0.4, 2.0)
+	AudioManager.play_theme_a(2.0)
 
 	# Putaran 1
 	thought_box.display_thought("S03_R1_VOICE")
@@ -328,6 +331,7 @@ func start_s03_monologue() -> void:
 
 	# Ponsel bergetar halus
 	FlagStore.set_flag("heard_phone_buzz", true)
+	AudioManager.play_vibrate()
 	thought_box.display_thought("S03_R3_RES_COMMON")
 	await thought_box.text_completed
 	await get_tree().create_timer(1.5).timeout
@@ -367,6 +371,7 @@ func _start_s08_sequence() -> void:
 
 	transition_layer.cut_to_black()
 	transition_layer.fade_from_black(3.0)
+	AudioManager.play_rain(2.0)
 
 	# 2. Jam muncul
 	clock_label.text = "02:47"
@@ -382,6 +387,7 @@ func _start_s08_sequence() -> void:
 	await get_tree().create_timer(1.5).timeout
 
 	# 3. Ponsel bergetar, nomor tak dikenal
+	AudioManager.play_vibrate()
 	thought_box.display_thought("S08_N03")
 	await thought_box.text_completed
 	await get_tree().create_timer(1.2).timeout
@@ -410,13 +416,16 @@ func _start_s08_sequence() -> void:
 	await get_tree().create_timer(2.0).timeout
 	chat_ui.visible = false
 
-	# 7. Label Loop Counter "LOOP 2/7"
+	# 7. Label Loop Counter "LOOP 2/7" & Satu nada hangat
+	AudioManager.play_warm_note(0.5)
 	loop_counter_label.text = tr("S08_LOOP_LABEL")
 	loop_counter_label.visible = true
 	var tw_label := create_tween()
 	tw_label.tween_property(loop_counter_label, "modulate:a", 0.0, 3.0)
 
 	# 8. Fade out & selesaikan loop 1
+	AudioManager.stop_bgm(3.0)
+	AudioManager.stop_ambience(3.0)
 	transition_layer.fade_to_black(3.0)
 	await get_tree().create_timer(3.0).timeout
 

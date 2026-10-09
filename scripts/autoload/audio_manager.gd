@@ -10,6 +10,17 @@ const BUS_BGM: StringName = &"BGM"
 const BUS_SFX: StringName = &"SFX"
 const BUS_AMBIENCE: StringName = &"Ambience"
 
+# --- Chapter 1 Audio Assets Preload ---
+const STREAM_RAIN: AudioStream = preload("res://assets/audio/ambience/rain_gentle_loop.wav")
+const STREAM_FRIDGE: AudioStream = preload("res://assets/audio/ambience/fridge_hum_loop.wav")
+const STREAM_CLOCK_TICK: AudioStream = preload("res://assets/audio/ambience/clock_tick_loop.wav")
+const STREAM_PHONE_VIBRATE: AudioStream = preload("res://assets/audio/sfx/phone_vibrate.wav")
+const STREAM_CLOCK_CHIME: AudioStream = preload("res://assets/audio/sfx/clock_chime.wav")
+const STREAM_CHAT_TYPE: AudioStream = preload("res://assets/audio/sfx/chat_type.wav")
+const STREAM_THEME_FRAGMENT_A: AudioStream = preload("res://assets/audio/bgm/theme_fragment_a.wav")
+const STREAM_THEME_FRAGMENT_A_REVERSED: AudioStream = preload("res://assets/audio/bgm/theme_fragment_a_reversed.wav")
+const STREAM_THEME_WARM_NOTE: AudioStream = preload("res://assets/audio/bgm/theme_warm_single_note.wav")
+
 var _bgm_player: AudioStreamPlayer
 var _ambience_player: AudioStreamPlayer
 var _sfx_pool: Array[AudioStreamPlayer] = []
@@ -135,3 +146,33 @@ func set_leitmotif_stage(stage: int) -> void:
 
 func get_leitmotif_stage() -> int:
 	return _current_leitmotif_stage
+
+
+# --- Convenience Helpers for Chapter 1 ---
+
+func play_rain(fade_in: float = 2.0) -> void:
+	play_ambience(STREAM_RAIN, fade_in)
+
+
+func play_theme_a(fade_in: float = 1.0) -> void:
+	play_bgm(STREAM_THEME_FRAGMENT_A, fade_in)
+
+
+func play_theme_a_reversed(fade_in: float = 1.0) -> void:
+	play_bgm(STREAM_THEME_FRAGMENT_A_REVERSED, fade_in)
+
+
+func play_warm_note(fade_in: float = 0.5) -> void:
+	play_bgm(STREAM_THEME_WARM_NOTE, fade_in)
+
+
+func play_vibrate() -> void:
+	play_sfx(STREAM_PHONE_VIBRATE)
+
+
+func play_chime() -> void:
+	play_sfx(STREAM_CLOCK_CHIME)
+
+
+func play_typing_sfx() -> void:
+	play_sfx(STREAM_CHAT_TYPE)
