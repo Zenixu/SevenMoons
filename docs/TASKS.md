@@ -28,11 +28,11 @@ Kerjakan berurutan. Centang `[x]` saat selesai dan lolos kriteria. Rujuk AGENTS.
 **Selesai jika:** semua UI dapat dipanggil dari scene uji dan responsif pada resolusi pixel.
 
 ## FASE 3 — Scene Bab 1
-- [ ] 3.1 `bedroom.tscn` dengan placeholder art, kamera tetap, gerak pemain.
-- [ ] 3.2 6 objek interaktif (phone, photo, tea, mirror, clock, door) dengan flag sesuai CHAPTER_01.md.
-- [ ] 3.3 `balcony.tscn` dengan siluet dan tombol [Lompat] tunggal.
-- [ ] 3.4 Transisi: fade lambat, hitam total, vignette, kilas balik.
-- [ ] 3.5 Konversi CHAPTER_01.md ke `data/chapters/chapter_01.json` + `data/localization/id.csv`.
+- [x] 3.1 `bedroom.tscn` dengan placeholder art, kamera tetap, gerak pemain.
+- [x] 3.2 6 objek interaktif (phone, photo, tea, mirror, clock, door) dengan flag sesuai CHAPTER_01.md.
+- [x] 3.3 `balcony.tscn` dengan siluet dan tombol [Lompat] tunggal.
+- [x] 3.4 Transisi: fade lambat, hitam total, vignette, kilas balik.
+- [x] 3.5 Konversi CHAPTER_01.md ke `data/chapters/chapter_01.json` + `data/localization/id.csv`.
 **Selesai jika:** S01-S08 dapat dimainkan dengan placeholder.
 
 ## FASE 4 — Implementasi Bab 1 Penuh

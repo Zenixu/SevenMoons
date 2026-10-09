@@ -1,0 +1,170 @@
+{
+	"chapter": 1,
+	"loop": 1,
+	"scenes": {
+		"S01": {
+			"setting": "bedroom_dark",
+			"bgm": null,
+			"ambience": "rain_light",
+			"steps": [
+				{ "type": "vfx", "action": "fade_in", "duration": 4.0 },
+				{ "type": "narration", "text": "S01_N01", "pause_after": 2.0 },
+				{ "type": "narration", "text": "S01_N02", "pause_after": 2.0 },
+				{ "type": "narration", "text": "S01_N03", "pause_after": 1.0 },
+				{ "type": "ui", "action": "show_clock", "value": "02:47" },
+				{ "type": "set_flag", "flag": "ui_clock_visible", "value": true },
+				{ "type": "line", "speaker": "ARU", "text": "S01_A01", "pause_after": 1.5 },
+				{ "type": "line", "speaker": "ARU", "text": "S01_A02", "pause_after": 1.0 },
+				{ "type": "next_scene", "target": "S02" }
+			]
+		},
+		"S02": {
+			"setting": "bedroom",
+			"interactables": ["phone", "photo", "tea", "mirror", "clock", "door"],
+			"min_inspected": 3,
+			"next": "S03"
+		},
+		"S03": {
+			"setting": "bedroom_dim",
+			"bgm": "fragmen_a",
+			"ambience": "rain_light",
+			"steps": [
+				{ "type": "line", "speaker": "SUARA", "text": "S03_R1_VOICE" },
+				{
+					"type": "choice",
+					"mode": "convergent",
+					"options": [
+						{ "text": "S03_R1_OPT_A" },
+						{ "text": "S03_R1_OPT_B" },
+						{ "text": "S03_R1_OPT_C" }
+					]
+				},
+				{ "type": "line", "speaker": "SUARA", "text": "S03_R1_RES", "pause_after": 1.5 },
+				{ "type": "line", "speaker": "SUARA", "text": "S03_R2_VOICE" },
+				{
+					"type": "choice",
+					"mode": "convergent",
+					"options": [
+						{ "text": "S03_R2_OPT_A" },
+						{ "text": "S03_R2_OPT_B" },
+						{ "text": "S03_R2_OPT_C" }
+					]
+				},
+				{ "type": "narration", "text": "S03_R2_RES", "pause_after": 1.5 },
+				{ "type": "line", "speaker": "SUARA", "text": "S03_R3_VOICE" },
+				{
+					"type": "choice",
+					"mode": "convergent",
+					"options": [
+						{ "text": "S03_R3_OPT_A" },
+						{ "text": "S03_R3_OPT_B" },
+						{ "text": "S03_R3_OPT_C" }
+					]
+				},
+				{ "type": "sfx", "file": "phone_buzz_light" },
+				{ "type": "set_flag", "flag": "heard_phone_buzz", "value": true },
+				{ "type": "narration", "text": "S03_R3_RES_COMMON", "pause_after": 1.5 },
+				{ "type": "line", "speaker": "ARU", "text": "S03_R4_A01", "pause_after": 3.0 },
+				{ "type": "line", "speaker": "ARU", "text": "S03_R4_A02" },
+				{ "type": "ui", "action": "erase_text" },
+				{ "type": "narration", "text": "S03_R4_N01", "pause_after": 1.0 },
+				{ "type": "bgm", "action": "stop" },
+				{ "type": "next_scene", "target": "S04" }
+			]
+		},
+		"S04": {
+			"setting": "balcony_door",
+			"bgm": null,
+			"ambience": "rain_medium",
+			"steps": [
+				{ "type": "vfx", "action": "vignette_in" },
+				{ "type": "narration", "text": "S04_N01", "pause_after": 1.5 },
+				{ "type": "narration", "text": "S04_N02", "pause_after": 1.5 },
+				{ "type": "set_flag", "flag": "saw_moon_hidden", "value": true },
+				{ "type": "line", "speaker": "ARU", "text": "S04_A01", "pause_after": 2.0 },
+				{ "type": "line", "speaker": "ARU", "text": "S04_A02", "pause_after": 1.0 },
+				{ "type": "line", "speaker": "ARU", "text": "S04_A03", "pause_after": 2.0 },
+				{ "type": "next_scene", "target": "S05" }
+			]
+		},
+		"S05": {
+			"setting": "balcony",
+			"bgm": null,
+			"ambience": "rain_medium",
+			"steps": [
+				{
+					"type": "choice",
+					"mode": "normal",
+					"options": [
+						{ "text": "S05_BTN_JUMP" }
+					]
+				},
+				{ "type": "next_scene", "target": "S06" }
+			]
+		},
+		"S06": {
+			"setting": "balcony",
+			"bgm": null,
+			"ambience": null,
+			"steps": [
+				{ "type": "vfx", "action": "silhouette_move" },
+				{ "type": "vfx", "action": "fade_to_black_cut" },
+				{ "type": "pause", "duration": 3.0 },
+				{ "type": "sfx", "file": "clock_chime_single" },
+				{ "type": "pause", "duration": 2.0 },
+				{ "type": "next_scene", "target": "S07" }
+			]
+		},
+		"S06_ALT": {
+			"setting": "black_screen",
+			"bgm": null,
+			"ambience": null,
+			"steps": [
+				{ "type": "vfx", "action": "fade_to_black", "duration": 3.0 },
+				{ "type": "narration", "text": "S06_ALT_N01", "pause_after": 3.0 },
+				{ "type": "narration", "text": "S06_ALT_N02", "pause_after": 2.0 },
+				{ "type": "next_scene", "target": "S07" }
+			]
+		},
+		"S07": {
+			"setting": "flashback",
+			"bgm": "fragmen_a_reversed",
+			"ambience": "soft",
+			"steps": [
+				{ "type": "vfx", "action": "flashback_slide", "slide": 1, "text": "S07_FLASH_1", "duration": 3.5 },
+				{ "type": "vfx", "action": "flashback_slide", "slide": 2, "text": "S07_FLASH_2", "duration": 3.5 },
+				{ "type": "vfx", "action": "flashback_slide", "slide": 3, "text": "S07_FLASH_3", "duration": 3.5 },
+				{ "type": "vfx", "action": "flashback_slide", "slide": 4, "text": "S07_FLASH_4", "duration": 3.5 },
+				{ "type": "set_flag", "flag": "saw_flashback_1", "value": true },
+				{ "type": "line", "speaker": "ARU", "text": "S07_A01", "pause_after": 1.5 },
+				{ "type": "line", "speaker": "ARU", "text": "S07_A02", "pause_after": 1.5 },
+				{ "type": "vfx", "action": "pixel_dissolve" },
+				{ "type": "pause", "duration": 3.0 },
+				{ "type": "next_scene", "target": "S08" }
+			]
+		},
+		"S08": {
+			"setting": "bedroom",
+			"bgm": null,
+			"ambience": "rain_light",
+			"steps": [
+				{ "type": "narration", "text": "S08_N01", "pause_after": 2.0 },
+				{ "type": "narration", "text": "S08_N02", "pause_after": 2.0 },
+				{ "type": "sfx", "file": "phone_buzz" },
+				{ "type": "narration", "text": "S08_N03", "pause_after": 1.5 },
+				{ "type": "chat_message", "sender": "Unknown", "text": "S08_MSG_1" },
+				{ "type": "pause", "duration": 2.0 },
+				{ "type": "chat_message", "sender": "Unknown", "text": "S08_MSG_2" },
+				{ "type": "pause", "duration": 3.0 },
+				{ "type": "chat_message", "sender": "Unknown", "text": "S08_MSG_3" },
+				{ "type": "text_input", "prompt": "S08_INPUT_PROMPT", "store_as": "loop1_player_reply" },
+				{ "type": "chat_message", "sender": "Unknown", "text": "S08_MSG_REPLY" },
+				{ "type": "set_flag", "flag": "received_mystery_message", "value": true },
+				{ "type": "ui", "action": "show_loop_counter", "text": "S08_LOOP_LABEL" },
+				{ "type": "bgm", "file": "theme_first_note_warm" },
+				{ "type": "vfx", "action": "fade_to_black", "duration": 3.0 },
+				{ "type": "ui", "action": "chapter_complete", "next_loop": 2 }
+			]
+		}
+	}
+}

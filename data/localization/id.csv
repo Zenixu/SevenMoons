@@ -7,6 +7,8 @@ UI_SETTINGS,Pengaturan
 UI_HELP,Bantuan
 UI_QUIT,Keluar
 UI_CONFIRM,Konfirmasi
+UI_INTERACT,Periksa
+UI_PROMPT_BALCONY,Ada udara dingin dari arah balkon.
 CW_TITLE,Peringatan Konten
 CW_DESC,"Game ini membahas depresi, rasa bersalah, kecemasan sosial, dan pikiran untuk mengakhiri hidup. Ada adegan yang menyiratkan percobaan bunuh diri (tidak ditampilkan secara grafis).\n\nKalau kamu sedang berada di masa sulit, kamu boleh berhenti kapan saja. Kamu tidak harus memainkan ini sekarang."
 CW_BTN_PROCEED,"Aku mengerti, lanjutkan"
@@ -33,3 +35,83 @@ SETTINGS_REDUCE_FLASH,Kurangi Kilatan Cahaya
 SETTINGS_FONT_SIZE,Ukuran Huruf
 SETTINGS_RESET,Kembalikan ke Awal
 SETTINGS_SAVE,Simpan
+S01_N01,...
+S01_N02,Aku bangun.
+S01_N03,Atau mungkin tidak pernah benar-benar tidur.
+S01_A01,Hujan lagi.
+S01_A02,Selalu hujan kalau aku nggak ingin ada suara.
+S02_O1_N01,Layarnya menyala sendiri. Empat belas pesan belum dibuka.
+S02_O1_N02,"Yang paling atas: Kirana. Terkirim tiga hari lalu."
+S02_O1_PREVIEW,"Kirana: Kamu masih di sana? Aku cuma mau bilang..."
+S02_O1_A01,...
+S02_O1_A02,Aku belum siap tahu lanjutannya.
+S02_O1_OPT_A,Buka pesannya
+S02_O1_OPT_B,Letakkan lagi
+S02_O1_RES_A,Jari Arutala berhenti di atas layar. Layar mati sendiri.
+S02_O1_RES_B,Nanti. Selalu nanti.
+S02_O2_N01,"Sebuah bingkai kecil di meja, tertelungkup."
+S02_O2_N02,Debunya tipis. Tidak ada yang menyentuhnya akhir-akhir ini.
+S02_O2_OPT_A,Balikkan
+S02_O2_OPT_B,Biarkan
+S02_O2_RES_A,Aku nggak bisa lihat lama-lama.
+S02_O2_RES_B,Lebih baik begitu.
+S02_O3_N01,Teh yang dibuat entah kapan. Sudah tidak ada uapnya.
+S02_O3_A01,Dulu ada yang bilang teh itu bisa bikin tenang.
+S02_O3_A02,Dulu.
+S02_O4_N01,Pantulannya samar di kaca lemari. Wajahnya tampak lelah dan jauh.
+S02_O4_A01,"Kamu juga nggak tidur, ya."
+S02_O4_N02,Pantulan itu tidak menjawab.
+S02_O5_N01,Jarumnya tidak sama dengan jam di pojok layar.
+S02_O5_A01,Mana yang benar?
+S02_O5_A02,Nggak penting juga.
+S02_O6_N01,Pintu itu ada di sana. Tidak dikunci.
+S02_O6_N02,Tapi tangan Arutala tidak mau terangkat.
+S02_O6_A01,Di luar terlalu ramai. Walaupun sebenarnya kosong.
+S02_O6_OPT_A,Coba buka
+S02_O6_OPT_B,Mundur
+S02_O6_RES_A,Gagang pintu terasa dingin. Ia menariknya kembali.
+S02_O6_RES_B,Nggak malam ini.
+S03_R1_VOICE,Kamu tahu apa yang kamu lakukan ke dia.
+S03_R1_OPT_A,Aku tahu.
+S03_R1_OPT_B,Jangan mulai lagi.
+S03_R1_OPT_C,...
+S03_R1_RES,"Dan kamu masih di sini, seolah nggak apa-apa."
+S03_R2_VOICE,Orang-orang bakal lebih baik tanpa kamu.
+S03_R2_OPT_A,Mungkin.
+S03_R2_OPT_B,Bukan itu masalahnya.
+S03_R2_OPT_C,Aku capek.
+S03_R2_RES,Pilihan tadi terasa seperti pintu yang terbuka ke ruangan yang sama.
+S03_R3_VOICE,Nggak ada yang bakal peduli.
+S03_R3_OPT_A,...
+S03_R3_OPT_B,Kirana peduli dulu.
+S03_R3_OPT_C,Aku nggak tahu.
+S03_R3_RES_A,Arutala menatap ponsel yang gelap di meja.
+S03_R3_RES_COMMON,Ada sesuatu yang belum selesai di sana. Tapi ia terlalu lelah untuk mengejarnya.
+S03_R4_A01,Kalau aku berhenti sekarang...
+S03_R4_A02,...nggak akan ada lagi yang harus kuhadapi.
+S03_R4_N01,Pikiran itu berat. Dan ia sudah membawanya terlalu lama.
+S04_N01,Gerimis menempel di kaca.
+S04_N02,"Di atas, awan menutup hampir seluruh langit. Ada cahaya pucat di balik awan."
+S04_A01,Bulan.
+S04_A02,Dulu aku suka lihat itu.
+S04_A03,Sekarang aku cuma ingin menghilang di bawahnya.
+S05_BTN_JUMP,Lompat
+S05_WAIT_15,Rasanya seperti pilihan lain sudah lama hilang.
+S05_WAIT_40,Atau mungkin kamu cuma belum melihatnya.
+S06_ALT_N01,Pikiran itu semakin berat. Layar meredup.
+S06_ALT_N02,Satu hari lagi yang tidak berakhir.
+S07_FLASH_1,Aku ingat dia pernah tertawa seperti itu.
+S07_FLASH_2,"Aku mengetik, lalu menghapus."
+S07_FLASH_3,Aku yang membuatnya pergi.
+S07_FLASH_4,Ia hanya ingin aku berhenti sendirian.
+S07_A01,Maaf.
+S07_A02,Aku minta maaf.
+S08_N01,Aku bangun.
+S08_N02,Lagi.
+S08_N03,Bukan dari Kirana. Nomor tak dikenal.
+S08_MSG_1,kamu yang di sana.
+S08_MSG_2,iya. kamu. bukan dia.
+S08_MSG_3,dia belum selesai. dan aku rasa kamu juga belum.
+S08_INPUT_PROMPT,ketik apa saja...
+S08_MSG_REPLY,"nanti kamu tahu. sekarang, kita mulai dari yang kecil."
+S08_LOOP_LABEL,LOOP 2/7
