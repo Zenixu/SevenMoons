@@ -190,13 +190,13 @@ Umpan balik pemain: **kasur masih sangat jelek**, **kulkas terlalu besar**, kara
 ### Keputusan
 - **Karakter:**
   - **Idle benar-benar diam.** Sebelumnya frame idle memakai tabel langkah yang sama
-    dengan walk, sehingga lengan berayun +/-2-3 px dan badan naik-turun. Sekarang
-    `draw_char(..., walking=False)` memakai pose statis; frame idle identik.
+	dengan walk, sehingga lengan berayun +/-2-3 px dan badan naik-turun. Sekarang
+	`draw_char(..., walking=False)` memakai pose statis; frame idle identik.
   - **Tangan & lengan dirapikan:** lengan lebih ramping, diwarnai `hood_sh` (lebih
-    gelap dari torso) agar tidak menyatu, dan tangan dibuat kecil (3x2 + ibu jari),
-    bukan balok peach besar.
+	gelap dari torso) agar tidak menyatu, dan tangan dibuat kecil (3x2 + ibu jari),
+	bukan balok peach besar.
   - **Ukuran sedikit lebih besar:** `player.gd` `sprite_scale = 1.25` (murni visual,
-    collision tak berubah) + kompensasi offset agar kaki tetap menempel lantai.
+	collision tak berubah) + kompensasi offset agar kaki tetap menempel lantai.
 - **Kasur:** digambar ulang — headboard berkepala tiang, matras tebal (highlight atas /
   bayangan bawah), **bantal persegi jelas**, selimut dengan tepi terlipat + kerutan +
   menggantung di sisi kanan, kaki & bayangan kontak. Kini jelas terbaca sebagai kasur.
@@ -209,3 +209,50 @@ Umpan balik pemain: **kasur masih sangat jelek**, **kulkas terlalu besar**, kara
   flag `walking`; `make_bedroom` (kasur + kulkas) diperbarui.
 - Regenerasi: `/usr/bin/python3 scripts/gen_art_v2.py`.
 - Uji: `test_reachability` (Bedroom 1364 titik), `test_intro`, `test_chapter1_scenes` LULUS.
+
+## D009 — Lorong/lift/rooftop diselaraskan dengan kamar baru + audio diperkuat
+
+**Tanggal:** Sesi terbaru
+**Konteks:** Setelah kamar dirombak (D007) dan karakter diperbaiki (D008), scene lain
+(lorong, interior lift, atap) terasa pucat dan tidak senada. Audio juga kurang: ketukan
+pintu tetangga memakai SFX *ketikan*, lift tidak punya suara mesin/dentang, dan langkah
+kaki tidak berbunyi.
+
+### Keputusan
+- **Lorong (`make_corridor`, 1120x360):** palet indigo dingin senada kamar — wainscot +
+  baseboard, pipa langit-langit, **kolam cahaya lampu** (dither lembut), keset, tanaman,
+  poster penghuni, kontak shadow di ambang pintu. **Posisi x pintu/lift DIPERTAHANKAN**
+  (room 40-84, stairs 150-194, nbrA 300-344, nbrB 520-564, elevator 896-984) agar
+  interactable tetap valid.
+- **Interior lift (`make_lift`, 640x360):** kotak lift sempit di tengah, sisi kiri/kanan
+  dibiarkan gelap. Logam brushed (grain halus), langit-langit berpanel + lampu & glow,
+  dua daun pintu, **cermin lebih jelas**, panel tombol, peta lantai, grounding lantai.
+  Geometri dipertahankan (L=208, R=432, pintu 250-390, peta 398-426 x 200-240).
+- **Atap (`make_rooftop`, 640x360):** lantai beton **basah** (grid + retakan + genangan
+  dengan highlight pantulan), unit AC/vent bertekstur, pagar memanjang + kontak shadow.
+  **Berkas cahaya bulan diperbaiki:** sebelumnya terlihat seperti stiker trapesium keras;
+  kini gradien lembut (per-pixel falloff + `GaussianBlur(4)`) dan **diredam di dekat
+  pagar**, tidak lagi menembus lantai.
+- **Audio diperkuat:**
+  - SFX baru: `door_knock.wav` (3 ketuk kayu), `lift_ding.wav` (bell 2 nada), `footstep.wav`.
+  - Ambience baru: `lift_hum_loop.wav` (dengung mesin lift, 60Hz + harmonik).
+  - `corridor_controller`: ketukan tetangga kini `play_knock()` (sebelumnya keliru memakai
+    SFX ketikan).
+  - `lift_controller`: masuk lift -> `play_lift_ambience()` (hujan diredam + hum lift);
+    pindah lantai -> `play_lift_ding()` lalu hentikan hum.
+  - `player.gd`: SFX langkah kaki berkala (`STEP_INTERVAL = 0.34s`) saat berjalan manual
+    maupun `auto_walk_to`; langsung berhenti saat diam.
+
+### Konsekuensi
+- `gen_art_v2.py`: `make_corridor`/`make_lift`/`make_rooftop` ditulis ulang. **Catatan
+  bug:** setelah `Image.alpha_composite(img, ...)`, handle `ImageDraw` lama menunjuk ke
+  citra yang dibuang — objek yang digambar setelahnya tak terlihat. Wajib
+  `d = ImageDraw.Draw(img)` ulang setelah setiap composite.
+- `generate_audio.py`: fungsi `generate_door_knock`, `generate_lift_ding`,
+  `generate_lift_hum`, `generate_footstep`.
+- `audio_manager.gd`: preload stream baru, layer ambience `AMB_LIFT`, `play_lift_ambience`,
+  `stop_lift_hum`, `play_knock`, `play_lift_ding`, `play_footstep`.
+- Regenerasi: `/usr/bin/python3 scripts/gen_art_v2.py` dan
+  `/usr/bin/python3 scripts/generate_audio.py`.
+- Uji: suite 13/13 LULUS (audio, ui, flag, save, settings, dialogue, loop, intro, corridor,
+  reachability, chapter1 scenes/full).

@@ -25,6 +25,8 @@ const ANIM_ROWS := [
 
 var _facing: String = "down"
 var _auto_walking: bool = false
+var _step_timer: float = 0.0
+const STEP_INTERVAL: float = 0.34   # jeda antar langkah kaki (detik)
 
 
 func _ready() -> void:
@@ -72,6 +74,7 @@ func _physics_process(_delta: float) -> void:
 	if not can_move:
 		velocity = Vector2.ZERO
 		_play_idle()
+		_tick_footsteps(false, _delta)
 		move_and_slide()
 		return
 
@@ -89,9 +92,22 @@ func _physics_process(_delta: float) -> void:
 	if direction != Vector2.ZERO:
 		_update_facing(direction)
 		sprite.play("walk_" + _facing)
+		_tick_footsteps(true, _delta)
 	else:
 		_play_idle()
+		_tick_footsteps(false, _delta)
 	move_and_slide()
+
+
+## Picu SFX langkah kaki berkala saat berjalan (berhenti langsung saat diam).
+func _tick_footsteps(walking: bool, delta: float) -> void:
+	if not walking:
+		_step_timer = 0.0
+		return
+	_step_timer -= delta
+	if _step_timer <= 0.0:
+		_step_timer = STEP_INTERVAL
+		AudioManager.play_footstep()
 
 
 func _update_facing(direction: Vector2) -> void:
@@ -135,6 +151,11 @@ func auto_walk_to(target: Vector2, speed: float = 68.0) -> void:
 		sprite.play("walk_" + _facing)
 		velocity = dir * speed
 		move_and_slide()
+		_step_timer -= get_physics_process_delta_time()
+		if _step_timer <= 0.0:
+			_step_timer = STEP_INTERVAL
+			AudioManager.play_footstep()
 		await get_tree().physics_frame
 	_play_idle()
+	_step_timer = 0.0
 	_auto_walking = false

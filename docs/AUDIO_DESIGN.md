@@ -37,6 +37,10 @@ Tonalitas awal: minor lembut, tempo lambat. Di akhir bergeser ke mayor hangat ta
 - Getar ponsel: SFX khas yang konsisten.
 - Ketikan chat: SFX lembut, bukan mekanis keras.
 - **Ketikan dialog** (`type_tick.wav`, 0.055s): bunyi tick halus yang diputar tiap beberapa karakter saat teks dialog/monolog/caption diketik.
+- **Ketukan pintu** (`door_knock.wav`): tiga ketuk kayu (thud rendah + noise), dipakai saat mengetuk pintu tetangga di lorong (sebelumnya keliru memakai SFX ketikan).
+- **Dentang lift** (`lift_ding.wav`): dua nada bell (B5 lalu E6), berbunyi saat lift tiba di lantai tujuan.
+- **Langkah kaki** (`footstep.wav`): tapak lembut, dipicu berkala (`STEP_INTERVAL = 0.34s`) saat pemain berjalan manual maupun `auto_walk_to`.
+- **Dengung mesin lift** (`lift_hum_loop.wav`): loop 60Hz + harmonik, lapisan ambience `AMB_LIFT` di dalam lift (`play_lift_ambience()`), dihentikan saat lift berpindah.
 
 ## 6. Peta Audio Bab 1
 | Scene | BGM | Ambience | Catatan |
@@ -46,6 +50,7 @@ Tonalitas awal: minor lembut, tempo lambat. Di akhir bergeser ke mayor hangat ta
 | S02 | Tidak ada | Sama | Eksplorasi sunyi |
 | S03 | Fragmen A, sangat pelan | Hujan | Monolog |
 | S04a (rooftop) | Tidak ada | Hujan (tanpa kulkas/jam) | Jalan ke tengah atap lalu berhenti |
+| Lift (interior) | Tidak ada | Hujan quiet + **dengung mesin lift** | Pilih lantai dari peta; dentang saat tiba |
 | S04 | Tidak ada | Hujan lebih jelas | Menuju balkon/tepi atap |
 | S05 | Tidak ada | Hujan | Satu pilihan |
 | S06 | Terputus | Dipotong total | Hitam total 3 detik |
@@ -60,6 +65,10 @@ Tonalitas awal: minor lembut, tempo lambat. Di akhir bergeser ke mayor hangat ta
 - [x] Denting jam tunggal — `clock_chime.wav`
 - [x] Ketikan chat — `chat_type.wav`
 - [x] **Ketikan dialog** — `type_tick.wav` (BARU)
+- [x] **Ketukan pintu** — `door_knock.wav` (BARU)
+- [x] **Dentang lift** — `lift_ding.wav` (BARU)
+- [x] **Langkah kaki** — `footstep.wav` (BARU)
+- [x] **Dengung mesin lift (loop)** — `lift_hum_loop.wav` (BARU)
 - [x] Fragmen A (piano, normal dan versi dibalik)
 - [x] Satu nada hangat penutup
 

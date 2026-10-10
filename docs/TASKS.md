@@ -58,6 +58,8 @@ Kerjakan berurutan. Centang `[x]` saat selesai dan lolos kriteria. Rujuk AGENTS.
 - [x] 5.10 Lift: pemain masuk interior lift (sempit) lalu pilih lantai dari peta; lantai 5 = rooftop langsung (bukan lorong berpintu).
 - [x] 5.11 Audio: hujan dikecilkan + level quiet (mata tertutup & dalam lift); SFX ketikan saat dialog/monolog.
 - [x] 5.12 Intro: monolog pembuka saat mata tertutup, diketik perlahan & dipotong per bagian.
+- [x] 5.13 Lorong/interior lift/atap diselaraskan dengan kamar baru (indigo dingin, kolam cahaya, logam, beton basah).
+- [x] 5.14 Audio diperkuat: SFX ketukan pintu, dentang lift, langkah kaki; ambience hum mesin lift.
 **Selesai jika:** vertical slice layak dijadikan trailer/demo.
 
 ## FASE 6 — Uji dan Tinjauan

@@ -132,7 +132,9 @@ func _handle_stairs() -> void:
 
 func _handle_neighbor() -> void:
 	await _say("CORRIDOR_NEIGHBOR", 0.9)
-	AudioManager.play_typing_sfx()
+	AudioManager.play_knock()
+	await get_tree().create_timer(0.5).timeout
+	AudioManager.play_knock()
 	await _say("CORRIDOR_NEIGHBOR_KNOCK", 1.4)
 	await _say("CORRIDOR_NEIGHBOR_KNOCK2", 1.0)
 	thought_box.clear()

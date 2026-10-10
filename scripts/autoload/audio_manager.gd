@@ -20,6 +20,10 @@ const STREAM_PHONE_VIBRATE: AudioStream = preload("res://assets/audio/sfx/phone_
 const STREAM_CLOCK_CHIME: AudioStream = preload("res://assets/audio/sfx/clock_chime.wav")
 const STREAM_CHAT_TYPE: AudioStream = preload("res://assets/audio/sfx/chat_type.wav")
 const STREAM_TYPE_TICK: AudioStream = preload("res://assets/audio/sfx/type_tick.wav")
+const STREAM_DOOR_KNOCK: AudioStream = preload("res://assets/audio/sfx/door_knock.wav")
+const STREAM_LIFT_DING: AudioStream = preload("res://assets/audio/sfx/lift_ding.wav")
+const STREAM_FOOTSTEP: AudioStream = preload("res://assets/audio/sfx/footstep.wav")
+const STREAM_LIFT_HUM: AudioStream = preload("res://assets/audio/ambience/lift_hum_loop.wav")
 const STREAM_THEME_FRAGMENT_A: AudioStream = preload("res://assets/audio/bgm/theme_fragment_a.wav")
 const STREAM_THEME_FRAGMENT_A_REVERSED: AudioStream = preload("res://assets/audio/bgm/theme_fragment_a_reversed.wav")
 const STREAM_THEME_WARM_NOTE: AudioStream = preload("res://assets/audio/bgm/theme_warm_single_note.wav")
@@ -29,6 +33,7 @@ const AMB_RAIN_DB: float = -6.0
 const AMB_RAIN_QUIET_DB: float = -15.0   # hujan diredam (mata tertutup / dalam lift)
 const AMB_FRIDGE_DB: float = -14.0
 const AMB_CLOCK_DB: float = -20.0
+const AMB_LIFT_DB: float = -18.0
 
 var _bgm_player: AudioStreamPlayer
 var _type_tick_player: AudioStreamPlayer
@@ -41,6 +46,7 @@ const AMB_MAIN: StringName = &"main"
 const AMB_RAIN: StringName = &"rain"
 const AMB_FRIDGE: StringName = &"fridge"
 const AMB_CLOCK: StringName = &"clock"
+const AMB_LIFT: StringName = &"lift"
 
 var _current_leitmotif_stage: int = 0
 
@@ -64,6 +70,7 @@ func _ready() -> void:
 	_ambience_layers[AMB_RAIN] = _make_ambience_player(AMB_RAIN_DB)
 	_ambience_layers[AMB_FRIDGE] = _make_ambience_player(AMB_FRIDGE_DB)
 	_ambience_layers[AMB_CLOCK] = _make_ambience_player(AMB_CLOCK_DB)
+	_ambience_layers[AMB_LIFT] = _make_ambience_player(AMB_LIFT_DB)
 
 	# SFX pool
 	for i in SFX_POOL_SIZE:
@@ -209,6 +216,18 @@ func stop_fridge_hum(fade_out_time: float = 1.5) -> void:
 	stop_ambience_layer(AMB_FRIDGE, fade_out_time)
 
 
+## Dengung mesin lift: hujan diredam + hum lift (dipakai di dalam lift).
+func play_lift_ambience(fade_in: float = 1.5) -> void:
+	set_ambience_layer(AMB_RAIN, STREAM_RAIN, AMB_RAIN_QUIET_DB, fade_in)
+	set_ambience_layer(AMB_LIFT, STREAM_LIFT_HUM, AMB_LIFT_DB, fade_in)
+	stop_ambience_layer(AMB_FRIDGE, minf(fade_in, 0.6))
+	stop_ambience_layer(AMB_CLOCK, minf(fade_in, 0.6))
+
+
+func stop_lift_hum(fade_out_time: float = 1.0) -> void:
+	stop_ambience_layer(AMB_LIFT, fade_out_time)
+
+
 # --- SFX ---
 
 func play_sfx(stream: AudioStream) -> void:
@@ -258,6 +277,18 @@ func play_chime() -> void:
 
 func play_typing_sfx() -> void:
 	play_sfx(STREAM_CHAT_TYPE)
+
+
+func play_knock() -> void:
+	play_sfx(STREAM_DOOR_KNOCK)
+
+
+func play_lift_ding() -> void:
+	play_sfx(STREAM_LIFT_DING)
+
+
+func play_footstep() -> void:
+	play_sfx(STREAM_FOOTSTEP)
 
 
 ## Tick ketikan singkat untuk efek dialog mengetik (boleh dipanggil berulang).

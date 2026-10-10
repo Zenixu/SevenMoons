@@ -14,8 +14,8 @@ res://
 │   ├── flashbacks/     (fb_1..4)
 │   ├── audio/
 │   │   ├── bgm/
-│   │   ├── sfx/        (type_tick, chat_type, phone_vibrate, clock_chime)
-│   │   └── ambience/   (rain_gentle_loop, fridge_hum_loop, clock_tick_loop)
+│   │   ├── sfx/        (type_tick, chat_type, phone_vibrate, clock_chime, door_knock, lift_ding, footstep)
+│   │   └── ambience/   (rain_gentle_loop, fridge_hum_loop, clock_tick_loop, lift_hum_loop)
 │   ├── shaders/        (wake_blur.gdshader)
 │   └── fonts/
 ├── data/

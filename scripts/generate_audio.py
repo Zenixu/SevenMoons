@@ -133,6 +133,86 @@ def generate_type_tick(filename):
         samples[i] = click * env * 0.5
     create_wav(filename, samples)
 
+# 6c. SFX: Ketukan pintu kayu (tiga ketuk lembut, berat rendah + noise kayu)
+def generate_door_knock(filename):
+    duration = 0.75
+    num_samples = int(SAMPLE_RATE * duration)
+    samples = [0.0] * num_samples
+    random.seed(33)
+    def knock(start_t, gain=1.0):
+        start_idx = int(start_t * SAMPLE_RATE)
+        body = int(SAMPLE_RATE * 0.12)
+        for i in range(body):
+            idx = start_idx + i
+            if idx >= num_samples:
+                break
+            t = i / SAMPLE_RATE
+            env = math.exp(-t * 45.0)
+            # thud kayu: noise singkat + resonansi rendah
+            noise = random.uniform(-1.0, 1.0)
+            tone = 0.7 * math.sin(2 * math.pi * 190 * t) + 0.3 * math.sin(2 * math.pi * 95 * t)
+            samples[idx] += (noise * 0.35 + tone) * env * 0.55 * gain
+    knock(0.02, 1.0)
+    knock(0.20, 0.85)
+    knock(0.36, 0.7)
+    create_wav(filename, samples)
+
+# 6d. SFX: Dentang lift tiba (dua nada bell, "ding")
+def generate_lift_ding(filename):
+    duration = 0.9
+    num_samples = int(SAMPLE_RATE * duration)
+    samples = [0.0] * num_samples
+    def bell(start_t, freq):
+        start_idx = int(start_t * SAMPLE_RATE)
+        length = int(SAMPLE_RATE * 0.55)
+        for i in range(length):
+            idx = start_idx + i
+            if idx >= num_samples:
+                break
+            t = i / SAMPLE_RATE
+            env = math.exp(-t * 6.0)
+            s = 0.6 * math.sin(2 * math.pi * freq * t) + \
+                0.25 * math.sin(2 * math.pi * freq * 2.0 * t) + \
+                0.1 * math.sin(2 * math.pi * freq * 3.0 * t)
+            samples[idx] += s * env * 0.4
+    bell(0.0, 988.0)     # B5
+    bell(0.16, 1318.5)   # E6
+    create_wav(filename, samples)
+
+# 6e. Ambience: Dengung mesin lift (loop, 60Hz + harmonik + noise lembut)
+def generate_lift_hum(filename, duration=2.0):
+    num_samples = int(SAMPLE_RATE * duration)
+    samples = [0.0] * num_samples
+    random.seed(41)
+    lp = 0.0
+    for i in range(num_samples):
+        t = i / SAMPLE_RATE
+        hum = 0.16 * math.sin(2 * math.pi * 60 * t) + \
+              0.07 * math.sin(2 * math.pi * 120 * t) + \
+              0.03 * math.sin(2 * math.pi * 180 * t)
+        white = random.uniform(-1.0, 1.0)
+        lp += 0.05 * (white - lp)
+        samples[i] = (hum + 0.12 * lp) * 0.45
+    fade_len = int(SAMPLE_RATE * 0.25)
+    for i in range(fade_len):
+        w = i / fade_len
+        samples[i] = samples[i] * w + samples[num_samples - fade_len + i] * (1.0 - w)
+    create_wav(filename, samples)
+
+# 6f. SFX: Langkah kaki lembut (kaki menapak lantai, dipakai saat berjalan)
+def generate_footstep(filename):
+    duration = 0.16
+    num_samples = int(SAMPLE_RATE * duration)
+    samples = [0.0] * num_samples
+    random.seed(57)
+    for i in range(num_samples):
+        t = i / SAMPLE_RATE
+        env = math.exp(-t * 55.0)
+        noise = random.uniform(-1.0, 1.0)
+        tone = 0.4 * math.sin(2 * math.pi * 120 * t)
+        samples[i] = (noise * 0.5 + tone) * env * 0.35
+    create_wav(filename, samples)
+
 # 7. BGM: Fragment A Piano (4-note gentle melancholic phrase: A3, C4, B3, E3 with subtle reverb)
 def synthesize_piano_note(freq, duration, decay_rate=2.0):
     num_samples = int(SAMPLE_RATE * duration)
@@ -192,6 +272,10 @@ if __name__ == '__main__':
     generate_clock_chime(os.path.join(base_dir, "assets/audio/sfx/clock_chime.wav"))
     generate_chat_type(os.path.join(base_dir, "assets/audio/sfx/chat_type.wav"))
     generate_type_tick(os.path.join(base_dir, "assets/audio/sfx/type_tick.wav"))
+    generate_door_knock(os.path.join(base_dir, "assets/audio/sfx/door_knock.wav"))
+    generate_lift_ding(os.path.join(base_dir, "assets/audio/sfx/lift_ding.wav"))
+    generate_footstep(os.path.join(base_dir, "assets/audio/sfx/footstep.wav"))
+    generate_lift_hum(os.path.join(base_dir, "assets/audio/ambience/lift_hum_loop.wav"))
     generate_fragment_a(os.path.join(base_dir, "assets/audio/bgm/theme_fragment_a.wav"), False)
     generate_fragment_a(os.path.join(base_dir, "assets/audio/bgm/theme_fragment_a_reversed.wav"), True)
     generate_warm_single_note(os.path.join(base_dir, "assets/audio/bgm/theme_warm_single_note.wav"))

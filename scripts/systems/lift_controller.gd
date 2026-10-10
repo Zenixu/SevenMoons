@@ -35,8 +35,8 @@ func _ready() -> void:
 
 	transition_layer.cut_to_black()
 	transition_layer.fade_from_black(1.2)
-	# Di dalam lift suara hujan diredam (ruang tertutup).
-	AudioManager.play_rain_quiet(AudioManager.AMB_RAIN_QUIET_DB, 1.5)
+	# Di dalam lift: hujan diredam + dengung mesin lift.
+	AudioManager.play_lift_ambience(1.5)
 
 	for child in interactables_parent.get_children():
 		if child is Interactable:
@@ -132,6 +132,9 @@ func _go_to(scene_path: String) -> void:
 	thought_box.clear()
 	if not navigate_scenes:
 		return
+	# Dentang lift saat tiba, lalu hentikan dengung mesin.
+	AudioManager.play_lift_ding()
+	AudioManager.stop_lift_hum(1.0)
 	transition_layer.fade_to_black(1.0)
 	await get_tree().create_timer(1.0).timeout
 	get_tree().change_scene_to_file(scene_path)
