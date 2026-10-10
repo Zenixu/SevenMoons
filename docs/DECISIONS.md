@@ -268,12 +268,12 @@ dialog dibuat menghilang saat tak ada teks, dan cermin diturunkan.
 - **Kasur (`make_bedroom`):** diperkecil dari 174 px (b0=296..b1=470) -> **136 px
   (b0=316..b1=452)**.
   - **Headboard:** dari tiang tipis (16 px) -> **panel kokoh** (18 px, `rounded_rectangle`,
-    bibir atas terang + garis panel) yang benar-benar menopang.
+	bibir atas terang + garis panel) yang benar-benar menopang.
   - **Bantal:** dibuat jelas **HORIZONTAL & empuk** — `rounded_rectangle` membulat dengan
-    highlight atas, **cekung/kerut di tengah**, dan bayangan bawah (sebelumnya balok tipis
-    yang terbaca seperti kertas). Bantal lama sebenarnya sudah horizontal (lebar 68 x
-    tinggi 24), tetapi kepala kasur yang tinggi-tipis di sisi kiri membuatnya terbaca
-    seperti elemen vertikal.
+	highlight atas, **cekung/kerut di tengah**, dan bayangan bawah (sebelumnya balok tipis
+	yang terbaca seperti kertas). Bantal lama sebenarnya sudah horizontal (lebar 68 x
+	tinggi 24), tetapi kepala kasur yang tinggi-tipis di sisi kiri membuatnya terbaca
+	seperti elemen vertikal.
   - **Duvet:** tepi lipatan + kerutan + menggantung di kanan; **kontak shadow** bawah.
 - **Cermin:** backing di dinding diturunkan **y 130..172 -> 146..188**; node `Interactables/Mirror`
   `position (254,150) -> (254,166)`, collision `(0,90) -> (0,74)`.
@@ -293,3 +293,30 @@ dialog dibuat menghilang saat tak ada teks, dan cermin diturunkan.
 - `id.csv`: `LIFT_ENTER` baru.
 - Uji: suite 13/13 LULUS (`test_reachability` Bedroom 1364 -> **1380** titik karena kasur
   lebih kecil menambah ruang jalan).
+
+## D011 — Bantal digambar ulang: duduk DI ATAS matras (punya tinggi), tetap horizontal
+
+**Tanggal:** Sesi terbaru
+**Konteks:** User menegaskan bantal salah orientasi: "bantal jangan seperti itu, tapi ke arah
+atas, jangan ke samping... bantal di atas bukan dari arah atas ke bawah, tapi di atas dan
+horizontal ke samping".
+
+### Analisis
+Perbandingan langsung (referensi #2 vs render sendiri) menunjukkan **bantal sebelumnya
+digambar DATAR menempel di permukaan matras** — seperti stiker/decal, bukan objek dengan
+volume. Bentuknya sudah melebar ke samping (horizontal), tetapi karena **tanpa tinggi**,
+bantal terbaca "tenggelam" di matras, bukan bantal yang duduk di atasnya.
+
+### Keputusan
+- Bantal digambar ulang sebagai **objek bertimbul (punya tinggi/volume)**:
+  - badan bantal naik **di atas garis matras** (y176..206, sebelumnya 194..216 yang menempel
+    di matras);
+  - sisi atas terang + sisi bawah gelap (pencahayaan dari jendela) untuk kesan empuk;
+  - sudut membulat (`rounded_rectangle` radius 10) + cekung/kerut tengah + lipatan ujung;
+  - **bayangan jatuh ke matras** agar jelas "duduk di atas", bukan menempel.
+- Bantal tetap **HORIZONTAL** (melebar ke samping, lebar ~70px) dan **rapat ke headboard**
+  (celah 1-2 px dihilangkan: px0 = b0+2).
+
+### Konsekuensi
+- `gen_art_v2.py`: blok bantal di `make_bedroom` ditulis ulang.
+- Uji: `test_reachability` (Bedroom 1380), `test_chapter1_scenes`, `test_ui` LULUS.

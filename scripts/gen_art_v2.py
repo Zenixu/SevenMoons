@@ -525,12 +525,22 @@ def make_bedroom(bg_dir):
     d.rectangle([b0, 192, b1, 198], fill=(80, 90, 128, 255))               # highlight atas
     d.line([(b0, 198), (b1, 198)], fill=(44, 52, 80, 255))                 # piping
     d.rectangle([b0, 232, b1, 238], fill=(38, 44, 70, 255))                # sisi bawah gelap
-    # bantal HORIZONTAL empuk: membulat + highlight + cekung tengah + bayangan
-    d.rounded_rectangle([b0 + 8, 194, b0 + 66, 216], radius=7, fill=(168, 178, 206, 255))
-    d.rounded_rectangle([b0 + 11, 197, b0 + 63, 208], radius=5, fill=(198, 206, 230, 255))
-    d.line([(b0 + 37, 197), (b0 + 37, 208)], fill=(152, 162, 192, 255))    # cekung/kerut tengah
-    d.line([(b0 + 20, 205), (b0 + 54, 205)], fill=(150, 160, 190, 255))
-    d.rectangle([b0 + 8, 216, b0 + 66, 219], fill=(120, 130, 160, 255))    # bayangan bawah bantal
+    # bantal: duduk DI ATAS matras di kepala kasur — punya TINGGI/volume (naik
+    # ke atas) tapi tetap HORIZONTAL (melebar ke samping), seperti bantal asli.
+    px0, px1 = b0 + 2, b0 + 72
+    # bayangan bantal jatuh ke matras
+    d.rounded_rectangle([px0 + 5, 194, px1 - 3, 210], radius=7, fill=(42, 49, 76, 255))
+    # badan bantal (membulat, naik di atas garis matras y=192)
+    d.rounded_rectangle([px0, 176, px1, 206], radius=10, fill=(150, 160, 192, 255))
+    # sisi atas terang (volume & cahaya dari jendela)
+    d.rounded_rectangle([px0 + 3, 178, px1 - 3, 194], radius=8, fill=(198, 207, 232, 255))
+    # sisi bawah lebih gelap (memberi kedalaman bantal)
+    d.rounded_rectangle([px0 + 2, 196, px1 - 2, 206], radius=7, fill=(130, 140, 172, 255))
+    # cekung/kerut tengah
+    d.line([(px0 + 34, 180), (px0 + 34, 198)], fill=(160, 170, 200, 255))
+    d.line([(px0 + 12, 190), (px0 + 56, 190)], fill=(140, 150, 182, 255))
+    # lipatan di ujung kanan bantal
+    d.line([(px1 - 9, 179), (px1 - 9, 202)], fill=(132, 142, 174, 255))
     # duvet/selimut: tepi terlipat + kerutan + menggantung di kanan
     g0 = b0 + 76
     d.rectangle([g0, 194, b1, 236], fill=(46, 56, 90, 255))
