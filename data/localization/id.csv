@@ -152,7 +152,7 @@ CORRIDOR_LIFT_STAY_RES,Nggak ada tempat lain yang lebih baik.
 CORRIDOR_LIFT_MOVE,Pintu besi menutup. Lantai di bawah kakiku bergeser.
 CORRIDOR_ARRIVE_LINE,Selamat datang di lantai %d. Pintu lift terbuka lagi.
 CORRIDOR_F5_HINT,Di atas lantai ini hanya ada atap. Lift akan membawaku ke sana.
-LIFT_ENTER,Pintu lift menutup di belakangku. Ruang kecil ini terasa lebih sunyi dari lorong.
+LIFT_ENTER,Apakah ini pilihan yang tepat? ...
 LIFT_HINT,Ada peta lantai di dinding kanan. Tekan [E] untuk memilih tujuan.
 LIFT_PANEL_PROMPT,Peta Lantai
 LIFT_PANEL,Peta lantai apartemen. Tiga tombol: 3, 4, dan 5.

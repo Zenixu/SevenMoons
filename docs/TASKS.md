@@ -60,6 +60,7 @@ Kerjakan berurutan. Centang `[x]` saat selesai dan lolos kriteria. Rujuk AGENTS.
 - [x] 5.12 Intro: monolog pembuka saat mata tertutup, diketik perlahan & dipotong per bagian.
 - [x] 5.13 Lorong/interior lift/atap diselaraskan dengan kamar baru (indigo dingin, kolam cahaya, logam, beton basah).
 - [x] 5.14 Audio diperkuat: SFX ketukan pintu, dentang lift, langkah kaki; ambience hum mesin lift.
+- [x] 5.15 Kasur dirombak (lebih kecil, bantal horizontal), cermin diturunkan, ThoughtBox auto-hide, teks masuk lift diganti, karakter diperbesar (1.4x).
 **Selesai jika:** vertical slice layak dijadikan trailer/demo.
 
 ## FASE 6 — Uji dan Tinjauan

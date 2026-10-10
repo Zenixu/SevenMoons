@@ -237,11 +237,11 @@ kaki tidak berbunyi.
   - SFX baru: `door_knock.wav` (3 ketuk kayu), `lift_ding.wav` (bell 2 nada), `footstep.wav`.
   - Ambience baru: `lift_hum_loop.wav` (dengung mesin lift, 60Hz + harmonik).
   - `corridor_controller`: ketukan tetangga kini `play_knock()` (sebelumnya keliru memakai
-    SFX ketikan).
+	SFX ketikan).
   - `lift_controller`: masuk lift -> `play_lift_ambience()` (hujan diredam + hum lift);
-    pindah lantai -> `play_lift_ding()` lalu hentikan hum.
+	pindah lantai -> `play_lift_ding()` lalu hentikan hum.
   - `player.gd`: SFX langkah kaki berkala (`STEP_INTERVAL = 0.34s`) saat berjalan manual
-    maupun `auto_walk_to`; langsung berhenti saat diam.
+	maupun `auto_walk_to`; langsung berhenti saat diam.
 
 ### Konsekuensi
 - `gen_art_v2.py`: `make_corridor`/`make_lift`/`make_rooftop` ditulis ulang. **Catatan
@@ -256,3 +256,40 @@ kaki tidak berbunyi.
   `/usr/bin/python3 scripts/generate_audio.py`.
 - Uji: suite 13/13 LULUS (audio, ui, flag, save, settings, dialogue, loop, intro, corridor,
   reachability, chapter1 scenes/full).
+
+## D010 — Kasur dirombak (kecil + bantal horizontal), cermin diturunkan, ThoughtBox auto-hide, teks lift diganti, karakter diperbesar
+
+**Tanggal:** Sesi terbaru
+**Konteks:** User menilai kasur "masih sangat jelek" (bantal terasa vertikal, kasur terlalu
+besar), minta karakter sedikit lebih besar lagi, teks saat masuk lift diganti, kotak latar
+dialog dibuat menghilang saat tak ada teks, dan cermin diturunkan.
+
+### Keputusan
+- **Kasur (`make_bedroom`):** diperkecil dari 174 px (b0=296..b1=470) -> **136 px
+  (b0=316..b1=452)**.
+  - **Headboard:** dari tiang tipis (16 px) -> **panel kokoh** (18 px, `rounded_rectangle`,
+    bibir atas terang + garis panel) yang benar-benar menopang.
+  - **Bantal:** dibuat jelas **HORIZONTAL & empuk** — `rounded_rectangle` membulat dengan
+    highlight atas, **cekung/kerut di tengah**, dan bayangan bawah (sebelumnya balok tipis
+    yang terbaca seperti kertas). Bantal lama sebenarnya sudah horizontal (lebar 68 x
+    tinggi 24), tetapi kepala kasur yang tinggi-tipis di sisi kiri membuatnya terbaca
+    seperti elemen vertikal.
+  - **Duvet:** tepi lipatan + kerutan + menggantung di kanan; **kontak shadow** bawah.
+- **Cermin:** backing di dinding diturunkan **y 130..172 -> 146..188**; node `Interactables/Mirror`
+  `position (254,150) -> (254,166)`, collision `(0,90) -> (0,74)`.
+- **Karakter:** `sprite_scale` **1.25 -> 1.4** (murni visual; collision tak berubah).
+- **Teks masuk lift:** `LIFT_ENTER` diganti menjadi *"Apakah ini pilihan yang tepat? ..."*
+  (sebelumnya deskripsi ruang lift).
+- **ThoughtBox auto-hide:** `PanelContainer` kini **disembunyikan saat tak ada teks**
+  (`_ready`, `clear`, selesai erase) dan muncul lagi saat `display_thought`. Jadi kotak latar
+  tidak mengganggu saat berjalan/idle.
+
+### Konsekuensi
+- `gen_art_v2.py`: blok kasur ditulis ulang; backing cermin diturunkan.
+- `bedroom.tscn`: collision Bed `176x76 -> 152x74` @ (383,210)->(381,212); Mirror node +
+  collision disesuaikan.
+- `player.gd`: `sprite_scale = 1.4`.
+- `thought_box.gd`: `_set_panel_visible()`; `test_ui.gd` ditambah assertion auto-hide.
+- `id.csv`: `LIFT_ENTER` baru.
+- Uji: suite 13/13 LULUS (`test_reachability` Bedroom 1364 -> **1380** titik karena kasur
+  lebih kecil menambah ruang jalan).

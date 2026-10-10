@@ -18,7 +18,7 @@ const ANIM_ROWS := [
 @export var move_speed: float = 85.0
 @export var can_move: bool = true
 ## Perbesaran sprite (tanpa mengubah collision). 1.0 = ukuran asli.
-@export var sprite_scale: float = 1.25
+@export var sprite_scale: float = 1.4
 
 @onready var sprite: AnimatedSprite2D = $Visual
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D

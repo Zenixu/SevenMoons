@@ -31,7 +31,7 @@ size = Vector2(30, 78)
 size = Vector2(42, 120)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bed"]
-size = Vector2(176, 76)
+size = Vector2(152, 74)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_desk"]
 size = Vector2(124, 52)
@@ -89,7 +89,7 @@ shape = SubResource("RectangleShape2D_wall_v")
 [node name="Furniture" type="StaticBody2D" parent="."]
 
 [node name="Bed" type="CollisionShape2D" parent="Furniture"]
-position = Vector2(383, 210)
+position = Vector2(381, 212)
 shape = SubResource("RectangleShape2D_bed")
 
 [node name="Desk" type="CollisionShape2D" parent="Furniture"]
@@ -134,12 +134,12 @@ position = Vector2(0, 54)
 shape = SubResource("RectangleShape2D_inter")
 
 [node name="Mirror" type="Area2D" parent="Interactables"]
-position = Vector2(254, 150)
+position = Vector2(254, 166)
 script = ExtResource("3_inter")
 object_id = "mirror"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/Mirror"]
-position = Vector2(0, 90)
+position = Vector2(0, 74)
 shape = SubResource("RectangleShape2D_wall_inter")
 
 [node name="Visual" type="TextureRect" parent="Interactables/Mirror"]

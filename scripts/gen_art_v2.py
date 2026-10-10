@@ -505,40 +505,43 @@ def make_bedroom(bg_dir):
     d.rectangle([fx0, 238, fx1, 244], fill=(22, 27, 42, 255))               # bayangan kontak
 
     # ---------- Backing cermin di dinding (prop mirror.png digambar di atas) ----------
-    d.rectangle([240, 130, 268, 172], fill=(18, 22, 40, 255))              # bayangan lembut
-    d.rectangle([240, 170, 268, 172], fill=(11, 14, 26, 255))
+    d.rectangle([240, 146, 268, 188], fill=(18, 22, 40, 255))              # bayangan lembut
+    d.rectangle([240, 186, 268, 188], fill=(11, 14, 26, 255))
 
-    # ---------- Kasur (KANAN) — rangka kayu, matras tebal, bantal & selimut ----------
-    b0, b1 = 296, 470
-    # kepala kasur (headboard) tinggi dengan dua tiang
-    d.rectangle([b0 - 8, 168, b0 + 8, 246], fill=(32, 26, 42, 255))
-    d.rectangle([b0 - 6, 174, b0 + 6, 244], fill=(46, 38, 60, 255))
-    d.rectangle([b0 - 8, 168, b0 + 8, 174], fill=(58, 48, 74, 255))         # bibir atas
-    d.rectangle([b0 - 9, 164, b0 - 3, 172], fill=(64, 54, 82, 255))         # tiang kiri
-    d.rectangle([b0 + 3, 164, b0 + 9, 172], fill=(64, 54, 82, 255))         # tiang kanan
-    # rangka + kaki
-    d.rectangle([b0, 236, b1, 244], fill=(30, 25, 40, 255))
-    d.rectangle([b0 + 6, 244, b0 + 12, 252], fill=(24, 20, 34, 255))        # kaki kiri
-    d.rectangle([b1 - 14, 244, b1 - 8, 252], fill=(24, 20, 34, 255))        # kaki kanan
-    # matras tebal (dengan sisi atas terang & bawah gelap)
-    d.rectangle([b0, 190, b1, 238], fill=(52, 60, 92, 255))
-    d.rectangle([b0, 190, b1, 196], fill=(74, 84, 122, 255))
-    d.rectangle([b0, 232, b1, 238], fill=(36, 42, 68, 255))
-    # bantal (persegi, jelas) + lipatan + bayangan
-    d.rounded_rectangle([b0 + 10, 194, b0 + 78, 214], radius=5, fill=(166, 176, 204, 255))
-    d.line([(b0 + 10, 194), (b0 + 78, 194)], fill=(198, 206, 230, 255))
-    d.line([(b0 + 16, 204), (b0 + 72, 204)], fill=(136, 146, 176, 255))
-    d.rectangle([b0 + 10, 214, b0 + 78, 218], fill=(118, 128, 158, 255))
-    # selimut menutupi sisi kanan: tepi terlipat, kerutan, menggantung di kanan
-    g0 = b0 + 88
-    d.rectangle([g0, 192, b1, 236], fill=(44, 54, 88, 255))
-    d.rectangle([g0, 192, b1, 199], fill=(64, 76, 116, 255))                # tepi lipatan
-    d.line([(g0, 199), (b1, 199)], fill=(30, 38, 64, 255))
-    for wx in range(g0 + 14, b1 - 10, 24):
-        d.line([(wx, 200), (wx + 4, 234)], fill=(37, 45, 76, 255))          # kerutan
-    d.rectangle([b1 - 6, 236, b1 + 6, 252], fill=(40, 50, 82, 255))         # selimut menggantung
-    d.rectangle([b1 - 6, 236, b1 + 6, 241], fill=(58, 70, 108, 255))
-    d.rectangle([b0 - 8, 250, b1 + 6, 254], fill=(9, 11, 22, 255))          # bayangan kontak
+    # ---------- Kasur (KANAN) — lebih kecil, headboard kokoh, bantal HORIZONTAL ----------
+    b0, b1 = 316, 452
+    # headboard: panel kokoh (bukan tiang tipis), sudut membulat
+    d.rounded_rectangle([b0 - 14, 176, b0 + 4, 246], radius=4, fill=(40, 32, 52, 255))
+    d.rounded_rectangle([b0 - 12, 178, b0 + 2, 244], radius=3, fill=(54, 44, 70, 255))
+    d.rectangle([b0 - 12, 178, b0 + 2, 184], fill=(72, 60, 92, 255))       # bibir atas terang
+    d.line([(b0 - 10, 190), (b0, 190)], fill=(38, 30, 50, 255))            # panel garis
+    d.line([(b0 - 10, 206), (b0, 206)], fill=(38, 30, 50, 255))
+    # rangka bawah + kaki
+    d.rectangle([b0 - 6, 236, b1, 244], fill=(34, 28, 44, 255))
+    d.rectangle([b0 + 8, 244, b0 + 16, 252], fill=(26, 21, 36, 255))       # kaki kiri
+    d.rectangle([b1 - 18, 244, b1 - 10, 252], fill=(26, 21, 36, 255))      # kaki kanan
+    # matras tebal
+    d.rectangle([b0, 192, b1, 238], fill=(56, 64, 96, 255))
+    d.rectangle([b0, 192, b1, 198], fill=(80, 90, 128, 255))               # highlight atas
+    d.line([(b0, 198), (b1, 198)], fill=(44, 52, 80, 255))                 # piping
+    d.rectangle([b0, 232, b1, 238], fill=(38, 44, 70, 255))                # sisi bawah gelap
+    # bantal HORIZONTAL empuk: membulat + highlight + cekung tengah + bayangan
+    d.rounded_rectangle([b0 + 8, 194, b0 + 66, 216], radius=7, fill=(168, 178, 206, 255))
+    d.rounded_rectangle([b0 + 11, 197, b0 + 63, 208], radius=5, fill=(198, 206, 230, 255))
+    d.line([(b0 + 37, 197), (b0 + 37, 208)], fill=(152, 162, 192, 255))    # cekung/kerut tengah
+    d.line([(b0 + 20, 205), (b0 + 54, 205)], fill=(150, 160, 190, 255))
+    d.rectangle([b0 + 8, 216, b0 + 66, 219], fill=(120, 130, 160, 255))    # bayangan bawah bantal
+    # duvet/selimut: tepi terlipat + kerutan + menggantung di kanan
+    g0 = b0 + 76
+    d.rectangle([g0, 194, b1, 236], fill=(46, 56, 90, 255))
+    d.rectangle([g0, 194, b1, 201], fill=(66, 78, 118, 255))               # tepi lipatan
+    d.line([(g0, 201), (b1, 201)], fill=(32, 40, 66, 255))
+    for wx in range(g0 + 16, b1 - 12, 26):
+        d.line([(wx, 203), (wx + 5, 234)], fill=(38, 47, 78, 255))         # kerutan
+    d.rectangle([b1 - 6, 236, b1 + 8, 252], fill=(42, 52, 84, 255))        # selimut menggantung
+    d.rectangle([b1 - 6, 236, b1 + 8, 242], fill=(60, 72, 110, 255))
+    # bayangan kontak
+    d.rectangle([b0 - 14, 250, b1 + 8, 254], fill=(9, 11, 22, 255))
 
     # ---------- Meja (KANAN) + barang ----------
     mx0, mx1 = 486, 606

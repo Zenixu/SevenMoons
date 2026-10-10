@@ -47,6 +47,13 @@ func _test_thought_box() -> void:
 	await tb.text_erased
 	assert(erased_ctx["done"] == true, "ThoughtBox: text_erased signal gagal dipancarkan")
 	assert(tb.label.text == "", "ThoughtBox: erase_thought gagal mengosongkan teks")
+	assert(tb.panel_container.visible == false, "ThoughtBox: kotak latar harus sembunyi setelah dihapus")
+
+	# Auto-hide: panel tersembunyi saat tak ada teks, muncul saat menampilkan
+	tb.clear()
+	assert(tb.panel_container.visible == false, "ThoughtBox: panel harus sembunyi setelah clear()")
+	tb.display_thought("Hujan di luar belum berhenti.")
+	assert(tb.panel_container.visible == true, "ThoughtBox: panel harus muncul saat menampilkan teks")
 
 	tb.clear()
 	tb.queue_free()

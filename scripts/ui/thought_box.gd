@@ -22,10 +22,23 @@ var _last_tick_char: int = -1
 func _ready() -> void:
 	if label:
 		label.text = ""
+	if panel_container:
+		panel_container.visible = false   # kotak latar sembunyi saat tak ada teks
 	set_process(true)
 	_apply_accessibility()
 	if not SettingsManager.settings_changed.is_connected(_apply_accessibility):
 		SettingsManager.settings_changed.connect(_apply_accessibility)
+
+
+## Tampilkan/sembunyikan kotak latar agar tidak mengganggu saat berjalan & idle.
+func _set_panel_visible(show: bool) -> void:
+	if panel_container == null:
+		return
+	if show:
+		panel_container.visible = true
+		panel_container.modulate = Color(1, 1, 1, 1)
+	else:
+		panel_container.visible = false
 
 
 ## Bunyi ketikan: satu tick tiap beberapa karakter yang muncul (bukan tiap
@@ -73,6 +86,7 @@ func display_thought(text_key_or_literal: String, typing_speed_cps: float = 25.0
 	_last_tick_char = -1
 	label.text = final_text
 	label.visible_characters = 0
+	_set_panel_visible(true)
 
 	if _tween and _tween.is_valid():
 		_tween.kill()
@@ -116,6 +130,7 @@ func erase_thought(erase_speed_cps: float = 35.0) -> void:
 func _on_erasing_finished() -> void:
 	_is_erasing = false
 	label.text = ""
+	_set_panel_visible(false)
 	text_erased.emit()
 
 
@@ -136,3 +151,4 @@ func clear() -> void:
 	_current_text = ""
 	label.text = ""
 	label.visible_characters = 0
+	_set_panel_visible(false)
