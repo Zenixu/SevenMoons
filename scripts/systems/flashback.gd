@@ -31,6 +31,8 @@ const SLIDES: Array[Dictionary] = [
 func play_sequence() -> void:
 	visible = true
 	AudioManager.play_theme_a_reversed(1.5)
+	# §6 S07: ambience "Lembut" — S06 memotong total, jadi pulihkan gerimis pelan.
+	AudioManager.play_rain_quiet(AudioManager.AMB_RAIN_QUIET_DB, 2.0)
 
 	for i in SLIDES.size():
 		var slide: Dictionary = SLIDES[i]

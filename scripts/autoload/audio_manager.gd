@@ -35,6 +35,10 @@ const AMB_FRIDGE_DB: float = -14.0
 const AMB_CLOCK_DB: float = -20.0
 const AMB_LIFT_DB: float = -18.0
 
+# Level BGM untuk leitmotif yang dimainkan "sangat pelan / lembut" (§6):
+# S03 (Fragmen A, sangat pelan) dan S07 (Fragmen A dibalik, lembut).
+const THEME_SOFT_DB: float = -6.0
+
 var _bgm_player: AudioStreamPlayer
 var _type_tick_player: AudioStreamPlayer
 var _sfx_pool: Array[AudioStreamPlayer] = []
@@ -109,8 +113,12 @@ func _set_bus_volume(bus_name: StringName, linear: float) -> void:
 
 # --- BGM ---
 
-func play_bgm(stream: AudioStream, fade_in: float = 1.0) -> void:
+func play_bgm(stream: AudioStream, fade_in: float = 1.0, target_db: float = 0.0) -> void:
 	if _bgm_player.stream == stream and _bgm_player.playing:
+		# Stream sama sudah berputar: cukup geser level bila perlu (loop mulus).
+		if not is_equal_approx(_bgm_player.volume_db, target_db):
+			var keep := create_tween()
+			keep.tween_property(_bgm_player, "volume_db", target_db, fade_in)
 		return
 	if _bgm_player.playing:
 		await fade_out_bgm(0.5)
@@ -118,7 +126,7 @@ func play_bgm(stream: AudioStream, fade_in: float = 1.0) -> void:
 	_bgm_player.volume_db = -80.0
 	_bgm_player.play()
 	var tw := create_tween()
-	tw.tween_property(_bgm_player, "volume_db", 0.0, fade_in)
+	tw.tween_property(_bgm_player, "volume_db", target_db, fade_in)
 
 
 func stop_bgm(fade_out_time: float = 1.0) -> void:
@@ -193,6 +201,18 @@ func play_rain(fade_in: float = 2.0) -> void:
 	set_ambience_layer(AMB_RAIN, STREAM_RAIN, AMB_RAIN_DB, fade_in)
 	set_ambience_layer(AMB_FRIDGE, STREAM_FRIDGE, AMB_FRIDGE_DB, fade_in)
 	set_ambience_layer(AMB_CLOCK, STREAM_CLOCK_TICK, AMB_CLOCK_DB, fade_in)
+	# Dengung lift hanya boleh hidup di dalam lift (§5) — pastikan tak bocor keluar.
+	stop_ambience_layer(AMB_LIFT, minf(fade_in, 0.6))
+
+
+## Hujan saja tanpa lapisan kamar (dengung kulkas / jam dinding).
+## Dipakai di LUAR kamar: atap/rooftop (§6 S04a: "Hujan, tanpa kulkas/jam") dan
+## lorong apartemen — supaya SFX kamar tidak salah konteks di luar ruangan.
+func play_rain_only(fade_in: float = 2.0) -> void:
+	set_ambience_layer(AMB_RAIN, STREAM_RAIN, AMB_RAIN_DB, fade_in)
+	stop_ambience_layer(AMB_FRIDGE, minf(fade_in, 0.6))
+	stop_ambience_layer(AMB_CLOCK, minf(fade_in, 0.6))
+	stop_ambience_layer(AMB_LIFT, minf(fade_in, 0.6))
 
 
 ## Hujan saja, dengan level lebih pelan (dipakai saat mata tertutup / di dalam lift).
@@ -255,16 +275,19 @@ func get_leitmotif_stage() -> int:
 
 # --- Convenience Helpers for Chapter 1 ---
 
-func play_theme_a(fade_in: float = 1.0) -> void:
-	play_bgm(STREAM_THEME_FRAGMENT_A, fade_in)
+## Peta Audio §6: S03 memainkan Fragmen A "sangat pelan" → level diredam.
+func play_theme_a(fade_in: float = 1.0, level_db: float = THEME_SOFT_DB) -> void:
+	play_bgm(STREAM_THEME_FRAGMENT_A, fade_in, level_db)
 
 
-func play_theme_a_reversed(fade_in: float = 1.0) -> void:
-	play_bgm(STREAM_THEME_FRAGMENT_A_REVERSED, fade_in)
+## Peta Audio §6: S07 memainkan Fragmen A dibalik "lembut" → level diredam.
+func play_theme_a_reversed(fade_in: float = 1.0, level_db: float = THEME_SOFT_DB) -> void:
+	play_bgm(STREAM_THEME_FRAGMENT_A_REVERSED, fade_in, level_db)
 
 
+## S08: satu nada hangat, bersih (bukan gema) — dimainkan pada level penuh.
 func play_warm_note(fade_in: float = 0.5) -> void:
-	play_bgm(STREAM_THEME_WARM_NOTE, fade_in)
+	play_bgm(STREAM_THEME_WARM_NOTE, fade_in, 0.0)
 
 
 func play_vibrate() -> void:
