@@ -22,65 +22,79 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.05, 0.06, 0.09, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/CenterContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="MarginContainer/ScrollContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.94, 0.98, 1)
 theme_override_font_sizes/font_size = 28
-text = "ARUTALA"
+text = ""
 horizontal_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="SubtitleLabel" type="Label" parent="MarginContainer/ScrollContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.8, 1)
 theme_override_font_sizes/font_size = 11
-text = "Tujuh Malam Sebelum Fajar"
+text = ""
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/ScrollContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="MenuButtons" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+[node name="MenuButtons" type="VBoxContainer" parent="MarginContainer/ScrollContainer/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 8
 
-[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons"]
+[node name="StartButton" type="Button" parent="MarginContainer/ScrollContainer/CenterContainer/VBoxContainer/MenuButtons"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
-text = "Mulai"
+text = ""
 
-[node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons"]
+[node name="SettingsButton" type="Button" parent="MarginContainer/ScrollContainer/CenterContainer/VBoxContainer/MenuButtons"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
-text = "Pengaturan"
+text = ""
 
-[node name="HelpButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons"]
+[node name="HelpButton" type="Button" parent="MarginContainer/ScrollContainer/CenterContainer/VBoxContainer/MenuButtons"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
-text = "Bantuan"
+text = ""
 
-[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons"]
+[node name="QuitButton" type="Button" parent="MarginContainer/ScrollContainer/CenterContainer/VBoxContainer/MenuButtons"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
-text = "Keluar"
+text = ""
 
 [node name="SettingsMenu" parent="." instance=ExtResource("2_settings")]
 visible = false
@@ -89,3 +103,13 @@ layout_mode = 1
 [node name="HelpMenu" parent="." instance=ExtResource("3_help")]
 visible = false
 layout_mode = 1
+
+[node name="FadeRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
