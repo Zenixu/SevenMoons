@@ -2,6 +2,9 @@
 ## Menampilkan monolog batin Arutala.
 ## Mendukung efek typewriter, hapus huruf per huruf (efek kecemasan),
 ## dan jeda sesuai spesifikasi.
+##
+## Aksesibilitas: teks mengikuti "Ukuran Huruf"/"Kontras Tinggi". Kotak latar
+## dapat di-scroll bila teks panjang agar tidak terpotong saat huruf diperbesar.
 class_name ThoughtBox
 extends Control
 
@@ -9,7 +12,7 @@ signal text_completed()
 signal text_erased()
 
 @onready var panel_container: PanelContainer = $PanelContainer
-@onready var label: RichTextLabel = $PanelContainer/MarginContainer/RichTextLabel
+@onready var label: RichTextLabel = $PanelContainer/MarginContainer/ScrollContainer/RichTextLabel
 
 var _current_text: String = ""
 var _is_typing: bool = false
@@ -25,9 +28,8 @@ func _ready() -> void:
 	if panel_container:
 		panel_container.visible = false   # kotak latar sembunyi saat tak ada teks
 	set_process(true)
-	_apply_accessibility()
-	if not SettingsManager.settings_changed.is_connected(_apply_accessibility):
-		SettingsManager.settings_changed.connect(_apply_accessibility)
+	panel_container.set_meta("ui_hc", true)
+	UITheme.bind(self)
 
 
 ## Tampilkan/sembunyikan kotak latar agar tidak mengganggu saat berjalan & idle.
@@ -55,26 +57,6 @@ func _process(delta: float) -> void:
 		_last_tick_char = shown
 		if shown % 2 == 0:
 			AudioManager.play_type_tick()
-
-
-func _apply_accessibility() -> void:
-	if not is_inside_tree() or label == null:
-		return
-	var base_size: int = 11
-	var font_sz: int = int(round(base_size * SettingsManager.font_size_multiplier))
-	label.add_theme_font_size_override("normal_font_size", font_sz)
-
-	if SettingsManager.high_contrast:
-		label.add_theme_color_override("default_color", Color(1.0, 1.0, 1.0, 1.0))
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = Color(0.0, 0.0, 0.0, 0.96)
-		sb.border_color = Color(1.0, 1.0, 1.0, 1.0)
-		sb.set_border_width_all(2)
-		sb.set_corner_radius_all(3)
-		panel_container.add_theme_stylebox_override("panel", sb)
-	else:
-		label.remove_theme_color_override("default_color")
-		panel_container.remove_theme_stylebox_override("panel")
 
 
 ## Menampilkan teks dengan efek mengetik perlahan

@@ -14,6 +14,8 @@ var _player_in_range: bool = false
 var _prompt_label: Label
 var _sprite_or_rect: CanvasItem
 
+const BASE_PROMPT_FONT: int = 9
+
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
@@ -21,17 +23,35 @@ func _ready() -> void:
 
 	_setup_prompt()
 
+	if not SettingsManager.settings_changed.is_connected(_apply_accessibility):
+		SettingsManager.settings_changed.connect(_apply_accessibility)
+
 
 func _setup_prompt() -> void:
 	_prompt_label = Label.new()
 	_prompt_label.text = "[E] " + tr(prompt_text_key)
-	_prompt_label.add_theme_font_size_override("font_size", 9)
-	_prompt_label.add_theme_color_override("font_color", Color(0.9, 0.95, 1.0, 0.9))
 	_prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_prompt_label.position = Vector2(-40, -28)
-	_prompt_label.custom_minimum_size = Vector2(80, 16)
+	_prompt_label.position = Vector2(-48, -28)
+	_prompt_label.custom_minimum_size = Vector2(96, 16)
 	_prompt_label.visible = false
+	# Garis tepi gelap agar teks tetap terbaca di atas latar apa pun
+	# (tanpa mengandalkan warna saja).
+	_prompt_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	_prompt_label.add_theme_constant_override("outline_size", 3)
 	add_child(_prompt_label)
+	_apply_accessibility()
+
+
+## Petunjuk interaksi ikut "Ukuran Huruf"/"Kontras Tinggi" (MECHANICS_SPEC §9/§10).
+func _apply_accessibility() -> void:
+	if _prompt_label == null:
+		return
+	var mult: float = UITheme.multiplier()
+	_prompt_label.add_theme_font_size_override("font_size", int(round(float(BASE_PROMPT_FONT) * mult)))
+	if SettingsManager.high_contrast:
+		_prompt_label.add_theme_color_override("font_color", UITheme.HC_TEXT)
+	else:
+		_prompt_label.add_theme_color_override("font_color", Color(0.92, 0.95, 1.0, 0.95))
 
 
 func _unhandled_input(event: InputEvent) -> void:

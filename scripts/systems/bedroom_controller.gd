@@ -46,6 +46,8 @@ func _ready() -> void:
 		chat_ui.visible = false
 	if loop_counter_label:
 		loop_counter_label.visible = false
+	# Aksesibilitas HUD (jam, "LOOP 2/7") mengikuti ukuran huruf/kontras.
+	UITheme.bind($UI)
 	balcony_trigger.monitoring = false
 	balcony_trigger.body_entered.connect(_on_balcony_trigger_entered)
 

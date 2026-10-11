@@ -33,6 +33,9 @@ func _ready() -> void:
 	player.position = Vector2(320, 300)
 	_update_floor_label()
 
+	# Aksesibilitas HUD (label lantai & petunjuk).
+	UITheme.bind($UI)
+
 	transition_layer.cut_to_black()
 	transition_layer.fade_from_black(1.2)
 	# Di dalam lift: hujan diredam + dengung mesin lift.

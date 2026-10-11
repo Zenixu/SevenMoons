@@ -16,6 +16,8 @@ var _current_slide: int = 0
 func _ready() -> void:
 	visible = false
 	whisper_text.visible = false
+	# Aksesibilitas: teks kilas balik mengikuti ukuran huruf/kontras.
+	UITheme.bind(self)
 	if auto_start and get_tree() and get_tree().current_scene == self:
 		await play_sequence()
 		get_tree().change_scene_to_file("res://scenes/bedroom/bedroom.tscn")

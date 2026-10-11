@@ -41,6 +41,9 @@ func _ready() -> void:
 	_update_floor_visuals()
 	_place_player()
 
+	# Aksesibilitas HUD (label lantai & petunjuk).
+	UITheme.bind($UI)
+
 	transition_layer.cut_to_black()
 	transition_layer.fade_from_black(1.5)
 	# Lorong apartemen: hujan saja (bukan ambience kamar).

@@ -49,6 +49,8 @@ func _ready() -> void:
 	if monologue_label:
 		monologue_label.text = ""
 		monologue_label.visible = false
+	# Aksesibilitas: monolog & caption mengikuti ukuran huruf/kontras.
+	UITheme.bind(self)
 	if auto_start:
 		await play_intro()
 		_go_to_bedroom()
