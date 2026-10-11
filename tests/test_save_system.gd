@@ -37,3 +37,6 @@ func _ready() -> void:
 	assert(SaveSystem.has_save("test_save.json") == false, "delete_save gagal")
 
 	print("=== SEMUA TEST SaveSystem LULUS ===")
+
+	# Pastikan proses headless berhenti (tanpa quit(), Godot menggantung).
+	get_tree().quit(0)

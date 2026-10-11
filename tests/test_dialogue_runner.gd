@@ -43,6 +43,9 @@ func _ready() -> void:
 	FlagStore.clear()
 	print("=== SEMUA TEST DialogueRunner LULUS ===")
 
+	# Pastikan proses headless berhenti (tanpa quit(), Godot menggantung).
+	get_tree().quit(0)
+
 
 func _create_test_chapter() -> void:
 	var data: Dictionary = {
