@@ -8,6 +8,9 @@ UI_HELP,Bantuan
 UI_QUIT,Keluar
 UI_CONFIRM,Konfirmasi
 UI_INTERACT,Periksa
+UI_RESUME,Lanjutkan
+PAUSE_TITLE,Jeda
+PAUSE_HINT,Tekan Esc untuk lanjut.
 UI_PROMPT_BALCONY,Ada udara dingin dari arah balkon.
 CW_TITLE,Peringatan Konten
 CW_DESC,"Game ini membahas depresi, rasa bersalah, kecemasan sosial, dan pikiran untuk mengakhiri hidup. Ada adegan yang menyiratkan percobaan bunuh diri (tidak ditampilkan secara grafis).\n\nKalau kamu sedang berada di masa sulit, kamu boleh berhenti kapan saja. Kamu tidak harus memainkan ini sekarang."
@@ -35,6 +38,8 @@ SETTINGS_REDUCE_FLASH,Kurangi Kilatan Cahaya
 SETTINGS_FONT_SIZE,Ukuran Huruf
 SETTINGS_RESET,Kembalikan ke Awal
 SETTINGS_SAVE,Simpan
+ARU,Arutala
+SUARA,Suara Dalam
 S01_N01,...
 S01_N02,Aku bangun. Lagi.
 S01_N03,Atau mungkin tidak pernah benar-benar tidur.
@@ -173,3 +178,10 @@ S01_INTRO_3,"Suara jarum jam, rintikan gerimis yang sangat tenang... aku sendiri
 S01_INTRO_4,"Namun rasanya kosong dan menakutkan. Apakah aku akan terbangun lagi di malam ini?"
 S01_INTRO_5,"Sudah 4 tahun sejak semua hal itu terjadi. Aku bingung dengan apa yang akan aku lakukan."
 S01_INTRO_6,"Rasanya setiap kali aku bergerak... aku merasa lelah. Haruskah aku mengakhiri malam ini saja?"
+MAIN_TITLE,ARUTALA
+MAIN_SUBTITLE,Tujuh Malam Sebelum Fajar
+UI_CHAT_HEADER,Pesan Masuk
+UI_CHAT_TYPING,Sedang mengetik...
+UI_CHAT_TYPING_FORMAT,%s sedang mengetik%s
+UI_CHAT_INPUT_PLACEHOLDER,ketik apa saja...
+UI_CHAT_SEND,Kirim
