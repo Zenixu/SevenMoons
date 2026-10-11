@@ -310,7 +310,7 @@ bantal terbaca "tenggelam" di matras, bukan bantal yang duduk di atasnya.
 ### Keputusan
 - Bantal digambar ulang sebagai **objek bertimbul (punya tinggi/volume)**:
   - badan bantal naik **di atas garis matras** (y176..206, sebelumnya 194..216 yang menempel
-    di matras);
+	di matras);
   - sisi atas terang + sisi bawah gelap (pencahayaan dari jendela) untuk kesan empuk;
   - sudut membulat (`rounded_rectangle` radius 10) + cekung/kerut tengah + lipatan ujung;
   - **bayangan jatuh ke matras** agar jelas "duduk di atas", bukan menempel.
@@ -320,3 +320,151 @@ bantal terbaca "tenggelam" di matras, bukan bantal yang duduk di atasnya.
 ### Konsekuensi
 - `gen_art_v2.py`: blok bantal di `make_bedroom` ditulis ulang.
 - Uji: `test_reachability` (Bedroom 1380), `test_chapter1_scenes`, `test_ui` LULUS.
+
+## D012 — Scene uji headless wajib memanggil `get_tree().quit()` (cegah suite menggantung)
+
+**Tanggal:** Sesi terbaru
+**Konteks:** Kartu teknis t_f62da1bf (perbaikan scene/kontroler/UI Chapter 1) — audit
+"error runtime headless & jalur tak tercapai". Mesin sempat kehabisan memori (worker
+dimatikan sinyal 9) karena puluhan proses Godot menumpuk.
+
+### Analisis
+7 dari 12 scene uji (`test_flag_store`, `test_settings_manager`, `test_save_system`,
+`test_audio_manager`, `test_loop_manager`, `test_dialogue_runner`, `test_chapter1_scenes`)
+mencetak `LULUS` tetapi **tidak pernah memanggil `get_tree().quit()`**. Di Godot headless,
+`_ready()` selesai namun main loop tetap berjalan tanpa akhir, jadi proses **menggantung
+selamanya**. `run_tests.sh` lama juga tidak memberi batas waktu per-test, sehingga tiap
+kali suite dijalankan proses yang menggantung menumpuk (pernah >100 proses, load ~8) dan
+akhirnya memicu OOM.
+
+### Keputusan
+- Tiap scene uji **wajib** mengakhiri `_ready()` dengan `get_tree().quit(0)` (setelah
+  mencetak `LULUS`/`SELESAI`), agar proses headless berhenti sendiri.
+- `run_tests.sh` membungkus tiap test dengan `timeout` per-test (`TEST_TIMEOUT`, default
+  60s); timeout (exit 124) dihitung **gagal**, bukan lulus.
+
+### Konsekuensi
+- `tests/test_*.gd` (7 file) + `run_tests.sh` diperbarui.
+- Suite kini **12/12 LULUS** dan keluar dengan exit 0 tanpa menyisakan proses menggantung.
+
+## D013 — Perbaikan node `ChoiceMenu` + pembersihan teks mentah `.tscn` (kartu t_f62da1bf)
+
+**Tanggal:** Sesi terbaru
+**Konteks:** Kartu teknis t_f62da1bf (audit scene/kontroler/UI Chapter 1). Dua temuan:
+(a) `ChoiceMenu` error runtime karena jalur `@onready` tidak cocok dengan scene;
+(b) laporan `docs/review/LAPORAN_TEKS_MENTAH_UI.md` (mikha) menemukan 40 nilai
+default `text`/`placeholder_text` masih literal di `.tscn`.
+
+### Keputusan
+- **ChoiceMenu:** scene `choice_menu.tscn` menaruh `ButtonContainer` di dalam
+  `ButtonsScroll` (ScrollContainer) agar menu panjang bisa di-scroll saat huruf
+  diperbesar; `choice_menu.gd` memakai jalur
+  `.../VBoxContainer/ButtonsScroll/ButtonContainer`. `PromptLabel` diberi
+  `autowrap_mode = 2`.
+- **Teks mentah:** seluruh 40 default `text = "..."` di `.tscn` UI/HUD **dikosongkan**
+  (`text = ""`). Semua node sudah diisi lewat `tr()` saat `_ready()`/`setup()`, jadi
+  tidak ada perubahan perilaku — hanya menghapus sisa default editor yang melanggar
+  konvensi "semua teks lewat lokalisasi" (`AGENTS.md`, `docs/agents/lavis.md`).
+- **Uji pengunci:** `tests/test_ui_accessibility.gd` menambah uji ke-4
+  (`_test_no_raw_literals`) yang membaca tiap `.tscn` UI/HUD dan gagal bila ada
+  `text`/`placeholder_text` berisi literal.
+
+### Konsekuensi
+- `scenes/ui/choice_menu.tscn`, `scripts/ui/choice_menu.gd`.
+- 11 `.tscn` (main_menu, settings_menu, help_menu, content_warning, choice_menu,
+  chat_bubble, flashback, corridor, lift, bedroom, balcony) dibersihkan.
+- `tests/test_ui_accessibility.gd` +1 uji.
+- Suite **15/15 LULUS**, exit 0.
+
+## D014 — Rapikan aset Chapter 1 (bug skyline hilang, bulan samar, cermin, prop ganda)
+
+**Tanggal:** Sesi terbaru
+**Konteks:** Kartu t_41b59543 — pemilik menilai beberapa aset/UI Chapter 1 "kurang rapi".
+Audit menemukan tiga cacat nyata (bukan sekadar selera) + satu bug laten generator.
+
+### Temuan
+1. **`balcony_skyline.png` TIDAK punya gedung sama sekali.** `make_balcony` menggambar
+   skyline memakai handle `ImageDraw` lama setelah `Image.alpha_composite(sky, stars)`
+   mengganti citra — bug yang sama seperti D009, tetapi tidak ikut diperbaiki di sini.
+   Akibatnya latar klimaks Bab 1 (S04–S06) hanya langit gelap + 40 bintang (city hilang).
+2. **`moon_dim.png`** (balcony/rooftop) punya garis awan horizontal selebar sprite →
+   terbaca seperti scanline/glitch.
+3. **Prop meja kamar digambar dua kali** (di bg + node Interactable) → ghosting halus.
+4. **`mirror.png`** terbaca seperti "gambar dalam bingkai", bukan cermin (D007 meminta
+   jelas terbaca sebagai cermin).
+5. Bug laten: `make_bedroom` di skrip lama tidak lagi mereproduksi kasur yang disetujui
+   pemilik (commit `dc083f5` mengubah hanya PNG). Skrip kini menggambar kasur bergaya
+   disetujui (bantal horizontal terang bertimbul + duvet berkerut) sehingga generator jadi
+   **sumber tunggal** (regenerasi tidak lagi menurunkan kualitas kasur).
+
+### Keputusan
+- **`make_balcony`:** ambil handle `ImageDraw.Draw(sky)` baru setelah composite; gambar
+  baris gedung belakang (gelap, berkabut) + baris depan (terang, berjendela) + kabut.
+- **`make_balcony` (moon):** awan jadi gumpalan lembut (`GaussianBlur`), bukan garis.
+- **`make_bedroom`:** hapus prop meja dari background (digambar node Interactable).
+- **`make_props` (mirror):** kaca gradien + pantulan ruangan dicampur manual (alpha
+  di-blend, bukan ditimpa) + kilau diagonal ganda → terbaca sebagai cermin.
+- **`make_bedroom` (kasur):** reproduksi gaya kasur yang disetujui (lihat temuan 5).
+
+### Batasan & keamanan
+- **Tidak ada collision/pintu/layout yang diubah** (hanya aset PNG + `gen_art_v2.py`).
+  `test_reachability` LULUS (Bedroom 1380, Corridor 3009, Lift 510).
+- Tidak ada gambar jatuh/darah/tubuh; makna cerita tidak diubah (SAFETY_AND_CONTENT).
+
+### Konsekuensi
+- `scripts/gen_art_v2.py` (make_balcony, make_bedroom, make_props/mirror).
+- Aset diregenerasi deterministik: `assets/backgrounds/balcony_skyline.png`,
+  `assets/backgrounds/bedroom_bg.png`, `assets/backgrounds/moon_dim.png`,
+  `assets/props/mirror.png` (+ PNG lain yang ikut di-commit di branch ini).
+- Verifikasi: regenerasi dua kali → byte-identik; suite **15/15 LULUS**.
+
+## D015 — Content Warning sebagai scene boot + Menu Jeda (Esc)
+
+**Tanggal:** Sesi terbaru
+**Status:** Diputuskan (keputusan pemilik; dapat diubah)
+**Konteks:** GATE Chapter 1 (`t_cf5fa9e3`, komentar 20) menolak merge: item keamanan wajib #3
+gagal karena **Content Warning tidak pernah tampil** (`project.godot` `run/main_scene` =
+`main_menu.tscn`; `content_warning.tscn` tak dirujuk jalur boot mana pun) dan **tidak ada
+Menu Jeda** sama sekali. Melanggar SAFETY_AND_CONTENT.md §3.1/§3.2/§3.4 dan urutan
+CHAPTER_01.md S00. Kartu perbaikan: `t_cc015717`.
+
+### Keputusan
+1. **`content_warning.tscn` dirutekan sebagai scene boot** (`run/main_scene`), sehingga
+   peringatan **SELALU tampil setiap kali game dijalankan** dan **butuh konfirmasi**
+   ("Aku mengerti, lanjutkan" → `main_menu.tscn`; "Lihat bantuan" → HelpMenu; "Keluar" → quit).
+   Ini pembacaan **paling ketat** dari SAFETY §3.1 ("sebelum permainan dimulai") dan
+   **tidak mengarang flag persisten** first-run yang tidak diminta spesifikasi.
+   *Rasional:* kartu menyerahkan pilihan "sekali vs setiap boot" ke pemilik, tetapi tidak ada
+   sinyal first-run yang dibutuhkan di tempat lain; menampilkan tiap boot paling aman bagi
+   pemain dan paling sederhana untuk diaudit. **Bila pemilik ingin "hanya sekali",** tambahkan
+   flag di `SettingsManager` (mis. `content_warning_acknowledged`) dan cek di awal boot —
+   **tanpa mengubah** `content_warning.tscn` itu sendiri.
+2. **Menu Jeda (Esc)** dibuat sebagai komponen dapat-pakai-ulang
+   (`scripts/ui/pause_menu.gd` + `scenes/ui/pause_menu.tscn`) dan dipasang di **semua scene
+   yang dilihat pemain**: bedroom, corridor, lift, balcony, intro, flashback. Berisi
+   **Menu Bantuan** + **Keluar** (tanpa penalti). Saat jeda, `get_tree().paused = true`
+   (waktu permainan benar-benar berhenti); node memakai `process_mode = ALWAYS` agar tetap
+   menerima input. `Esc` menutup Menu Bantuan lebih dulu bila terbuka, lalu menutup jeda.
+3. **Aksi input `pause`** ditambahkan di `project.godot` `[input]`, dipetakan ke **Esc**
+   (`physical_keycode 4194304 + 1`). Tidak menabrak `ui_cancel`/`ui_accept` bawaan.
+
+### Batasan & keamanan
+- **Tidak ada naskah/dialog/urutan adegan yang diubah**: `git diff` untuk
+  `docs/CHAPTER_01.md`, `docs/STORY_BIBLE.md`, `data/chapters/chapter_01.json` **kosong**.
+- Semua teks lewat `tr()`; kunci baru di `data/localization/id.csv`
+  (`UI_RESUME`, `PAUSE_TITLE`, `PAUSE_HINT`) — `test_ui_accessibility` tetap lulus
+  (tidak ada literal mentah di `.tscn`).
+- Uji regresi baru `tests/test_pause_and_warning.gd` memverifikasi: (a) scene boot =
+  content warning & `ContentWarning.MAIN_MENU_SCENE` menuju menu utama; (b) aksi `pause`
+  terpetakan ke Esc; (c) content warning butuh konfirmasi & memancarkan
+  `warning_acknowledged`; (d) Menu Bantuan terjangkau dari menu utama; (e) Menu Jeda ada di
+  keenam scene, `Esc` membuka/menutup, `paused` menyala/mati, Menu Bantuan (memuat 119)
+  terjangkau dari jeda, tombol keluar selalu ada.
+- Suite: **16/16 lulus** (headless Godot 4.7.2), exit 0, tanpa proses menggantung.
+
+### Konsekuensi
+- `project.godot` (`run/main_scene`, bagian `[input]`), `data/localization/id.csv`
+  (+ `.id.translation` diregenerasi), `scripts/ui/content_warning.gd` (konstanta
+  `MAIN_MENU_SCENE`), berkas baru `scripts/ui/pause_menu.gd` + `scenes/ui/pause_menu.tscn`,
+  sisipan `PauseMenu` di 6 `.tscn` scene, `tests/test_pause_and_warning.gd`/`.tscn`,
+  `run_tests.sh` (+1 entri).
