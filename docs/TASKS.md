@@ -64,7 +64,9 @@ Kerjakan berurutan. Centang `[x]` saat selesai dan lolos kriteria. Rujuk AGENTS.
 **Selesai jika:** vertical slice layak dijadikan trailer/demo.
 
 ## FASE 6 — Uji dan Tinjauan
-- [x] 6.0 Suite uji otomatis 13/13 LULUS (flag, settings, save, audio, loop, dialogue, ui, intro, corridor, reachability, chapter1 scenes/full).
+- [x] 6.0 Suite uji otomatis 15/15 LULUS (flag, settings, save, audio, loop, dialogue, ui, intro, corridor, reachability, chapter1 scenes/full/data, flow s00-s08, ui accessibility).
+- [x] 6.0a Pengerasan uji headless: tiap scene uji memanggil `get_tree().quit(0)` + batas waktu per-test di `run_tests.sh` (lihat DECISIONS.md D012). Perbaiki jalur node `ChoiceMenu` (`ButtonContainer` di dalam `ButtonsScroll`) yang sebelumnya error runtime. Suite keluar exit 0 tanpa proses menggantung.
+- [x] 6.0b Kartu teknis t_f62da1bf: audit scene/kontroler/UI Chapter 1 — scene boot headless tanpa error, 8 interactable kamar reachable, semua teks lewat `tr()`. Nilai default `text` di 11 `.tscn` dikosongkan (40 literal) + uji pengunci `_test_no_raw_literals` (DECISIONS.md D013).
 - [ ] 6.1 Uji dengan 5-10 pemain, kumpulkan masukan (terutama adegan sensitif).
 - [ ] 6.2 **Tinjauan naskah oleh psikolog/konselor/penyintas.** Wajib sebelum rilis demo.
 - [ ] 6.3 Revisi berdasarkan masukan.
