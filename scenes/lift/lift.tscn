@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/systems/lift_controller.gd" id="1_lift"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/lift_bg.png" id="2_bg"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/thought_box.tscn" id="5_thought"]
 [ext_resource type="PackedScene" path="res://scenes/ui/choice_menu.tscn" id="6_choice"]
 [ext_resource type="PackedScene" path="res://scenes/transitions/transition_layer.tscn" id="7_trans"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="8_pause"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(640, 236)
