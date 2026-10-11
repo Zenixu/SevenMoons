@@ -43,8 +43,8 @@ func _ready() -> void:
 
 	transition_layer.cut_to_black()
 	transition_layer.fade_from_black(1.5)
-	AudioManager.play_rain(2.0)
-	AudioManager.stop_clock_tick(0.5)
+	# Lorong apartemen: hujan saja (bukan ambience kamar).
+	AudioManager.play_rain_only(2.0)
 
 	for child in interactables_parent.get_children():
 		if child is Interactable:

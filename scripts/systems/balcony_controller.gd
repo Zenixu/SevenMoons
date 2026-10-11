@@ -52,7 +52,8 @@ func _arrive_then_start() -> void:
 	if FlagStore.get_flag("rooftop_from_lift", false) and not FlagStore.get_flag("rooftop_arrived", false):
 		FlagStore.set_flag("rooftop_arrived", true)
 		FlagStore.set_flag("rooftop_from_lift", false)
-		AudioManager.play_rain(1.5)
+		# §6 S04a: rooftop = "Hujan (tanpa kulkas/jam)".
+		AudioManager.play_rain_only(1.5)
 		transition_layer.set_vignette(0.35, 1.5)
 
 		if player:
@@ -86,7 +87,8 @@ func _arrive_then_start() -> void:
 
 func _start_s04_and_s05() -> void:
 	transition_layer.set_vignette(0.7, 2.0)
-	AudioManager.play_rain(1.0)
+	# §6 S04/S05: di luar ruangan (tepi atap) — hujan lebih jelas, tanpa kulkas/jam.
+	AudioManager.play_rain_only(1.0)
 	FlagStore.set_flag("saw_moon_hidden", true)
 
 	# S04 Narasi
