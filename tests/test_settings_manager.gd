@@ -38,3 +38,6 @@ func _ready() -> void:
 	assert(SettingsManager.volume_sfx == 0.8, "reset volume_sfx gagal")
 
 	print("=== SEMUA TEST SettingsManager LULUS ===")
+
+	# Pastikan proses headless berhenti (tanpa quit(), Godot menggantung).
+	get_tree().quit(0)

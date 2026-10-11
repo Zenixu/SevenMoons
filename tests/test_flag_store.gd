@@ -52,3 +52,7 @@ func _ready() -> void:
 	assert(FlagStore.get_all_flags().size() == 0, "clear gagal")
 
 	print("=== SEMUA TEST FlagStore LULUS ===")
+
+	# Pastikan proses headless berhenti: tanpa quit(), Godot menggantung
+	# selamanya dan proses menumpuk (OOM). Lihat catatan di TASKS.md Fase 6.
+	get_tree().quit(0)

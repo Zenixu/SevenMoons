@@ -44,3 +44,6 @@ func _ready() -> void:
 	FlagStore.clear()
 
 	print("=== SEMUA TEST LoopManager LULUS ===")
+
+	# Pastikan proses headless berhenti (tanpa quit(), Godot menggantung).
+	get_tree().quit(0)

@@ -20,6 +20,9 @@ func _ready() -> void:
 
 	print("=== SEMUA TEST SCENE BAB 1 LULUS ===")
 
+	# Pastikan proses headless berhenti (tanpa quit(), Godot menggantung).
+	get_tree().quit(0)
+
 
 func _test_chapter_json() -> void:
 	print("  - Menguji chapter_01.json data...")
