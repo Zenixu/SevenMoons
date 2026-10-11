@@ -28,6 +28,9 @@ func _ready() -> void:
 	wait_hint_label.visible = false
 	choice_menu.visible = false
 
+	# Aksesibilitas HUD (petunjuk tunggu).
+	UITheme.bind($UI)
+
 	if auto_start_sequence:
 		if SettingsManager.skip_sensitive_scenes:
 			_run_s06_alt()

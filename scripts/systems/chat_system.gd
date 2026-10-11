@@ -13,6 +13,7 @@ const CHAT_BUBBLE_SCENE = preload("res://scenes/ui/chat_bubble.tscn")
 
 @onready var scroll_container: ScrollContainer = $Panel/MarginContainer/VBoxContainer/ScrollContainer
 @onready var message_container: VBoxContainer = $Panel/MarginContainer/VBoxContainer/ScrollContainer/MessageList
+@onready var header_label: Label = $Panel/Header/HeaderLabel
 @onready var typing_indicator_container: HBoxContainer = $Panel/MarginContainer/VBoxContainer/TypingIndicator
 @onready var typing_label: Label = $Panel/MarginContainer/VBoxContainer/TypingIndicator/TypingLabel
 @onready var input_row: HBoxContainer = $Panel/MarginContainer/VBoxContainer/InputRow
@@ -26,6 +27,20 @@ var _waiting_for_submit: bool = false
 
 
 func _ready() -> void:
+	# Teks UI lewat lokalisasi (jangan hardcode string).
+	if header_label:
+		header_label.text = tr("UI_CHAT_HEADER")
+	if typing_label:
+		typing_label.text = tr("UI_CHAT_TYPING")
+	if line_edit:
+		line_edit.placeholder_text = tr("UI_CHAT_INPUT_PLACEHOLDER")
+	if send_button:
+		send_button.text = tr("UI_CHAT_SEND")
+
+	# Aksesibilitas: panel kontras tinggi + skala huruf untuk seluruh UI chat.
+	$Panel.set_meta("ui_hc", true)
+	UITheme.bind(self)
+
 	if typing_indicator_container:
 		typing_indicator_container.visible = false
 	if input_row:
@@ -119,14 +134,19 @@ func _show_typing(sender: String, duration: float) -> void:
 	typing_indicator_container.visible = true
 	typing_started.emit(sender)
 
-	# Animasi titik-titik mengetik
+	# Animasi titik-titik mengetik.
+	# MECHANICS_SPEC §10: efek kedip/osilasi dibatasi <3 kali per detik.
+	# 0.34s per langkah => ~2.94 langkah/detik (< 3). Mode "Kurangi kilatan"
+	# memperlambat lagi agar lebih tenang.
+	var dot_step: float = 0.34
+	if SettingsManager.reduce_flash:
+		dot_step = 0.5
 	var elapsed: float = 0.0
-	var dot_step: float = 0.3
 	var dots: int = 1
 
 	while elapsed < duration and _is_typing:
 		AudioManager.play_typing_sfx()
-		typing_label.text = "%s sedang mengetik%s" % [sender, ".".repeat(dots)]
+		typing_label.text = tr("UI_CHAT_TYPING_FORMAT") % [sender, ".".repeat(dots)]
 		dots = (dots % 3) + 1
 		await get_tree().create_timer(dot_step).timeout
 		elapsed += dot_step

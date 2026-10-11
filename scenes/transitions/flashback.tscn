@@ -60,8 +60,10 @@ stretch_mode = 5
 custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 11
-text = "Aku ingat dia pernah tertawa seperti itu."
+text = ""
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -73,15 +75,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -12.0
-offset_right = 100.0
-offset_bottom = 12.0
+offset_left = -110.0
+offset_top = -14.0
+offset_right = 110.0
+offset_bottom = 14.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
+theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 13
-text = "Maaf."
+text = ""
 horizontal_alignment = 1
 
 [node name="PauseMenu" parent="." instance=ExtResource("2_pause")]

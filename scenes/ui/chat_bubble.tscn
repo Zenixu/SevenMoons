@@ -3,7 +3,12 @@
 [ext_resource type="Script" path="res://scripts/ui/chat_bubble.gd" id="1_bubble"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
-bg_color = Color(1, 1, 1, 1)
+bg_color = Color(0.12, 0.13, 0.16, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.34, 0.4, 0.52, 0.72)
 corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
@@ -39,12 +44,12 @@ theme_override_constants/separation = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
 theme_override_font_sizes/font_size = 10
-text = "Pengirim"
+text = ""
 
 [node name="MessageLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 0.98, 1)
 theme_override_font_sizes/font_size = 12
-text = "Isi pesan chat di sini..."
+text = ""
 autowrap_mode = 2
