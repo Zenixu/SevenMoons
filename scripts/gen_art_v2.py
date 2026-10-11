@@ -376,23 +376,50 @@ def make_props(props_dir):
     prop(16, 16, tea).save(os.path.join(props_dir, "tea_cup.png"))
 
     def mirror(d):
-        # bingkai kayu gelap
+        # Bingkai kayu gelap dengan bevel (tepi atas-kiri terang, bawah-kanan gelap)
         d.rectangle([0, 0, 23, 35], fill=(52, 42, 38, 255))
-        d.rectangle([0, 0, 23, 1], fill=(78, 64, 58, 255))
-        d.rectangle([0, 34, 23, 35], fill=(30, 24, 22, 255))
-        # kaca: gradien vertikal (terang di atas, gelap di bawah)
-        for yy in range(2, 34):
+        d.line([(0, 0), (23, 0)], fill=(84, 69, 62, 255))
+        d.line([(0, 0), (0, 35)], fill=(80, 66, 60, 255))
+        d.line([(23, 0), (23, 35)], fill=(32, 25, 23, 255))
+        d.line([(0, 35), (23, 35)], fill=(28, 22, 20, 255))
+
+        # Kaca: gradien dingin (terang di atas — menangkap cahaya jendela).
+        def glass_col(yy):
             t = (yy - 2) / 31.0
-            col = (int(120 - 56 * t), int(142 - 60 * t), int(178 - 60 * t), 255)
-            d.line([(2, yy), (21, yy)], fill=col)
-        # kilau diagonal tipis (sheen kaca) — tidak tebal, bukan retak
-        for k in range(6):
-            d.line([(3 + k, 20 - k), (9 + k, 14 - k)], fill=(214, 226, 246, 120))
-        d.line([(3, 21), (10, 14)], fill=(230, 240, 255, 170))
-        d.line([(15, 8), (20, 3)], fill=(200, 216, 240, 90))
-        # pantulan samar sosok (siluet tipis)
-        d.ellipse([8, 15, 15, 24], fill=(66, 82, 104, 150))
-        d.rectangle([10, 23, 13, 30], fill=(58, 72, 92, 130))
+            return (96 - 40 * t, 118 - 46 * t, 158 - 52 * t)
+        for yy in range(2, 34):
+            c = glass_col(yy)
+            d.line([(2, yy), (21, yy)], fill=(int(c[0]), int(c[1]), int(c[2]), 255))
+
+        # PANTULAN ruangan (bukan gambar): pita cahaya vertikal + bulan samar +
+        # bayangan furnitur di bawah. Dicampur MANUAL (alpha<255 pada ImageDraw
+        # menimpa, bukan membaur) sehingga tidak ada lubang transparan.
+        def blend(base, add, a):
+            return tuple(int(base[i] * (1 - a) + add[i] * a) for i in range(3))
+        for yy in range(4, 29):
+            g = glass_col(yy)
+            for xx in range(6, 17):
+                a = 0.26 * (1.0 - abs(xx - 11) / 6.0)   # pita lembut, tepi pudar
+                if a > 0:
+                    d.point([(xx, yy)], fill=blend(g, (150, 172, 214), a) + (255,))
+        # bulan terpantul (samar, lembut)
+        for (cx, cy, r) in [(11, 10, 3), (11, 10, 2)]:
+            for yy in range(cy - r, cy + r + 1):
+                for xx in range(cx - r, cx + r + 1):
+                    if (xx - cx) ** 2 + (yy - cy) ** 2 <= r * r and 2 <= xx <= 21 and 2 <= yy <= 33:
+                        g = glass_col(yy)
+                        d.point([(xx, yy)], fill=blend(g, (212, 222, 242), 0.5) + (255,))
+        # pantulan furnitur (band horizontal lebih gelap) di bawah kaca
+        for yy in range(27, 33):
+            g = glass_col(yy)
+            for xx in range(5, 19):
+                d.point([(xx, yy)], fill=blend(g, (40, 50, 74), 0.35) + (255,))
+
+        # KILAU diagonal ganda — penanda kaca paling kuat.
+        for k in range(7):
+            d.line([(3 + k, 24 - k), (10 + k, 17 - k)], fill=(214, 226, 246, 255))
+        d.line([(3, 25), (11, 17)], fill=(236, 243, 255, 255))
+        d.line([(13, 12), (19, 6)], fill=(200, 216, 240, 255))
     prop(24, 36, mirror).save(os.path.join(props_dir, "mirror.png"))
 
     def clock(d):
@@ -508,52 +535,61 @@ def make_bedroom(bg_dir):
     d.rectangle([240, 146, 268, 188], fill=(18, 22, 40, 255))              # bayangan lembut
     d.rectangle([240, 186, 268, 188], fill=(11, 14, 26, 255))
 
-    # ---------- Kasur (KANAN) — lebih kecil, headboard kokoh, bantal HORIZONTAL ----------
-    b0, b1 = 316, 452
-    # headboard: panel kokoh (bukan tiang tipis), sudut membulat
-    d.rounded_rectangle([b0 - 14, 176, b0 + 4, 246], radius=4, fill=(40, 32, 52, 255))
-    d.rounded_rectangle([b0 - 12, 178, b0 + 2, 244], radius=3, fill=(54, 44, 70, 255))
-    d.rectangle([b0 - 12, 178, b0 + 2, 184], fill=(72, 60, 92, 255))       # bibir atas terang
-    d.line([(b0 - 10, 190), (b0, 190)], fill=(38, 30, 50, 255))            # panel garis
-    d.line([(b0 - 10, 206), (b0, 206)], fill=(38, 30, 50, 255))
-    # rangka bawah + kaki
-    d.rectangle([b0 - 6, 236, b1, 244], fill=(34, 28, 44, 255))
-    d.rectangle([b0 + 8, 244, b0 + 16, 252], fill=(26, 21, 36, 255))       # kaki kiri
-    d.rectangle([b1 - 18, 244, b1 - 10, 252], fill=(26, 21, 36, 255))      # kaki kanan
-    # matras tebal
-    d.rectangle([b0, 192, b1, 238], fill=(56, 64, 96, 255))
-    d.rectangle([b0, 192, b1, 198], fill=(80, 90, 128, 255))               # highlight atas
-    d.line([(b0, 198), (b1, 198)], fill=(44, 52, 80, 255))                 # piping
-    d.rectangle([b0, 232, b1, 238], fill=(38, 44, 70, 255))                # sisi bawah gelap
-    # bantal: duduk DI ATAS matras di kepala kasur — punya TINGGI/volume (naik
-    # ke atas) tapi tetap HORIZONTAL (melebar ke samping), seperti bantal asli.
-    px0, px1 = b0 + 2, b0 + 72
-    # bayangan bantal jatuh ke matras
-    d.rounded_rectangle([px0 + 5, 194, px1 - 3, 210], radius=7, fill=(42, 49, 76, 255))
-    # badan bantal (membulat, naik di atas garis matras y=192)
-    d.rounded_rectangle([px0, 176, px1, 206], radius=10, fill=(150, 160, 192, 255))
-    # sisi atas terang (volume & cahaya dari jendela)
-    d.rounded_rectangle([px0 + 3, 178, px1 - 3, 194], radius=8, fill=(198, 207, 232, 255))
-    # sisi bawah lebih gelap (memberi kedalaman bantal)
-    d.rounded_rectangle([px0 + 2, 196, px1 - 2, 206], radius=7, fill=(130, 140, 172, 255))
-    # cekung/kerut tengah
-    d.line([(px0 + 34, 180), (px0 + 34, 198)], fill=(160, 170, 200, 255))
-    d.line([(px0 + 12, 190), (px0 + 56, 190)], fill=(140, 150, 182, 255))
-    # lipatan di ujung kanan bantal
-    d.line([(px1 - 9, 179), (px1 - 9, 202)], fill=(132, 142, 174, 255))
-    # duvet/selimut: tepi terlipat + kerutan + menggantung di kanan
-    g0 = b0 + 76
-    d.rectangle([g0, 194, b1, 236], fill=(46, 56, 90, 255))
-    d.rectangle([g0, 194, b1, 201], fill=(66, 78, 118, 255))               # tepi lipatan
-    d.line([(g0, 201), (b1, 201)], fill=(32, 40, 66, 255))
-    for wx in range(g0 + 16, b1 - 12, 26):
-        d.line([(wx, 203), (wx + 5, 234)], fill=(38, 47, 78, 255))         # kerutan
-    d.rectangle([b1 - 6, 236, b1 + 8, 252], fill=(42, 52, 84, 255))        # selimut menggantung
-    d.rectangle([b1 - 6, 236, b1 + 8, 242], fill=(60, 72, 110, 255))
-    # bayangan kontak
-    d.rectangle([b0 - 14, 250, b1 + 8, 254], fill=(9, 11, 22, 255))
+    # ---------- Kasur (KANAN) ----------
+    # Palet & bentuk mengikuti versi kasur yang sudah disetujui pemilik (bantal
+    # HORIZONTAL terang yang duduk di atas matras, duvet biru berkerut, rangka
+    # kayu + kaki). Menggantikan versi lama yang bantalnya terbaca seperti
+    # "silang" dan duvet tanpa lipatan.
+    hb0, hb1 = 305, 320          # headboard (kiri)
+    b0, b1 = 316, 452            # badan kasur (matras + duvet)
+    # --- rangka bawah + kaki (di belakang) ---
+    d.rectangle([hb0 - 1, 238, b1 - 6, 246], fill=(40, 32, 56, 255))
+    d.rectangle([hb0 - 1, 244, b1 - 6, 249], fill=(24, 18, 34, 255))
+    d.rectangle([hb0 - 1, 246, hb0 + 12, 254], fill=(24, 18, 34, 255))     # kaki kiri
+    d.rectangle([b1 - 14, 246, b1 - 2, 254], fill=(24, 18, 34, 255))       # kaki kanan
+    # --- matras tebal ---
+    d.rectangle([hb1, 194, b1 - 4, 240], fill=(56, 64, 96, 255))
+    d.rectangle([hb1, 194, b1 - 4, 200], fill=(80, 90, 128, 255))          # highlight atas
+    d.rectangle([hb1, 234, b1 - 4, 240], fill=(38, 44, 70, 255))           # sisi bawah gelap
+    # permukaan matras yang tetap terlihat di bawah bantal (kiri)
+    d.rectangle([hb1, 215, hb1 + 36, 232], fill=(128, 138, 170, 255))
+    d.rectangle([hb1, 227, hb1 + 36, 232], fill=(92, 107, 146, 255))
+    # --- headboard: panel kayu kokoh, bibir atas terang ---
+    d.rounded_rectangle([hb0, 186, hb1, 230], radius=3, fill=(40, 32, 56, 255))
+    d.rectangle([hb0, 185, hb1, 188], fill=(104, 86, 126, 255))            # bibir atas terang
+    d.rectangle([hb0 + 1, 188, hb1 - 1, 190], fill=(86, 71, 106, 255))
+    d.line([(hb1 - 2, 190), (hb1 - 2, 228)], fill=(61, 50, 78, 255))       # tepi kanan
+    d.line([(hb0 + 2, 197), (hb1 - 4, 197)], fill=(24, 18, 34, 255))       # garis panel
+    d.line([(hb0 + 2, 213), (hb1 - 4, 213)], fill=(24, 18, 34, 255))
+    # --- bantal: HORIZONTAL, duduk DI ATAS matras (punya tinggi/volume) ---
+    px0, px1 = hb1 + 6, hb1 + 53          # 326..373
+    d.rounded_rectangle([px0 + 3, 208, px1 - 1, 220], radius=6,
+                        fill=(42, 49, 76, 255))                        # kontak shadow ke matras
+    d.rounded_rectangle([px0, 191, px1, 214], radius=9, fill=(200, 209, 233, 255))
+    d.rounded_rectangle([px0 + 2, 192, px1 - 2, 200], radius=7,
+                        fill=(224, 231, 246, 255))                     # sisi atas terang
+    d.rounded_rectangle([px0 + 3, 201, px1 - 3, 209], radius=6,
+                        fill=(224, 231, 246, 255))                     # inti terang
+    d.rounded_rectangle([px0 + 2, 209, px1 - 2, 214], radius=6,
+                        fill=(150, 160, 192, 255))                     # sisi bawah gelap
+    d.line([(px0 + 24, 194), (px0 + 24, 211)], fill=(150, 160, 192, 255))  # cekung tengah
+    d.line([(px1 - 8, 193), (px1 - 8, 211)], fill=(150, 160, 192, 255))    # lipatan ujung
+    # --- duvet/selimut: menutupi sisi kanan matras, ada lipatan & kerutan ---
+    g0 = px1 + 1                          # 374
+    d.rectangle([g0, 200, b1 - 4, 238], fill=(48, 60, 94, 255))
+    d.rectangle([g0, 200, b1 - 4, 204], fill=(68, 82, 120, 255))           # tepi lipatan atas
+    d.line([(g0, 204), (b1 - 4, 204)], fill=(38, 47, 78, 255))
+    for wx in (g0 + 7, g0 + 23, g0 + 39):
+        d.line([(wx, 205), (wx, 237)], fill=(33, 42, 67, 255))             # kerutan
+    d.rectangle([b1 - 8, 238, b1 + 8, 252], fill=(46, 56, 90, 255))        # selimut menggantung
+    d.rectangle([b1 - 8, 238, b1 + 8, 244], fill=(66, 78, 118, 255))
+    # --- bayangan kontak ---
+    d.rectangle([hb0 - 4, 250, b1 + 8, 255], fill=(9, 11, 22, 255))
 
-    # ---------- Meja (KANAN) + barang ----------
+    # ---------- Meja (KANAN) ----------
+    # Barang di atas meja (ponsel, foto, gelas) TIDAK digambar di sini: ketiganya
+    # digambar oleh node Interactable (Visual) di atas meja, jadi menggambarnya
+    # lagi di background membuat "bayangan ganda"/ghosting. Cukup mejanya saja.
     mx0, mx1 = 486, 606
     d.rectangle([mx0, 204, mx1, 212], fill=(38, 32, 50, 255))               # permukaan
     d.rectangle([mx0, 204, mx1, 207], fill=(58, 48, 72, 255))
@@ -561,12 +597,6 @@ def make_bedroom(bg_dir):
     d.rectangle([mx1 - 16, 212, mx1 - 8, 252], fill=(28, 24, 38, 255))
     d.rectangle([mx0 + 4, 214, mx1 - 4, 228], fill=(24, 20, 32, 255))       # laci
     d.line([(mx0 + 50, 221), (mx0 + 66, 221)], fill=(104, 92, 78, 255))
-    d.rounded_rectangle([mx0 + 12, 190, mx0 + 28, 206], radius=2, fill=(16, 19, 30, 255))  # ponsel
-    d.rectangle([mx0 + 15, 193, mx0 + 25, 203], fill=(24, 34, 54, 255))
-    d.rectangle([mx0 + 44, 182, mx0 + 64, 206], fill=(58, 44, 36, 255))     # foto
-    d.rectangle([mx0 + 46, 184, mx0 + 62, 204], fill=(140, 130, 116, 255))
-    d.ellipse([mx0 + 86, 192, mx0 + 102, 208], fill=(34, 40, 58, 255))      # tatakan
-    d.rectangle([mx0 + 89, 190, mx0 + 99, 200], fill=(158, 166, 184, 255))  # mug
     d.rectangle([mx0, 250, mx1, 254], fill=(9, 11, 22, 255))                # bayangan kontak meja
 
     # ---------- Jendela berkorden (kanan, agak ke ATAS) ----------
@@ -665,18 +695,46 @@ def make_balcony(bg_dir):
     stars = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     sd = ImageDraw.Draw(stars)
     random.seed(77)
-    for _ in range(40):
+    for _ in range(48):
         x, y = random.randint(0, W), random.randint(0, 90)
         sd.point([(x, y)], fill=(120, 130, 160, random.randint(40, 110)))
     sky = Image.alpha_composite(sky, stars)
+    # WAJIB: alpha_composite mengganti citra; handle ImageDraw lama menunjuk ke
+    # citra yang dibuang sehingga semua bangunan hilang (bug yang sama seperti
+    # D009 di make_corridor/make_lift). Ambil handle baru sebelum menggambar.
+    d = ImageDraw.Draw(sky)
+
+    # Baris belakang (lebih gelap, berkabut) untuk kedalaman.
+    random.seed(41)
+    x = -10
+    while x < W + 10:
+        bw = random.randint(30, 64)
+        bh = random.randint(50, 120)
+        by = H - 40 - bh
+        base = 12 + random.randint(0, 5)
+        d.rectangle([x, by, x + bw, H], fill=(base, base + 2, base + 10, 255))
+        x += bw + random.randint(4, 12)
+    # kabut tipis di atas baris belakang
+    haze = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(haze).rectangle([0, H - 92, W, H - 40], fill=(16, 20, 36, 70))
+    sky = Image.alpha_composite(sky, haze)
+    d = ImageDraw.Draw(sky)   # WAJIB: handle baru setelah composite
+
+    # Baris depan (lebih terang, detail) — garis besar kota.
+    random.seed(88)
     x = 0
     while x < W:
         bw = random.randint(24, 56)
         bh = random.randint(60, 160)
         by = H - bh
-        base = 14 + random.randint(0, 10)
+        base = 15 + random.randint(0, 9)
         d.rectangle([x, by, x + bw, H], fill=(base, base + 3, base + 14, 255))
-        d.line([(x, by), (x + bw, by)], fill=(base + 10, base + 12, base + 22, 255))
+        # tepi atas menangkap cahaya bulan (rim tipis)
+        d.line([(x, by), (x + bw, by)], fill=(base + 12, base + 15, base + 26, 255))
+        # antena/pipa kecil di sebagian gedung
+        if random.random() < 0.3:
+            ax = x + bw // 2
+            d.line([(ax, by - random.randint(4, 10)), (ax, by)], fill=(base + 6, base + 8, base + 18, 255))
         for wx in range(x + 4, x + bw - 4, 7):
             for wy in range(by + 6, H - 8, 12):
                 if random.random() < 0.22:
@@ -698,15 +756,25 @@ def make_balcony(bg_dir):
     rail.save(os.path.join(bg_dir, "balcony_railing.png"))
 
     mw, mh = 48, 48
+    # Bulan samar di balik awan (GAME_DESIGN: bulan tertutup awan di awal).
+    # Awan digambar sebagai gumpalan lembut yang menutup SEBAGIAN bulan —
+    # bukan garis horizontal selebar sprite (yang terbaca seperti glitch).
     moon = Image.new("RGBA", (mw, mh), (0, 0, 0, 0))
     md = ImageDraw.Draw(moon)
-    md.ellipse([6, 6, 42, 42], fill=(150, 162, 190, 90))
-    md.ellipse([10, 10, 38, 38], fill=(206, 214, 232, 220))
-    md.ellipse([14, 14, 26, 24], fill=(224, 230, 244, 235))
+    md.ellipse([6, 6, 42, 42], fill=(150, 162, 190, 90))     # halo samar
+    md.ellipse([10, 10, 38, 38], fill=(206, 214, 232, 220))  # piringan bulan
+    md.ellipse([14, 14, 26, 24], fill=(224, 230, 244, 235))  # highlight atas
+    # kawah tipis (agar terbaca sebagai bulan, bukan lingkaran polos)
+    md.ellipse([28, 18, 33, 23], fill=(186, 196, 222, 200))
+    md.ellipse([19, 26, 24, 30], fill=(188, 198, 224, 180))
+    # gumpalan awan lembut yang hanya menutupi sebagian bulan (wispy),
+    # supaya bulan tetap terbaca sebagai bulan yang tersamar awan.
     clouds = Image.new("RGBA", (mw, mh), (0, 0, 0, 0))
     cd = ImageDraw.Draw(clouds)
-    for cy in range(16, 36, 3):
-        cd.line([(2, cy), (46, cy)], fill=(28, 34, 52, 150), width=2)
+    cd.ellipse([6, 26, 26, 40], fill=(30, 36, 56, 120))
+    cd.ellipse([22, 30, 42, 42], fill=(28, 34, 52, 130))
+    cd.ellipse([14, 34, 34, 44], fill=(26, 32, 50, 140))
+    clouds = clouds.filter(ImageFilter.GaussianBlur(1.6))
     moon = Image.alpha_composite(moon, clouds)
     moon.save(os.path.join(bg_dir, "moon_dim.png"))
     print("  bg     -> balcony_skyline, balcony_railing, moon_dim")
