@@ -7,6 +7,13 @@ cd "$(dirname "$0")/.."
 ROOT="$PWD"
 TMO="${1:-45}"
 
+# Utamakan Godot native; fallback ke flatpak bila tidak terpasang.
+if command -v godot >/dev/null 2>&1; then
+  GODOT_RUN=(godot)
+else
+  GODOT_RUN=(flatpak run --filesystem="$ROOT" org.godotengine.Godot)
+fi
+
 TESTS=(
   test_flag_store
   test_settings_manager
@@ -30,7 +37,7 @@ for t in "${TESTS[@]}"; do
   if [ ! -f "tests/${t}.tscn" ]; then
     echo "SKIP  $t (scene tidak ada)"; continue
   fi
-  timeout -k 5 "$TMO" flatpak run --filesystem="$ROOT" org.godotengine.Godot \
+  timeout -k 5 "$TMO" "${GODOT_RUN[@]}" \
     --headless --path "$ROOT" "$scene" > "$log" 2>&1
   rc=$?
   if grep -q "SEMUA TEST\|LULUS\|SELESAI" "$log"; then
