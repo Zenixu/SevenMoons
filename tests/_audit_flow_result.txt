@@ -1,0 +1,20 @@
+=== AUDIT FLOW PROBE (mode=loop) ===
+SCENE[1] bedroom.tscn
+  LOOP: bedroom#1 -> touch door (s03_play_count=0)
+  choice: scene=bedroom.tscn seq=1 n=2 -> press idx=0 (text=Coba buka)
+  choice: scene=bedroom.tscn seq=2 n=2 -> press idx=0 (text=Keluar)
+  choice: scene=bedroom.tscn seq=3 n=1 -> press idx=0 (text=Aku tahu.)
+  choice: scene=bedroom.tscn seq=4 n=3 -> press idx=0 (text=Mungkin.)
+  choice: scene=bedroom.tscn seq=5 n=3 -> press idx=0 (text=...)
+SCENE[2] corridor.tscn
+  LOOP: corridor#1 -> touch room_door (kembali ke kamar)
+SCENE[3] bedroom.tscn
+  LOOP: bedroom#2 -> touch door (s03_play_count=0)
+  choice: scene=bedroom.tscn seq=1 n=2 -> press idx=0 (text=Coba buka)
+  choice: scene=bedroom.tscn seq=2 n=2 -> press idx=0 (text=Keluar)
+  choice: scene=bedroom.tscn seq=3 n=1 -> press idx=0 (text=Aku tahu.)
+  choice: scene=bedroom.tscn seq=4 n=3 -> press idx=0 (text=Mungkin.)
+  choice: scene=bedroom.tscn seq=5 n=3 -> press idx=0 (text=...)
+SCENE[4] corridor.tscn
+RESULT mode=loop reason=LOOP_DONE chain=["res://scenes/bedroom/bedroom.tscn", "res://scenes/corridor/corridor.tscn", "res://scenes/bedroom/bedroom.tscn", "res://scenes/corridor/corridor.tscn"]
+FLAGS { "checked_phone": true, "tried_door": true, "heard_phone_buzz": true, "corridor_from_elevator": false, "visited_corridor": true }
