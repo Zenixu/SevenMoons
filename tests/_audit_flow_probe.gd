@@ -38,6 +38,9 @@ var _max_scene_visits: int = 40
 var _choice_seq: int = 0          # urutan pilihan yang dijawab DI SCENE INI
 var _loop_bed_visits: int = 0     # berapa kali scene kamar dikunjungi (mode loop)
 var _loop_corr_visits: int = 0    # berapa kali scene lorong dikunjungi (mode loop)
+## mode loop: s03_play_count yang diamati pada kunjungan kamar ke-2 SETELAH pintu
+## disentuh (bukti penjaga S03 persisten: tetap 0 = tidak diputar ulang).
+var _bed2_s03_after: int = -1
 
 
 func _ready() -> void:
@@ -142,7 +145,16 @@ func _check_done() -> void:
 		if _did.has("win") and not _is_busy(cs):
 			_finish("WINDOW_OFF_BLOCKED" if _visited.size() == 1 else "WINDOW_OFF_LEFT")
 	elif _mode == "loop":
-		if _loop_bed_visits >= 2 and _visited.size() >= 3 and not _is_busy(cs):
+		# Catat s03_play_count pada kamar ke-2 setelah pintu disentuh (bukti tidak berulang).
+		if _loop_bed_visits >= 2 and _did.has("loop_out2"):
+			var b2: Node = get_tree().current_scene
+			if b2 != null and b2.scene_file_path == BEDROOM:
+				var cnt: int = int(b2.get("s03_play_count"))
+				if cnt != _bed2_s03_after:
+					_bed2_s03_after = cnt
+					_log("  LOOP: bedroom#2 s03_play_count=%d (penjaga s03_played=%s)" % [
+						cnt, str(FlagStore.get_flag(BedroomController.S03_PLAYED_FLAG, false))])
+		if _loop_bed_visits >= 2 and _visited.size() >= 3 and not _is_busy(cs) and _bed2_s03_after >= 0:
 			_finish("LOOP_DONE")
 
 

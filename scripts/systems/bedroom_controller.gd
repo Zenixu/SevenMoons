@@ -28,6 +28,12 @@ const CORRIDOR_SCENE := "res://scenes/corridor/corridor.tscn"
 ## Pemilik: "jika belum membuka HP, maka tidak diperbolehkan keluar kamar dahulu."
 const EXIT_NEED_PHONE_KEY := "S02_EXIT_NEED_PHONE"
 
+## Kunci flag FlagStore: menandai monolog S03 sudah diputar SEKALI dalam sesi.
+## Penjaga ini WAJIB persisten (bukan sekadar variabel instance) supaya tidak
+## reset ketika controller kamar dibuat ulang pada perpindahan scene — mis.
+## pemain keluar kamar, kembali lewat pintu kamar (lantai 3), lalu keluar lagi.
+const S03_PLAYED_FLAG := "s03_played"
+
 # Jam dinding: 1 menit dalam game per N detik nyata setelah diperiksa
 const CLOCK_MINUTES_PER_SECOND := 0.2   # ~1 menit tiap 5 detik
 
@@ -43,8 +49,10 @@ var _balcony_unlocked: bool = false
 ## Mencegah teks penahan keluar kamar muncul berulang saat pemain masih di trigger.
 var _exit_block_active: bool = false
 ## Menjaga monolog S03 (percakapan dengan diri sendiri) diputar TEPAT SEKALI
-## dalam satu kunjungan kamar, apa pun jalur keluar kamar (pintu O6 atau
-## jendela/balkon) — tidak dilewati, tidak pula diulang.
+## per sesi/permainan, apa pun jalur keluar kamar (pintu O6 atau jendela/balkon)
+## — tidak dilewati, tidak pula diulang. Disinkronkan dari flag FlagStore
+## `s03_played` di `_ready()` agar bertahan lintas perpindahan scene (mis. keluar
+## kamar lalu kembali lagi lewat pintu kamar).
 var _s03_played: bool = false
 ## Berapa kali S03 benar-benar diputar (dipakai uji alur headless).
 var s03_play_count: int = 0
@@ -70,6 +78,11 @@ func _ready() -> void:
 			child.player_interacted.connect(_on_object_interacted)
 
 	_setup_clock()
+
+	# Sinkronkan penjaga S03 dari FlagStore (persisten lintas perpindahan scene).
+	# Instance kamar baru (mis. setelah kembali dari lorong lewat pintu kamar)
+	# tidak boleh memutar ulang monolog S03 yang sudah pernah dimainkan.
+	_s03_played = bool(FlagStore.get_flag(S03_PLAYED_FLAG, false))
 
 	# Cek apakah ini kembalian dari flashback (S08)
 	if FlagStore.get_flag("saw_flashback_1", false) and not FlagStore.get_flag("received_mystery_message", false):
@@ -457,13 +470,14 @@ func _on_balcony_trigger_entered(body: Node2D) -> void:
 	await _leave_room_via_corridor()
 
 
-## Putar monolog S03 tepat SEKALI, apa pun jalur keluar kamar (pintu O6 atau
-## jendela/balkon). Menjaga naskah "S03 = monolog sebelum ke balkon" tanpa
-## mengulanginya bila pemain mencoba keluar lewat dua jalur.
+## Putar monolog S03 tepat SEKALI per sesi/permainan, apa pun jalur keluar kamar
+## (pintu O6 atau jendela/balkon). Penjaga disimpan di FlagStore (`s03_played`)
+## supaya tidak reset saat controller kamar dibuat ulang pada perpindahan scene.
 func _play_s03_once() -> void:
 	if _s03_played:
 		return
 	_s03_played = true
+	FlagStore.set_flag(S03_PLAYED_FLAG, true)
 	s03_play_count += 1
 	await start_s03_monologue()
 
