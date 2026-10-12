@@ -31,6 +31,7 @@ TESTS=(
   test_pause_and_warning
   test_choice_menu_geometry
   test_phone_gate
+  test_route_room_rooftop
 )
 
 # Batas waktu per-test (detik). Mencegah suite menggantung selamanya bila

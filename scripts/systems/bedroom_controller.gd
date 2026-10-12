@@ -42,6 +42,12 @@ var _is_interacting: bool = false
 var _balcony_unlocked: bool = false
 ## Mencegah teks penahan keluar kamar muncul berulang saat pemain masih di trigger.
 var _exit_block_active: bool = false
+## Menjaga monolog S03 (percakapan dengan diri sendiri) diputar TEPAT SEKALI
+## dalam satu kunjungan kamar, apa pun jalur keluar kamar (pintu O6 atau
+## jendela/balkon) — tidak dilewati, tidak pula diulang.
+var _s03_played: bool = false
+## Berapa kali S03 benar-benar diputar (dipakai uji alur headless).
+var s03_play_count: int = 0
 
 var _clock_minutes: int = 60        # 01:00
 var _clock_running: bool = false
@@ -382,16 +388,17 @@ func _handle_door() -> void:
 		await _block_exit_need_phone()
 		return
 
+	# Monolog S03 (percakapan dengan diri sendiri) dimainkan TEPAT SEKALI
+	# sebelum pemain berangkat — tidak dilewati, tidak pula diulang.
+	await _play_s03_once()
+
 	thought_box.display_thought("S02_O6_LEAVE")
 	await thought_box.text_completed
 	await get_tree().create_timer(0.8).timeout
 
-	FlagStore.set_flag("visited_corridor", true)
-	player.set_movement_enabled(false)
-	if navigate_scenes:
-		transition_layer.fade_to_black(1.2)
-		await get_tree().create_timer(1.2).timeout
-		get_tree().change_scene_to_file(CORRIDOR_SCENE)
+	# Keluar kamar = masuk LORONG (corridor.tscn). Rangkaian akhir (rooftop,
+	# S04a..S06) hanya dicapai lewat lorong -> lift -> lantai 5.
+	await _leave_room_via_corridor()
 
 
 ## Apakah ponsel (O1) sudah diperiksa? Menjadi syarat tunggal boleh keluar kamar.
@@ -442,10 +449,34 @@ func _on_balcony_trigger_entered(body: Node2D) -> void:
 
 	balcony_trigger.monitoring = false
 	player.set_movement_enabled(false)
-	await start_s03_monologue()
+	# S03 (monolog sebelum ke balkon) tetap dimainkan — tepat sekali.
+	await _play_s03_once()
 	exploration_completed.emit()
+	# JANGAN langsung ke balcony.tscn: keluar kamar selalu lewat LORONG, lalu
+	# pemain memakai LIFT ke lantai 5 (atap) — lihat kartu t_033e8f70.
+	await _leave_room_via_corridor()
+
+
+## Putar monolog S03 tepat SEKALI, apa pun jalur keluar kamar (pintu O6 atau
+## jendela/balkon). Menjaga naskah "S03 = monolog sebelum ke balkon" tanpa
+## mengulanginya bila pemain mencoba keluar lewat dua jalur.
+func _play_s03_once() -> void:
+	if _s03_played:
+		return
+	_s03_played = true
+	s03_play_count += 1
+	await start_s03_monologue()
+
+
+## Keluar dari kamar: selalu menuju LORONG (corridor.tscn). Rangkaian akhir
+## (rooftop S04a..S06) hanya dicapai dari lorong -> lift -> lantai 5.
+func _leave_room_via_corridor() -> void:
+	FlagStore.set_flag("visited_corridor", true)
+	player.set_movement_enabled(false)
 	if navigate_scenes:
-		get_tree().change_scene_to_file("res://scenes/balcony/balcony.tscn")
+		transition_layer.fade_to_black(1.2)
+		await get_tree().create_timer(1.2).timeout
+		get_tree().change_scene_to_file(CORRIDOR_SCENE)
 
 
 ## S03 — Percakapan dengan Diri Sendiri (monolog interaktif 4 putaran)

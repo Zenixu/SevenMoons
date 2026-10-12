@@ -468,3 +468,37 @@ CHAPTER_01.md S00. Kartu perbaikan: `t_cc015717`.
   `MAIN_MENU_SCENE`), berkas baru `scripts/ui/pause_menu.gd` + `scenes/ui/pause_menu.tscn`,
   sisipan `PauseMenu` di 6 `.tscn` scene, `tests/test_pause_and_warning.gd`/`.tscn`,
   `run_tests.sh` (+1 entri).
+
+## D016 — Alur kamar wajib lewat lorong + lift ke rooftop (bukan cutscene langsung)
+
+**Tanggal:** Sesi terbaru
+**Status:** Diputuskan (kartu `t_033e8f70`)
+**Konteks:** Pemilik: *"ketika selesai membaca chat kenapa langsung cutscene ke akhir,
+tidak berjalan ke lorong dan melewati liftnya?"* Dari kamar, trigger jendela/balkon
+(`BalconyTrigger`) memanggil `start_s03_monologue()` lalu **langsung**
+`change_scene_to_file("balcony.tscn")`. Karena `balcony_controller` memutar S04a→S04→S05→S06,
+pemain dilempar ke rangkaian akhir tanpa melewati lorong & lift — bertentangan dengan
+naskah S04a ("Setelah naik lift ke lantai 5, Arutala berjalan otomatis ke tengah atap…")
+dan scene `corridor.tscn` + `lift.tscn` yang sudah ada.
+
+### Keputusan
+- **Keluar kamar selalu menuju LORONG.** Baik pintu O6 (`_handle_door`) maupun jendela/balkon
+  (`_on_balcony_trigger_entered`) kini memanggil helper bersama `_leave_room_via_corridor()`
+  yang memindahkan scene ke `corridor.tscn`. Rangkaian akhir hanya dicapai lewat
+  **lorong → lift → lantai 5**.
+- **S03 tetap dimainkan, tepat sekali.** Helper `_play_s03_once()` menjalankan
+  `start_s03_monologue()` (naskah: S03 = monolog sebelum ke balkon) sebelum pemain
+  berangkat; dijaga flag per-instans `_s03_played` agar tidak terlewat maupun berulang.
+- **Kedatangan rooftop dipertahankan.** `balcony_controller._arrive_then_start()` (jalur
+  `rooftop_from_lift`), `FlagStore` `corridor_floor=5` + `rooftop_from_lift=true` dari
+  `lift_controller` — **tidak diubah**. Tidak ada naskah/urutan adegan/flag yang diubah.
+- **Uji alur scene baru** `tests/test_route_room_rooftop.{gd,tscn}`: driver menjalankan
+  RANTAI SCENE NYATA (menyentuh Interactable & menekan tombol asli, aman melewati
+  `change_scene_to_file`), lalu meng-assert `bedroom → corridor → lift → balcony`,
+  tidak ada lompatan langsung kamar→balcony, S03 tepat sekali, dan flag rooftop benar.
+
+### Konsekuensi
+- `scripts/systems/bedroom_controller.gd` (helper `_play_s03_once`, `_leave_room_via_corridor`;
+  kedua jalur keluar dirutekan ke lorong), `tests/test_route_room_rooftop.gd`/`.tscn`,
+  `run_tests.sh` (+1 entri). Suite: **19/19 lulus** (headless Godot 4.7.2), exit 0.
+- `python3 tests/validate_data.py` → OK (exit 0). Tidak ada kunci lokalisasi baru.
