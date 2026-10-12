@@ -1,12 +1,9 @@
 key,id
-UI_CONTINUE,Lanjutkan
-UI_BACK,Kembali
 UI_CLOSE,Tutup
 UI_START,Mulai
 UI_SETTINGS,Pengaturan
 UI_HELP,Bantuan
 UI_QUIT,Keluar
-UI_CONFIRM,Konfirmasi
 UI_INTERACT,Periksa
 UI_RESUME,Lanjutkan
 PAUSE_TITLE,Jeda
@@ -37,7 +34,6 @@ SETTINGS_HIGH_CONTRAST,Kontras Tinggi
 SETTINGS_REDUCE_FLASH,Kurangi Kilatan Cahaya
 SETTINGS_FONT_SIZE,Ukuran Huruf
 SETTINGS_RESET,Kembalikan ke Awal
-SETTINGS_SAVE,Simpan
 ARU,Arutala
 SUARA,Suara Dalam
 S01_N01,...
@@ -50,7 +46,6 @@ INTRO_CAP_4,Kamar. Langit-langit. Jam yang berhenti di angka satu.
 INTRO_SKIP,[spasi] lewati
 S01_A01,Gerimis di kaca. Jam di dinding berhenti di angka satu.
 S01_A02,Aku harus tahu sudah jam berapa.
-CLOCK_HINT,Periksa jam di dinding.
 CLOCK_START,Hanya satu angka yang berani bergerak. Sisanya diam.
 CLOCK_TICK,Jarum menit mulai berjalan. Seperti ada yang memberinya izin.
 S02_O1_N01,Layarnya menyala sendiri. Empat belas pesan belum dibuka.
@@ -140,9 +135,6 @@ CORRIDOR_F3_INTRO3,Hanya lampu dan pintu-pintu yang tidak akan kubuka. Aku berja
 CORRIDOR_F4_ARRIVE,Lantai empat. Angka di panel lift berganti tanpa suara.
 CORRIDOR_F4_ARRIVE2,Aku tidak ingat kenapa aku naik. Rasanya bukan aku yang menekan tombolnya.
 CORRIDOR_F4_ARRIVE3,Tapi di sini lebih sunyi. Dan di sini, pikiranku sedikit lebih keras.
-ROOFTOP_ARRIVE,Lantai lima. Lift membawaku ke atap, bukan ke lorong.
-ROOFTOP_ARRIVE2,Di sini tidak ada pintu lagi — hanya pager besi, langit, dan hujan yang belum berhenti.
-ROOFTOP_ARRIVE3,Aku melangkah ke tengah atap. Anginnya dingin, dan untuk sesaat, pikiranku ikut diam.
 CORRIDOR_ROOM_DOOR,Kamarku. Aku bisa kembali kalau mau.
 CORRIDOR_ROOM_OTHER,Bukan kamarku. Pintunya sama, tapi bukan milikku.
 CORRIDOR_STAIRS,Tangga darurat. Menuju bawah, ke lobi.
@@ -151,13 +143,7 @@ CORRIDOR_NEIGHBOR,Salah satu pintu tetangga. Ada suara TV pelan di dalam.
 CORRIDOR_NEIGHBOR_KNOCK,Aku mengetuk. Sekali. Dua kali.
 CORRIDOR_NEIGHBOR_KNOCK2,Tidak ada jawaban. Mungkin memang tidak seharusnya ada.
 CORRIDOR_LIFT,Lift. Tombolnya masih menyala.
-CORRIDOR_LIFT_UP,Naik satu lantai
-CORRIDOR_LIFT_DOWN,Turun satu lantai
-CORRIDOR_LIFT_STAY,Diam di sini
-CORRIDOR_LIFT_STAY_RES,Nggak ada tempat lain yang lebih baik.
 CORRIDOR_LIFT_MOVE,Pintu besi menutup. Lantai di bawah kakiku bergeser.
-CORRIDOR_ARRIVE_LINE,Selamat datang di lantai %d. Pintu lift terbuka lagi.
-CORRIDOR_F5_HINT,Di atas lantai ini hanya ada atap. Lift akan membawaku ke sana.
 LIFT_ENTER,Apakah ini pilihan yang tepat? ...
 LIFT_HINT,Ada peta lantai di dinding kanan. Tekan [E] untuk memilih tujuan.
 LIFT_PANEL_PROMPT,Peta Lantai
