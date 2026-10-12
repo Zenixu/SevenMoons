@@ -24,16 +24,24 @@ signal exploration_completed()
 
 const CORRIDOR_SCENE := "res://scenes/corridor/corridor.tscn"
 
+## Kunci lokalisasi untuk teks penahan keluar kamar sebelum ponsel (O1) diperiksa.
+## Pemilik: "jika belum membuka HP, maka tidak diperbolehkan keluar kamar dahulu."
+const EXIT_NEED_PHONE_KEY := "S02_EXIT_NEED_PHONE"
+
 # Jam dinding: 1 menit dalam game per N detik nyata setelah diperiksa
 const CLOCK_MINUTES_PER_SECOND := 0.2   # ~1 menit tiap 5 detik
 
 
 
 @export var auto_start_intro: bool = true
+## Bila false, controller tidak memindahkan scene (dipakai harness uji headless).
+@export var navigate_scenes: bool = true
 
 var _inspected_objects: Dictionary = {}
 var _is_interacting: bool = false
 var _balcony_unlocked: bool = false
+## Mencegah teks penahan keluar kamar muncul berulang saat pemain masih di trigger.
+var _exit_block_active: bool = false
 
 var _clock_minutes: int = 60        # 01:00
 var _clock_running: bool = false
@@ -367,15 +375,38 @@ func _handle_door() -> void:
 		return
 
 	# Konfirmasi keluar
+	# GATE (permintaan pemilik): ponsel O1 WAJIB diperiksa dulu. Selama
+	# `checked_phone` belum true, aksi keluar ditahan — naskah O6 tetap dimainkan
+	# utuh, hanya perpindahan scene yang dicegah, disertai teks penahan halus.
+	if not _phone_checked():
+		await _block_exit_need_phone()
+		return
+
 	thought_box.display_thought("S02_O6_LEAVE")
 	await thought_box.text_completed
 	await get_tree().create_timer(0.8).timeout
 
 	FlagStore.set_flag("visited_corridor", true)
 	player.set_movement_enabled(false)
-	transition_layer.fade_to_black(1.2)
+	if navigate_scenes:
+		transition_layer.fade_to_black(1.2)
+		await get_tree().create_timer(1.2).timeout
+		get_tree().change_scene_to_file(CORRIDOR_SCENE)
+
+
+## Apakah ponsel (O1) sudah diperiksa? Menjadi syarat tunggal boleh keluar kamar.
+func _phone_checked() -> bool:
+	return FlagStore.get_flag("checked_phone", false)
+
+
+## Tahan aksi keluar kamar sebelum ponsel diperiksa: tampilkan teks halus
+## (lewat lokalisasi, bukan literal) dan jangan pindah scene.
+func _block_exit_need_phone() -> void:
+	thought_box.display_thought(EXIT_NEED_PHONE_KEY)
+	await thought_box.text_completed
 	await get_tree().create_timer(1.2).timeout
-	get_tree().change_scene_to_file(CORRIDOR_SCENE)
+	thought_box.clear()
+
 
 
 func _check_balcony_condition() -> void:
@@ -392,11 +423,28 @@ func _check_balcony_condition() -> void:
 
 
 func _on_balcony_trigger_entered(body: Node2D) -> void:
-	if body.is_in_group("player") and _balcony_unlocked:
-		balcony_trigger.monitoring = false
+	if not (body.is_in_group("player") and _balcony_unlocked):
+		return
+
+	# GATE (permintaan pemilik): ponsel O1 WAJIB diperiksa sebelum keluar kamar,
+	# termasuk lewat jendela/balkon. Bila belum, tahan + teks halus; pemain tetap
+	# di kamar. `monitoring` dibiarkan menyala (tak dimatikan-nyalakan) agar tidak
+	# memicu body_entered berulang selama pemain masih berdiri di area.
+	if not _phone_checked():
+		if _exit_block_active:
+			return
+		_exit_block_active = true
 		player.set_movement_enabled(false)
-		await start_s03_monologue()
-		exploration_completed.emit()
+		await _block_exit_need_phone()
+		player.set_movement_enabled(true)
+		_exit_block_active = false
+		return
+
+	balcony_trigger.monitoring = false
+	player.set_movement_enabled(false)
+	await start_s03_monologue()
+	exploration_completed.emit()
+	if navigate_scenes:
 		get_tree().change_scene_to_file("res://scenes/balcony/balcony.tscn")
 
 

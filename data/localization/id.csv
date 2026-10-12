@@ -88,6 +88,7 @@ S02_O6_CONFIRM,"Lorong di luar dingin dan kosong. Keluar sekarang?"
 S02_O6_CONFIRM_YES,Keluar
 S02_O6_CONFIRM_NO,Belum dulu
 S02_O6_LEAVE,Kunci berputar pelan. Aku melangkah ke lorong.
+S02_EXIT_NEED_PHONE,Ada yang belum kulihat di ponsel.
 S03_R1_VOICE,Kamu tahu apa yang kamu lakukan ke dia.
 S03_R1_OPT_A,Aku tahu.
 S03_R1_OPT_B,Jangan mulai lagi.
