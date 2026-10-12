@@ -38,6 +38,9 @@ func _ready() -> void:
 	await _test_no_clip()
 	await _test_main_menu_buttons()
 	await _test_settings_slider_labels()
+	await _test_settings_tab_titles()
+	await _test_hud_no_overlap()
+	await _test_interact_prompt_centered()
 	_test_no_raw_literals()
 
 	# Pulihkan pengaturan agar tak mengotori uji lain (tersimpan ke user://).
@@ -272,6 +275,177 @@ func _test_settings_slider_labels() -> void:
 	SettingsManager.font_size_multiplier = prev_mult
 	SettingsManager.save_settings()
 	print("    Label slider SettingsMenu 1x/2x: OK")
+
+
+# ---------------------------------------------------------------------------
+# 3d. SettingsMenu: judul tab (TabContainer) harus ikut "Ukuran Huruf"
+# ---------------------------------------------------------------------------
+## Regresi BUG-6: judul tab SettingsMenu (Audio/Permainan/Aksesibilitas) memakai
+## font default TabBar (16) yang TIDAK ikut `font_size_multiplier`, sehingga
+## pemain yang memperbesar huruf tetap melihat judul tab kecil. Uji: ukuran font
+## judul tab harus == dasar*mult, dan semua judul tetap terlihat (TabBar membungkus
+## ke baris berikutnya, bukan memotong).
+func _test_settings_tab_titles() -> void:
+	print("  - Menguji judul tab SettingsMenu ikut skala huruf (1x/2x)...")
+	const SETTINGS: String = "res://scenes/ui/settings_menu.tscn"
+	var prev_mult: float = SettingsManager.font_size_multiplier
+
+	for mult in [1.0, 2.0]:
+		SettingsManager.font_size_multiplier = mult
+		SettingsManager.save_settings()
+		var node: Node = _spawn(SETTINGS)
+		if node == null:
+			continue
+		await _settle()
+		await _settle()
+
+		var tc: TabContainer = node.find_child("TabContainer", true, false) as TabContainer
+		_check(tc != null, "SettingsMenu x%.1f: TabContainer hilang" % mult)
+		if tc == null:
+			node.queue_free()
+			continue
+
+		var tb: TabBar = tc.get_tab_bar()
+		var fs: int = tb.get_theme_font_size("font_size")
+		var base: int = 16
+		var expected: int = int(round(float(base) * mult))
+		_check(fs == expected,
+			"SettingsMenu x%.1f: font judul tab diharapkan %d, dapat %d (judul tab tak ikut skala)" % [mult, expected, fs])
+
+		# Semua judul tab harus benar-benar terlihat: rect tab muat lebar teks.
+		var f: Font = tb.get_theme_font("font")
+		for i in tc.get_tab_count():
+			var title: String = tc.get_tab_title(i)
+			var need: float = f.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+			var r: Rect2 = tb.get_tab_rect(i)
+			_check(r.size.x + 0.5 >= need,
+				"SettingsMenu x%.1f: judul tab '%s' terpotong (rect=%.0f < teks=%.0f)" % [mult, title, r.size.x, need])
+
+		node.queue_free()
+		await get_tree().process_frame
+
+	SettingsManager.font_size_multiplier = prev_mult
+	SettingsManager.save_settings()
+	print("    Judul tab SettingsMenu ikut skala 1x/2x: OK")
+
+
+# ---------------------------------------------------------------------------
+# 3e. HUD: label tak boleh tumpang tindih pada 1x-2.5x
+# ---------------------------------------------------------------------------
+## Regresi BUG-7: pada font 2x/2.5x label lantai (`UI/FloorLabel`) tumbuh ke
+## bawah menimpa petunjuk (`UI/HintLabel`) di lift & koridor. Uji: rect kedua
+## label tidak boleh tumpang tindih (di luar toleransi sub-piksel) di semua skala.
+func _test_hud_no_overlap() -> void:
+	print("  - Menguji HUD lift/koridor tak tumpang tindih (1x-2.5x)...")
+	const HUD_PAIRS: Array = [
+		{"path": "res://scenes/lift/lift.tscn",
+			"a": "UI/FloorLabel", "b": "UI/HintLabel",
+			"ta": "Lantai 3", "tb": "Ada peta lantai di dinding kanan. Tekan [E] untuk memilih tujuan."},
+		{"path": "res://scenes/corridor/corridor.tscn",
+			"a": "UI/FloorLabel", "b": "UI/HintLabel",
+			"ta": "Lantai 3", "tb": "Di atas lantai ini hanya ada atap. Lift akan membawaku ke sana."},
+	]
+	var prev_mult: float = SettingsManager.font_size_multiplier
+
+	for mult in [1.0, 1.5, 2.0, 2.5]:
+		SettingsManager.font_size_multiplier = mult
+		SettingsManager.save_settings()
+		for pair in HUD_PAIRS:
+			var node: Node = _spawn(pair["path"])
+			if node == null:
+				continue
+			await _settle()
+			var la: Label = node.get_node_or_null(pair["a"]) as Label
+			var lb: Label = node.get_node_or_null(pair["b"]) as Label
+			if la == null or lb == null:
+				_check(false, "%s x%.1f: label HUD hilang" % [pair["path"], mult])
+				node.queue_free()
+				continue
+			la.text = pair["ta"]
+			lb.text = tr(pair["tb"])
+			la.visible = true
+			lb.visible = true
+			await _settle()
+			await _settle()
+
+			var ra: Rect2 = la.get_global_rect()
+			var rb: Rect2 = lb.get_global_rect()
+			var overlap: bool = ra.intersects(rb, false)
+			_check(not overlap,
+				"%s x%.1f: %s tumpang tindih %s (a=%.0f..%.0f b=%.0f..%.0f)" % [
+					pair["path"], mult, pair["a"], pair["b"],
+					ra.position.y, ra.end.y, rb.position.y, rb.end.y])
+			node.queue_free()
+			await get_tree().process_frame
+
+	SettingsManager.font_size_multiplier = prev_mult
+	SettingsManager.save_settings()
+	print("    HUD lift/koridor tak tumpang tindih 1x-2.5x: OK")
+
+
+# ---------------------------------------------------------------------------
+# 3f. Prompt interaksi in-world "[E] ..." tetap terpusat & tak terpotong
+# ---------------------------------------------------------------------------
+## Regresi BUG-8: label prompt `Interactable` memakai kotak lebar-tetap (96px)
+## sehingga pada 2.5x teks (115px) melampaui kotak dan bergeser dari pusat objek.
+## Uji: pada 1x-2.5x, lebar label >= lebar teks DAN pusat label == pusat objek.
+func _test_interact_prompt_centered() -> void:
+	print("  - Menguji prompt interaksi '[E] ...' terpusat (1x-2.5x)...")
+	const SCENE: String = "res://scenes/corridor/corridor.tscn"
+	var prev_mult: float = SettingsManager.font_size_multiplier
+	var tested: bool = false
+
+	for mult in [1.0, 1.5, 2.0, 2.5]:
+		SettingsManager.font_size_multiplier = mult
+		SettingsManager.save_settings()
+		var node: Node = _spawn(SCENE)
+		if node == null:
+			continue
+		await _settle()
+
+		# Cari Interactable pertama yang punya anak Label (prompt).
+		var area: Area2D = null
+		var lbl: Label = null
+		var stack: Array = [node]
+		while not stack.is_empty():
+			var n: Node = stack.pop_back()
+			if n is Area2D and n.has_method("_setup_prompt"):
+				for c in n.get_children():
+					if c is Label:
+						area = n as Area2D
+						lbl = c as Label
+						break
+				if lbl != null:
+					break
+			for c in n.get_children():
+				stack.append(c)
+
+		if lbl == null or area == null:
+			node.queue_free()
+			await get_tree().process_frame
+			continue
+		tested = true
+		lbl.visible = true
+		await _settle()
+		await _settle()
+
+		var fs: int = lbl.get_theme_font_size("font_size")
+		var need: float = lbl.get_theme_font("font").get_string_size(
+			lbl.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var r: Rect2 = lbl.get_global_rect()
+		_check(r.size.x + 0.5 >= need,
+			"prompt x%.1f: label (%.0f) < teks (%.0f) -> terpotong" % [mult, r.size.x, need])
+		var center_off: float = (r.position.x + r.size.x * 0.5) - area.global_position.x
+		_check(absf(center_off) <= 1.0,
+			"prompt x%.1f: tak terpusat pada objek (geser %.1f px)" % [mult, center_off])
+
+		node.queue_free()
+		await get_tree().process_frame
+
+	_check(tested, "prompt: tak ada Interactable dengan label untuk diuji")
+	SettingsManager.font_size_multiplier = prev_mult
+	SettingsManager.save_settings()
+	print("    Prompt interaksi terpusat 1x-2.5x: OK")
 
 
 # ---------------------------------------------------------------------------

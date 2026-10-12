@@ -39,6 +39,16 @@ const HC_TEXT: Color   = Color(1.0, 1.0, 1.0, 1.0)
 const HC_BORDER: Color = Color(1.0, 1.0, 1.0, 1.0)
 const HC_ACCENT: Color = Color(0.60, 0.85, 1.0, 1.0)
 
+# --- Pilihan "diam" (tombol bertuliskan "...") --------------------------------
+# Affordance NON-TEKS: bentuk PIL transparan + ikon "bisu" (pengeras suara
+# dicoret) + warna redup. Teks naskah ("...") TIDAK diubah sedikit pun — ini
+# murni pembeda visual agar pemain tidak menyangka tombolnya rusak/bug
+# (lihat docs/review/VERIFIKASI_KUNCI_TITIK.md).
+const SILENCE_TEXT: Color   = Color(0.680, 0.740, 0.860, 0.95)
+const SILENCE_BORDER: Color = Color(0.460, 0.520, 0.660, 0.95)
+const SILENCE_BG: Color     = Color(0.100, 0.115, 0.155, 0.55)
+const SILENCE_ICON_SIZE: int = 16
+
 const _FONT_KEYS: Array[String] = ["font_size", "normal_font_size"]
 
 # ---------------------------------------------------------------------------
@@ -63,6 +73,64 @@ static func high_contrast() -> bool:
 	if sm == null:
 		return false
 	return bool(sm.get("high_contrast"))
+
+
+## True bila teks tampil hanya berisi titik-titik (opsi naskah "diam", mis. "...").
+## Dipakai untuk memberi affordance visual TANPA mengubah teks naskah.
+static func is_silence_text(text: String) -> bool:
+	var t: String = text.strip_edges()
+	if t.is_empty():
+		return false
+	for i in t.length():
+		var ch: String = t[i]
+		if ch != "." and ch != "…" and ch != "·":
+			return false
+	return true
+
+
+## Ikon "bisu" (pengeras suara dicoret), digambar vektor — bukan huruf/emoji,
+## jadi tidak bergantung pada font. Dipakai sebagai affordance opsi "diam".
+class SilenceIcon:
+	extends Control
+
+	var glyph_color: Color = Color(0.68, 0.74, 0.86, 0.95)
+
+	func _init(color: Color) -> void:
+		glyph_color = color
+		custom_minimum_size = Vector2(16, 16)
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		size_flags_vertical = Control.SIZE_SHRINK_CENTER
+
+	func _draw() -> void:
+		var s: float = minf(size.x, size.y)
+		if s <= 0.0:
+			return
+		var lw: float = maxf(1.0, s / 8.0)
+		# Badan pengeras suara (kotak kecil).
+		var bx: float = s * 0.10
+		var by: float = s * 0.36
+		var bw: float = s * 0.22
+		var bh: float = s * 0.28
+		draw_rect(Rect2(bx, by, bw, bh), glyph_color)
+		# Corong (segitiga).
+		var horn := PackedVector2Array([
+			Vector2(bx + bw, by),
+			Vector2(s * 0.60, s * 0.16),
+			Vector2(s * 0.60, s * 0.84),
+			Vector2(bx + bw, by + bh),
+		])
+		draw_colored_polygon(horn, glyph_color)
+		# Garis coret (mute).
+		draw_line(Vector2(s * 0.16, s * 0.84), Vector2(s * 0.84, s * 0.16),
+			glyph_color, lw * 1.5, true)
+
+
+## Buat ikon "bisu" berukuran `px` (biasanya ikut skala huruf).
+static func make_silence_icon(px: int = SILENCE_ICON_SIZE, color: Color = SILENCE_TEXT) -> Control:
+	var ic := SilenceIcon.new(color)
+	ic.name = "SilenceIcon"
+	ic.custom_minimum_size = Vector2(px, px)
+	return ic
 
 
 # ---------------------------------------------------------------------------
@@ -93,9 +161,12 @@ static func hud_style() -> StyleBoxFlat:
 	return sb
 
 
-## Kotak tombol. `kind`: "normal" | "accent" | "honest" | "danger".
+## Kotak tombol. `kind`: "normal" | "accent" | "honest" | "danger" | "silence".
 ## `honest` sengaja hanya berbingkai (tanpa isi) — pembeda NON-WARNA untuk
 ## pilihan "jujur" yang lebih redup (MECHANICS_SPEC §2 & §10).
+## `silence` (opsi naskah "...") = bentuk PIL (radius penuh) + bingkai tipis
+## + latar transparan redup: pembeda BENTUK NON-WARNA yang jelas berbeda dari
+## tombol jawaban lain, sehingga tak tampak seperti tombol rusak.
 static func button_style(kind: String = "normal") -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
 	sb.set_corner_radius_all(RADIUS_BUTTON)
@@ -114,6 +185,13 @@ static func button_style(kind: String = "normal") -> StyleBoxFlat:
 		"danger":
 			sb.bg_color = Color(0.28, 0.10, 0.12, 0.95)
 			sb.border_color = WARN
+		"silence":
+			# Pil (radius penuh) + bingkai tipis + latar transparan redup.
+			sb.set_corner_radius_all(16)
+			sb.corner_detail = 6
+			sb.bg_color = SILENCE_BG
+			sb.border_color = SILENCE_BORDER
+			sb.draw_center = true
 		_:
 			sb.bg_color = BG_PANEL_SOLID
 			sb.border_color = BORDER
@@ -131,6 +209,25 @@ static func button_style_hc(kind: String = "normal") -> StyleBoxFlat:
 	sb.content_margin_top = 5
 	sb.content_margin_bottom = 5
 	return sb
+
+
+# ---------------------------------------------------------------------------
+# Ukuran huruf dasar (idempoten)
+# ---------------------------------------------------------------------------
+## Set ukuran huruf DASAR (belum di-scale) untuk sebuah Control, lalu langsung
+## terapkan pengali "Ukuran Huruf" saat ini. Menyimpan dasar di metadata
+## `__ui_base_<key>` sehingga pemanggilan `apply()` berulang (mis. saat
+## `settings_changed`) TIDAK menumpuk (tidak men-scale dua kali).
+##
+## WAJIB dipakai oleh UI yang membuat node secara runtime (tombol pilihan, gelembung
+## chat, prompt interaksi) — kalau tidak, `apply()` akan menganggap ukuran yang
+## sudah di-scale sebagai "dasar" lalu menggandakannya.
+static func set_base_font_size(c: Control, base: int, key: String = "font_size") -> void:
+	if c == null:
+		return
+	var b: int = maxi(1, base)
+	c.set_meta("__ui_base_" + key, b)
+	c.add_theme_font_size_override(key, maxi(1, int(round(float(b) * multiplier()))))
 
 
 # ---------------------------------------------------------------------------

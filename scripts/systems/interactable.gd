@@ -15,6 +15,8 @@ var _prompt_label: Label
 var _sprite_or_rect: CanvasItem
 
 const BASE_PROMPT_FONT: int = 9
+# Jarak vertikal label prompt dari titik objek (px).
+const PROMPT_OFFSET_Y: float = -28.0
 
 
 func _ready() -> void:
@@ -31,8 +33,6 @@ func _setup_prompt() -> void:
 	_prompt_label = Label.new()
 	_prompt_label.text = "[E] " + tr(prompt_text_key)
 	_prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_prompt_label.position = Vector2(-48, -28)
-	_prompt_label.custom_minimum_size = Vector2(96, 16)
 	_prompt_label.visible = false
 	# Garis tepi gelap agar teks tetap terbaca di atas latar apa pun
 	# (tanpa mengandalkan warna saja).
@@ -43,15 +43,32 @@ func _setup_prompt() -> void:
 
 
 ## Petunjuk interaksi ikut "Ukuran Huruf"/"Kontras Tinggi" (MECHANICS_SPEC §9/§10).
+## Label dipusatkan pada objek: lebarnya diukur dari teks yang sudah di-scale, lalu
+## posisinya digeser `-lebar/2`. Ini menjaga prompt tetap di tengah (dan tak
+## terpotong) pada 1x–2.5x, alih-alih kotak lebar-tetap yang melenceng saat teks
+## membesar.
 func _apply_accessibility() -> void:
 	if _prompt_label == null:
 		return
 	var mult: float = UITheme.multiplier()
-	_prompt_label.add_theme_font_size_override("font_size", int(round(float(BASE_PROMPT_FONT) * mult)))
+	var font_sz: int = int(round(float(BASE_PROMPT_FONT) * mult))
+	_prompt_label.add_theme_font_size_override("font_size", font_sz)
 	if SettingsManager.high_contrast:
 		_prompt_label.add_theme_color_override("font_color", UITheme.HC_TEXT)
 	else:
 		_prompt_label.add_theme_color_override("font_color", Color(0.92, 0.95, 1.0, 0.95))
+	_recenter_prompt(font_sz)
+
+
+## Ukur lebar teks prompt pada ukuran font saat ini, lalu pusatkan label pada objek.
+func _recenter_prompt(font_sz: int) -> void:
+	var font: Font = _prompt_label.get_theme_font("font")
+	var text_w: float = font.get_string_size(
+		_prompt_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_sz).x
+	var w: float = maxf(text_w + 8.0, 32.0)
+	_prompt_label.custom_minimum_size = Vector2(w, 0)
+	_prompt_label.size = Vector2(w, _prompt_label.size.y)
+	_prompt_label.position = Vector2(-w * 0.5, PROMPT_OFFSET_Y)
 
 
 func _unhandled_input(event: InputEvent) -> void:

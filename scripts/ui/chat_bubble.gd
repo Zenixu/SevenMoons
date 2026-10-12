@@ -38,9 +38,10 @@ func setup(sender_name: String, message_text: String, is_sent_by_player: bool) -
 
 
 func _apply_style() -> void:
-	var mult: float = UITheme.multiplier()
-	message_label.add_theme_font_size_override("font_size", int(round(float(BASE_MSG_SIZE) * mult)))
-	sender_label.add_theme_font_size_override("font_size", int(round(float(BASE_SENDER_SIZE) * mult)))
+	# Pakai dasar idempoten: aman bila `_apply_style` dipanggil ulang (mis. saat
+	# pengaturan berubah) tanpa menggandakan skala huruf.
+	UITheme.set_base_font_size(message_label, BASE_MSG_SIZE)
+	UITheme.set_base_font_size(sender_label, BASE_SENDER_SIZE)
 
 	if SettingsManager.high_contrast:
 		var sb := StyleBoxFlat.new()
